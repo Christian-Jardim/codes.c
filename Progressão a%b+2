@@ -1,3 +1,7 @@
+/*Faça um programa que calcule e mostre o termo n da série a seguir. Imprima também
+no final a soma da série.
+S = 1/1 + 2/3 + 3/5 + 4/7 + 5/9 + ... + n/m.*\
+
 #include <stdio.h>
 int main(){
     int p,d=0;
