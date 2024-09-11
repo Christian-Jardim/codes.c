@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+int main()
+{
+    int vz,num,som,med;
+    do{
+    printf("Digite um número: \n");
+    scanf("%i",&num);
+    som=som+num;
+    vz++;
+    }while(num>=0);
+    
+    med=som/vz;
+    
+    printf("A soma dos valores é: %i\n",som);
+    printf("A média dos valores é: %i\n",med);
+    printf("O total de valores lidos é: %i\n",vz);
+    return 0;
+}
