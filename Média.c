@@ -1,5 +1,5 @@
 /*Receber sexo, peso e idade do usuário. Depois calcular: o peso total,
-a idade total, o peso médio e a idade média de cada sexo.*\
+a idade total, o peso médio e a idade média de cada sexo.*/
 
 #include <stdio.h>
 int main()
