@@ -11,10 +11,11 @@ scanf("%f",&num);
 
 if(num>=1){
     printf("Os termos são: \n1\n");
-    for (dnm=1;dnm<=num;dnm++){
+    for (dnm=2;dnm<=num;dnm++){
         soma+=(1/dnm);
         printf("1/%2.f.\n",dnm);
     }
+    soma+=1;
     printf("A soma dos termos é: %f",soma);
 }
 else{
