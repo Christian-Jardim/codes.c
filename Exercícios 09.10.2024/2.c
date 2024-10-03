@@ -1,5 +1,6 @@
-/*Programa que permite ao usuário entrar com uma matriz de 3 x 3 nu ́meros inteiros. Em seguida, gera um array unidimensional
-pela soma dos nu ́meros de cada coluna da matriz e mostra na tela esse array.*/
+/*Programa que permite ao usuário entrar com uma matriz de 3 x 3 nu ́meros inteiros.
+Em seguida, gera um array unidimensional pela soma dos nu ́meros de cada coluna da matriz
+e mostra na tela esse array.*/
 
 #include <stdio.h>
 int main()
