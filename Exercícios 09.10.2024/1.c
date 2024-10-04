@@ -1,7 +1,7 @@
 /*Programa para corrigir uma prova com 10 questões de múltipla escolha (a, b, c, d ou e),
-em uma turma com 3 alunos. Cada questão vale 1 ponto. Leia o gabarito, e para cada aluno leia
-sua matricula (número inteiro) e suas respostas. Calcule e escreva para cada aluno:
-sua matrícula, suas respostas,sua nota e o percentual de aprovação.*/
+em uma turma com 3 alunos. Cada questão vale 1 ponto. Leia o gabarito, e para cada aluno
+leia sua matricula (número inteiro) e suas respostas. Calcule e escreva para cada aluno:
+sua matrícula, suas respostas, sua nota e o seu percentual de aprovação.*/
 
 #include <stdio.h>
 #include <string.h>
