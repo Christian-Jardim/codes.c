@@ -1,11 +1,7 @@
 /*Programa que lẽ uma matriz 3 x 6 com valores reais e:
-
 (a) Imprime a soma de todos os elementos das colunas ímpares.
-
 (b) Imprime a média aritmética dos elementos da segunda e quarta colunas.
-
 (c) Substitui os valores da sexta coluna pela soma dos valores das colunas 1 e 2.
-
 (d) Imprime a matriz modificada*/
 
 #include <stdio.h>
