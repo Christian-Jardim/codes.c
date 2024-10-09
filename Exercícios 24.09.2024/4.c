@@ -1,4 +1,7 @@
-/**/
+/*Programa que lẽ dez conjuntos de dois valores, o primeiro representando
+o número do aluno e o segundo representando a sua altura em metros.
+Encontra o aluno mais baixo e o mais alto e mostre o nú́mero do aluno
+mais baixo e do mais alto, juntamente com suas alturas.*/
 
 #include <stdio.h>
 int main(){
