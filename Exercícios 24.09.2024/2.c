@@ -1,3 +1,9 @@
+/*Programa que lẽ um vetor de 5 posições para números reais e,
+depois, um código inteiro. Se o código for zero, finaliza o programa
+;se for 1, mostra o vetor na ordem direta; se for 2, mostra o vetor
+na ordem inversa. Caso, o código for diferente de 1 e 2 escreve uma
+mensagem informando que o código é inválido.*/
+
 #include <stdio.h>
 int main()
 {
