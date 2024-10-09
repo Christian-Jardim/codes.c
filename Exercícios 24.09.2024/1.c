@@ -1,3 +1,9 @@
+/*Programa que possui um vetor denominado A que armazena 6 números inteiros. O programa executa os seguintes passos:
+(a) Atribui os seguintes valores a esse vetor: 1, 0, 5, -2, -5, 7.
+(b) Armazena em uma variável inteira (simples) a soma entre os valores das posiçõesA[0], A[1] e A[5] do vetor e mostra na tela esta soma.
+(c) Modifica o vetor na posição 4, atribuindo a esta posição o valor 100.
+(d) Mostra na tela cada valor do vetor A, um em cada linha*/
+
 #include <stdio.h>
 
 int main()
