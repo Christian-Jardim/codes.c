@@ -1,3 +1,7 @@
+/*Programa que lẽ números inteiros no intervalo [0,50] e os armazena
+em um vetor com 10 posições. Preenche um segundo vetor apenas com os
+números ímpares do primeiro vetore imprime os dois vetores, 2 elementos por linha.*/
+
 #include <stdio.h>
 int main()
 {
