@@ -7,13 +7,11 @@ int fun1(int x, int y){
  int i,r;
  r=x;
  for(i=1;i<y;i++){
-  r=r*x;
- }
- printf("%i",r);
-}
+  r=r*x;}
+ return r;}
 
-int main()
-{
+int main(){
+
 int x,y;
 printf("Digite o valor da base: ");
 scanf("%i",&x);
@@ -21,7 +19,6 @@ scanf("%i",&x);
 printf("Digite o valor do expoente: ");
 scanf("%i",&y);
 
-fun1(x,y);
+printf("%i",fun1(x,y)); 
 
-return 0;
-}
+return 0;}
