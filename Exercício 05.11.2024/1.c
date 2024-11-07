@@ -5,31 +5,31 @@
 struct Banda1{
  char nome[20], tipo[10];
  int integ, pos;
-}band1;
+}a;
 
 struct Banda2{
  char nome[20], tipo[10];
  int integ, pos;
-}band2;
+}b;
 
 struct Banda3{
  char nome[20], tipo[10];
  int integ, pos;
-}band3;
+}c;
 
 struct Banda4{
  char nome[20], tipo[10];
  int integ, pos;
-}band4;
+}d;
 
 struct Banda5{
  char nome[20], tipo[10];
  int integ, pos;
-}band5;
+}e;
 
 int main(){
-char b[2];
-b[0] = "b";
-printf("%s",b[0]);
+gets(a.nome);
+gets(a.tipo);
+scanf()
 return 0;
 }
