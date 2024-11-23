@@ -10,7 +10,7 @@ void regis() {
 	printf("Digite a quantidade de candidatos: ");
 	scanf("%i",&q);
 	for(int i=0; i<q; i++) {
-		printf("Digite o nome de um candidato: ");
+		printf("\nDigite o nome de um candidato: ");
 		scanf(" %[^\n]",cand.nome[i]);
 		printf("Agora o seu numero: ");
 		scanf("%i",&cand.cod[i]);
@@ -20,46 +20,65 @@ void regis() {
 void ord() {
 	int i, a;
 	char aux[30];
-	i=strcmp(cand.nome[1], cand.nome[0]);
-	if(i<0) {
-		strcpy(aux, cand.nome[0]);
-		strcpy(cand.nome[0], cand.nome[1]);
-		strcpy(cand.nome[1], aux);
-		a=cand.cod[0];
-		cand.cod[0]=cand.cod[1];
-		cand.cod[1]=a;
-	}
-}
-
-void vot() {
-	while(voto >=0) {
-		for(int i=0; i<q; i++) {
-			printf("\nVote em %s:%i",cand.nome[0], cand.cod[0]);
-			printf("\nVoto em branco: 0");
-			printf("\nPara encerrar votaC'C#o, digite qualquer valor negativo.\n");
-			printf("Sua escolha: ");
-			scanf("%i",&voto);
-			if(voto==0)
-				vb++;
-			else {
-				for(i=0; i<q; i++) {
-					if(voto == cand.cod[i])
-						votos[i]++;
-					if(voto !=0 && voto != votos[i])
-						vn++;
-				}
+	for(int j=0; j<q; j++) {
+		for(int i=1; i<q; i++) {
+			if(strcmp(cand.nome[i- 1], cand.nome[i])>0) {
+				strcpy(aux, cand.nome[i- 1]);
+				strcpy(cand.nome[i- 1], cand.nome[i]);
+				strcpy(cand.nome[i], aux);
+				a=cand.cod[i- 1];
+				cand.cod[i- 1]=cand.cod[i];
+				cand.cod[i]=a;
 			}
-			vt++;
 		}
 	}
 }
-
+void vot() {
+	int m;
+	while(voto >=0) {
+		m=0;
+		for(int i=0; i<q; i++) {
+			printf("\nVote em %s:%i",cand.nome[i], cand.cod[i]);
+		}
+		printf("\nVoto em branco: 0");
+		printf("\nPara encerrar, digite qualquer valor negativo.\n");
+		printf("Sua escolha: ");
+		scanf("%i",&voto);
+		if(voto == 0)
+			vb++;
+		else {
+			for(int i=0; i<q; i++) {
+				if(voto == cand.cod[i]) {
+					votos[i]++;
+					m=1;
+				}
+			}
+			if(m==0 && voto >0)
+				vn++;
+		}
+		vt++;
+	}
+}
+void file(){
+    FILE *arq;
+    arq = fopen("votacao.txt", "w");
+    fprintf(arq,"Totais de votos: %i\n",vt);
+    for(int i=0; i<q; i++){
+        fprintf(arq, "%s: %i votos.\n",cand.nome[i], votos[i]);
+    }
+    fprintf(arq, "Votos em branco: %i",vb);
+	fprintf(arq, "\nVotos nulos: %i",vn);
+	fprintf(arq, "\nPorcentagem de votos em branco sobre o total de votos: %d%%",(vb*100)/vt);
+	fprintf(arq, "\nPorcentagem de votos nulos sobre o total de votos: %d%%",(vn*100)/vt);
+    fclose(arq);
+	
+}
 int main() {
 
 	regis();
 	ord();
 	vot();
-
+    	vt-=1;
 	printf("Totais de votos:%i\n",vt);
 	for(int i=0; i<q; i++) {
 		printf("%s:%i votos.\n",cand.nome[i], votos[i]);
@@ -68,5 +87,6 @@ int main() {
 	printf("\nVotos nulos:%i",vn);
 	printf("\nPorcentagem de votos em branco sobre o total de votos:%d%%",(vb*100)/vt);
 	printf("\nPorcentagem de votos nulos sobre o total de votos:%d%%",(vn*100)/vt);
+	file();
 	return 0;
 }
