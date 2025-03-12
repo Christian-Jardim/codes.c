@@ -30,7 +30,7 @@ int main() {
 			scanf("%i", &m);
 			printf("Digite a quantidade de linhas: \n");
 			scanf("%i", &n);
-			criaMatriz(m, n);
+			*mat = criaMatriz(m, n);
 			break;
 		case 5:
 			return 0;
@@ -47,4 +47,5 @@ int criaMatriz(int m, int n) {
 			scanf("%i", &mat[i][j]);
 		}
 	}
+ return mat
 }
