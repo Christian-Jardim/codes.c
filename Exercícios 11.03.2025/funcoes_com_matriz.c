@@ -52,7 +52,9 @@ int criaMatriz(int m, int n) {
  return mat;
 }
 
-void leiaMatriz(int **mat, int m, int n) {
-
+void leiaMatriz(int *mat, int m, int n) {
+ int i,j;
 
  for(i=0;i<m;i++){
+  for(j=0;j<n;j++){
+   printf("%i", &mat[i][j]);}}}
