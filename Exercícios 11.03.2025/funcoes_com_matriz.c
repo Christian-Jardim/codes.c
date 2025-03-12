@@ -7,7 +7,7 @@
 int criaMatriz(int m, int n);
 
 int main() {
-	int op,m,n;
+	int op,m,n,*mat;
 
 	do {
 		printf("O que desejas fazer?\n");
@@ -47,5 +47,5 @@ int criaMatriz(int m, int n) {
 			scanf("%i", &mat[i][j]);
 		}
 	}
- return mat
+ return mat;
 }
