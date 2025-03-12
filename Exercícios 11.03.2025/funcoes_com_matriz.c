@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 int criaMatriz(int m, int n);
+void leiaMatriz(int **mat, int m, int n);
 
 int main() {
 	int op,m,n,*mat;
@@ -28,8 +29,9 @@ int main() {
 		case 1:
 			printf("\nDigite a quantidade de colunas: ");
 			scanf("%i", &m);
-			printf("Digite a quantidade de linhas: \n");
+			printf("Digite a quantidade de linhas: ");
 			scanf("%i", &n);
+     printf("\n");
 			*mat = criaMatriz(m, n);
 			break;
 		case 5:
@@ -49,3 +51,8 @@ int criaMatriz(int m, int n) {
 	}
  return mat;
 }
+
+void leiaMatriz(int **mat, int m, int n) {
+
+
+ for(i=0;i<m;i++){
