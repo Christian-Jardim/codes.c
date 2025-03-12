@@ -34,6 +34,8 @@ int main() {
      printf("\n");
 			*mat = criaMatriz(m, n);
 			break;
+   case 2:
+     
 		case 5:
 			return 0;
 			break;
