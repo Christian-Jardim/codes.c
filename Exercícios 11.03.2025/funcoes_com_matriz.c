@@ -8,7 +8,7 @@ int criaMatriz(int m, int n);
 void leiaMatriz(int **mat, int m, int n);
 
 int main() {
-	int op,m,n,*mat;
+	int op,m,n,mat;
 
 	do {
 		printf("O que desejas fazer?\n");
@@ -31,10 +31,10 @@ int main() {
 			scanf("%i", &m);
 			printf("Digite a quantidade de linhas: ");
 			scanf("%i", &n);
-     printf("\n");
+			printf("\n");
 			*mat = criaMatriz(m, n);
 			break;
-   case 2:
+		case 2:
      
 		case 5:
 			return 0;
@@ -44,7 +44,10 @@ int main() {
 }
 
 int criaMatriz(int m, int n) {
-	int mat[m][n],i,j;
+	int **mat= malloc(m * sizeof (int*)),i,j;
+	for (i=0;i < m;i++) {
+         mat[i]=malloc(n * sizeof (int));
+	}
 	for(i=0; i<m; i++) {
 		for(j=0; j<n; j++) {
 			printf("\nDigite a posicao %i%i da matriz: ", i+ 1,j+ 1);
