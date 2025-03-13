@@ -3,15 +3,17 @@
 //Christian de Vargas Jardim (christianjardim.aluno@unipampa.edu.br)
 
 #include <stdio.h>
+#include <stdlib.h>
 
-int criaMatriz(int m, int n);
+int **criaMatriz(int m, int n);
 void leiaMatriz(int **mat, int m, int n);
+int somaMatriz(int **mat, int m, int n);
 
 int main() {
-	int op,m,n,mat;
+	int op,m,n,**mat;
 
 	do {
-		printf("O que desejas fazer?\n");
+		printf("\nO que desejas fazer?\n");
 		printf("1 - Criar uma matriz\n");
 		printf("2 - Ler os elementos de uma matriz\n");
 		printf("3 - Receber a soma dos elementos da matriz\n");
@@ -32,10 +34,13 @@ int main() {
 			printf("Digite a quantidade de linhas: ");
 			scanf("%i", &n);
 			printf("\n");
-			*mat = criaMatriz(m, n);
+			mat = criaMatriz(m, n);
 			break;
 		case 2:
-     
+            		leiaMatriz(mat, m, n);
+			break;
+		case 3:
+			sum = somaMatriz(mat, m, n);
 		case 5:
 			return 0;
 			break;
@@ -43,10 +48,11 @@ int main() {
 	} while(op != 5);
 }
 
-int criaMatriz(int m, int n) {
-	int **mat= malloc(m * sizeof (int*)),i,j;
-	for (i=0;i < m;i++) {
-         mat[i]=malloc(n * sizeof (int));
+int **criaMatriz(int m, int n) {
+	int **mat,i,j;
+	mat= malloc(m * sizeof (int*));
+	for (i=0; i < m; i++) {
+		mat[i]=malloc(n * sizeof (int));
 	}
 	for(i=0; i<m; i++) {
 		for(j=0; j<n; j++) {
@@ -54,12 +60,24 @@ int criaMatriz(int m, int n) {
 			scanf("%i", &mat[i][j]);
 		}
 	}
- return mat;
+	return mat;
 }
 
-void leiaMatriz(int *mat, int m, int n) {
- int i,j;
+void leiaMatriz(int **mat, int m, int n){
+    	int i, j;
+    	printf("\n");
+    	for(i=0; i<m; i++){
+        	for(j=0; j<n; j++){
+			printf("%i\  ",mat[i][j]);
+        	}
+        	printf("\n");
+    	}
+}
 
- for(i=0;i<m;i++){
-  for(j=0;j<n;j++){
-   printf("%i", &mat[i][j]);}}}
+int somaMatriz(int **mat, int m, int n) {
+	int i, j;
+
+	for(i=0; i<m; i++){
+		for(j=0; j<n; j++){
+			sum 
+	
