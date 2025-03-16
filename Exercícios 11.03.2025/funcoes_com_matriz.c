@@ -121,6 +121,7 @@ int *colunaMat(int **mat, int m, int ncoluna) {
 
 void imprimeVet(int *vet, int m) {
 	int i;
+	printf("\n");
 	for(i=0; i<m; i++) {
 		printf("%i  ", vet[i]);
 	}
