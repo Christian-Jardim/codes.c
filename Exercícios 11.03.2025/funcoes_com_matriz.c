@@ -89,7 +89,7 @@ void leiaMatriz(int **mat, int m, int n) {
 
 void imprimeMatriz(int **mat, int m, int n) {
 	int i, j;
-
+	printf("\n");
 	printf("\n");
 	for(i=0; i<m; i++) {
 		for(j=0; j<n; j++) {
