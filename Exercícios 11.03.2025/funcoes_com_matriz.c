@@ -1,5 +1,5 @@
 //Lista 1
-//Data
+//16/03/2025
 //Christian de Vargas Jardim (christianjardim.aluno@unipampa.edu.br)
 
 #include <stdio.h>
