@@ -63,7 +63,8 @@ void open_mem_arq(){
 
 	arq_mem = fopen("mem_inst.mem", "r");
 	if(arq_mem == NULL)
-		printf("Erro ao abrir arquivo.");
+		printf("Erro ao abrir o arquivo.");
+	arq_mem
 }
 
 int p_count(pc) {
