@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+void open_mem_arq();
 int p_count(pc);
 
 int main() {
@@ -17,7 +18,7 @@ int main() {
 		printf("8 - Executar programa\n");
 		printf("9 - Executar instrucao\n");
 		printf("10 - Volta uma instrucao\n");
-		printf("11 - Sair\n");
+		printf("11 - Sair\n\n");
 		scanf("%i", &op);
 		
 		do {
@@ -29,6 +30,7 @@ int main() {
 
 		switch (op) {
 		case 1:
+			
 			break;
 		case 2:
 			break;
@@ -54,6 +56,14 @@ int main() {
 		}
 	} while(op != 11);
 
+}
+
+void open_mem_arq(){
+	FILE *arq_mem;
+
+	arq_mem = fopen("mem_inst.mem", "r");
+	if(arq_mem == NULL)
+		printf("Erro ao abrir arquivo.");
 }
 
 int p_count(pc) {
