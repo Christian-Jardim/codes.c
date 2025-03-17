@@ -5,6 +5,7 @@ int p_count(pc);
 
 int main() {
 	int op,pc;
+	FILE *arq_mem;
 
 	do {
 		printf("\n *** MENU *** \n");
@@ -58,13 +59,12 @@ int main() {
 
 }
 
-void open_mem_arq(){
-	FILE *arq_mem;
+int open_mem_arq(arq_mem){
 
 	arq_mem = fopen("mem_inst.mem", "r");
 	if(arq_mem == NULL)
 		printf("Erro ao abrir o arquivo.");
-	arq_mem
+	return arq_mem;
 }
 
 int p_count(pc) {
