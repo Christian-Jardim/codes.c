@@ -8,6 +8,7 @@ typedef struct {
 	enum gen;
 	int rank;
 	int integ;
+	int tipo;
 }Band;
 
 void load(Band band[]);
@@ -33,23 +34,29 @@ void load(Band band[]) {
 	}
 }
 
-void print
+void print(Band band) {
+	for(int i=0; i<5; i++){
+		printf("\nBanda:%s\n",band[i].nome);
+			printf("Estilo musical: %s\n", band[i].tipo);
+			printf("Quantidade de integrantes:%d\n", band[i].integ);
+printf("Lugar no ranking:%d\n",band[i].rank);
+}
 
 void ran(Band band[], int r) {
 	for(int i=0; i<5; i++) {
 		if(band[i].rank == r) {
 			printf("\nBanda:%s\n",band[i].nome);
-			printf("Estilo musical:%s\n", band[i].gen);
-			printf("Quantidade de integrantes:%d\n", band[i].integinteg);
+			printf("Estilo musical: %s\n", band[i].tipo);
+			printf("Quantidade de integrantes:%d\n", band[i].integ);
 printf("Lugar no ranking:%d\n",band[i].rank);
 		}
 	}
 }
 
-void est(Band band, char genfav[10]) {
+void est(Band band[], char genfav[10]) {
 	printf("Estas são as suas bandas favoritas desse estilo:\n");
 	for(int i=0; i<5; i++) {
-		if(strcmp(genfav, band[i].gen) == 0) {
+		if(strcmp(genfav, band[i].tipo) == 0) {
 			printf("%s\n",band.x[i]);
 		}
 	}
