@@ -25,8 +25,9 @@ int main() {
 	print(Band band);
 	scanf("%d",&r)
 	ran(Band band, r);
-	
+	scanf(" %[^\n]", genfav);
 	est(Band band, genfav);
+	scanf(" %[^\n]", ver);
 	banVeri(Band band, ver); 
 }
 
