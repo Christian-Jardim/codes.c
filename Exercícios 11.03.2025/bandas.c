@@ -15,10 +15,19 @@ void load(Band band[]);
 void print(Band band[]);
 void ran(Band band[], int r);
 void est(Band band[], char genfav[10]);
-void ban()Band band[], char ver[20]);
+void banVeri(Band band[], char ver[20]);
 
 int main() {
+	int r;
+	char genfav[10],ver[20];
 	Band band[5];
+	load(Band band);
+	print(Band band);
+	scanf("%d",&r)
+	ran(Band band, r);
+	
+	est(Band band, genfav);
+	banVeri(Band band, ver); 
 }
 
 void load(Band band[]) {
