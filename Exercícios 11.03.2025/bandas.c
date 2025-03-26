@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-enum{};
+enum tipo{rock=1, samba, metal, sertanejo, jazz};
 
 typedef struct {
 	char nome[30];
@@ -25,8 +25,8 @@ void load(Band band[]) {
 	for(i=0; i<5; i++) {
 		printf("\nDigite o nome de uma banda favorita: ");
 		scanf(" %[^\n]", band[i].nome);
-		printf("\nSeu estilo musical: ");
-		scanf(" %[^\n]", band[i].gen);
+		printf("\nSeu estilo musical, dentro desta opcoes: 1 - rock, 2 - samba, 3 - metal, 4 - sertanejo, 5 - jazz");
+		scanf(" %[^\n]", band[i].tipo);
 		printf("\nQuantidade de membros: );
 		scanf("%d",&band[i].integ);
 		printf("\nA posicao dela no seu ranking: ");
