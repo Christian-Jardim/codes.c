@@ -8,7 +8,6 @@ typedef struct {
 	enum gen tipo;
 	int rank;
 	int integ;
-	int tipo;
 }Band;
 
 void load(Band band[]);
@@ -23,7 +22,7 @@ int main() {
 	Band band[5];
 	load(Band band);
 	print(Band band);
-	scanf("%d",&r)
+	scanf("%d",&r);
 	ran(Band band, r);
 	scanf(" %[^\n]", genfav);
 	est(Band band, genfav);
