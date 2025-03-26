@@ -8,19 +8,21 @@ typedef struct {
 	int integ;
 }Band;
 
-void load(Band band[]) {
-	for(i=0; i<5; i++) {
-		printf("\nDigite o nome de uma banda favorita, seu estilo musical,\n");
-		printf("quantidade de membros e o lugar dela no seu ranking:\n");
-		scanf(" %[^\n]", band[i].nome);
-		scanf(" %[^\n]", band[i].gen);
-		scanf("%i",&band[i].integ);
-		scanf("%i",&band[i].rank);
-	}
-}
-
 int main() {
 	Band band[5];
+}
+
+void load(Band band[]) {
+	for(i=0; i<5; i++) {
+		printf("\nDigite o nome de uma banda favorita: ");
+		scanf(" %[^\n]", band[i].nome);
+		printf("\nSeu estilo musical: ");
+		scanf(" %[^\n]", band[i].gen);
+		printf("\nQuantidade de membros: );
+		scanf("%d",&band[i].integ);
+		printf("\nA posicao dela no seu ranking: ");
+		scanf("%d",&band[i].rank);
+	}
 }
 
 void ran(Band band[], r) {
