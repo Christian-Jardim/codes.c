@@ -1,12 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 
+enum{};
+
 typedef struct {
 	char nome[30];
-	char gen[20];
+	enum gen;
 	int rank;
 	int integ;
 }Band;
+
+void load(Band band[]);
+void print(Band band[]);
+void ran(Band band[], int r);
+void est(Band band[], char genfav[10]);
+void ban()Band band[], char ver[20]);
 
 int main() {
 	Band band[5];
@@ -25,7 +33,9 @@ void load(Band band[]) {
 	}
 }
 
-void ran(Band band[], r) {
+void print
+
+void ran(Band band[], int r) {
 	for(int i=0; i<5; i++) {
 		if(band[i].rank == r) {
 			printf("\nBanda:%s\n",band[i].nome);
@@ -36,23 +46,19 @@ printf("Lugar no ranking:%d\n",band[i].rank);
 	}
 }
 
-void est(Band band, char fav[10]) {
-	char c[10];
+void est(Band band, char genfav[10]) {
 	printf("Estas são as suas bandas favoritas desse estilo:\n");
-	for(int i=0; i<5; i++) {
-		strcpy(c, band[i].gen);
-		if(strcmp(c, h) == 0) {
+	for(int i=0; i<5; i++) {
+		if(strcmp(genfav, band[i].gen) == 0) {
 			printf("%s\n",band.x[i]);
 		}
 	}
 }
 
-void ban(Band band, char ver[20]) {
+void ban(Band band[], char ver[20]) {
 	int y;
-	char c[10];
 	for(int i=0; i<5; i++) {
-		strcpy(c, band.x[i]);
-		if(strcmp(c, g) == 0) {
+		if(strcmp(ver, band[i].nome) == 0) {
 			printf("Esta banda é uma das suas favoritas.");
 			y=1;}
 		if(y=0) {
