@@ -24,16 +24,16 @@ int main() {
 	print(band);
 	scanf("%d",&r);
 	ran(band, r);
-	scanf(" %[^\n]", genfav);
+	scanf(" %[^\n]", &genfav);
 	est(band, genfav);
-	scanf(" %[^\n]", ver);
+	scanf(" %[^\n]", &ver);
 	banVeri(band, ver); 
 }
 
 void load(Band band[]) {
-	for(i=0; i<5; i++) {
+	for(int i=0; i<5; i++) {
 		printf("\nDigite o nome de uma banda favorita: ");
-		scanf(" %[^\n]", band[i].nome);
+		scanf(" %[^\n]", &band[i].nome);
 		int tipoinf;
 		printf("\nSeu estilo musical, dentro desta opcoes: 1 - rock, 2 - samba, 3 - metal, 4 - sertanejo, 5 - jazz");
 		scanf("%d", &tipoinf);
