@@ -50,7 +50,8 @@ void print(Band band) {
 		printf("\nBanda:%s\n",band[i].nome);
 			printf("Estilo musical: ");
 			switch(band[i].tipo) {
-			
+				case 1:
+					printf("rock");
 			printf("Quantidade de integrantes:%d\n", band[i].integ);
 printf("Lugar no ranking:%d\n",band[i].rank);
 }
@@ -58,10 +59,7 @@ printf("Lugar no ranking:%d\n",band[i].rank);
 void ran(Band band[], int r) {
 	for(int i=0; i<5; i++) {
 		if(band[i].rank == r) {
-			printf("\nBanda:%s\n",band[i].nome);
-			printf("Estilo musical: %s\n", band[i].tipo);
-			printf("Quantidade de integrantes:%d\n", band[i].integ);
-printf("Lugar no ranking:%d\n",band[i].rank);
+			print(band);
 		}
 	}
 }
@@ -70,7 +68,7 @@ void est(Band band[], int g) {
 	printf("Estas são as suas bandas favoritas desse estilo:\n");
 	for(int i=0; i<5; i++) {
 		if(band[i].tipo == g) {
-			printf("%s\n",band[i].nome);
+			print(band);
 		}
 	}
 }
