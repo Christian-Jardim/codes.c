@@ -13,19 +13,19 @@ typedef struct {
 void load(Band band[]);
 void print(Band band[]);
 void ran(Band band[], int r);
-void est(Band band[], char genfav[10]);
+void est(Band band[], gen g);
 void banVeri(Band band[], char ver[20]);
 
 int main() {
-	int r;
+	int r,g;
 	char genfav[10],ver[20];
 	Band band[5];
 	load(band);
 	print(band);
 	scanf("%d",&r);
 	ran(band, r);
-	scanf(" %[^\n]", &genfav);
-	est(band, genfav);
+	scanf("%d", &g);
+	est(band, g);
 	scanf(" %[^\n]", &ver);
 	banVeri(band, ver); 
 }
@@ -64,11 +64,11 @@ printf("Lugar no ranking:%d\n",band[i].rank);
 	}
 }
 
-void est(Band band[], char genfav[10]) {
+void est(Band band[], int g) {
 	printf("Estas são as suas bandas favoritas desse estilo:\n");
 	for(int i=0; i<5; i++) {
-		if(strcmp(genfav, band[i].tipo) == 0) {
-			printf("%s\n",band.x[i]);
+		if(band[i].tipo == g) {
+			printf("%s\n",band[i].nome);
 		}
 	}
 }
