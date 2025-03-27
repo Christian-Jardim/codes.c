@@ -20,14 +20,14 @@ int main() {
 	int r;
 	char genfav[10],ver[20];
 	Band band[5];
-	load(Band band);
-	print(Band band);
+	load(band);
+	print(band);
 	scanf("%d",&r);
-	ran(Band band, r);
+	ran(band, r);
 	scanf(" %[^\n]", genfav);
-	est(Band band, genfav);
+	est(band, genfav);
 	scanf(" %[^\n]", ver);
-	banVeri(Band band, ver); 
+	banVeri(band, ver); 
 }
 
 void load(Band band[]) {
