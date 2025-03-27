@@ -48,7 +48,9 @@ void load(Band band[]) {
 void print(Band band) {
 	for(int i=0; i<5; i++){
 		printf("\nBanda:%s\n",band[i].nome);
-			printf("Estilo musical: %s\n", band[i].tipo);
+			printf("Estilo musical: ");
+			switch(band[i].tipo) {
+			
 			printf("Quantidade de integrantes:%d\n", band[i].integ);
 printf("Lugar no ranking:%d\n",band[i].rank);
 }
