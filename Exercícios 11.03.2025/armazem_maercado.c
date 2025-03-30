@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-enum tipo {hort_frut,bebida,snack,higiene,carne,laticineo,doce};
+enum tipo {hortifruti,bebidas,mercearia,higiene,acougue,laticineos,frios,doces,padaria};
 
 typedef struct {
 	char nome[15]
