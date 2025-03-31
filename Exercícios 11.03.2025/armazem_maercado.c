@@ -11,6 +11,12 @@ typedef struct {
 }ITEM;
 
 int main() {
+	int cont,op;
+	ITEM item
 
-
+	do{
+	printf("Informe a quantidade de produtos a serem cadastrados: ");
+	scanf("%d", &cont);
+	
+	}while(op != 0)
 }
