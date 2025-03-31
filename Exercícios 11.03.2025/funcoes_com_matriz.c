@@ -14,10 +14,11 @@ typedef struct {
 void menu();
 int insere(int cont, ITEM *item);
 void apresenta(char prod, ITEM *item);
-
+void apresentaT(ITEM *item, int qt);
 
 void buscaN(char bnome[15], ITEM *item, int qt);
 void buscaS(int snome, ITEM *item, int qt);
+int venda(char v[15], ITEM *item, int qt);
 
 int main() {
 	int cont,op,qt,snome;
@@ -35,12 +36,10 @@ int main() {
 			qt = insere(cont, item);
 			break;
 		case 2:
-			printf("Informe o produto que deseja buscar: ");
-			scanf(" %[^\n]", bnome);
-			buscaN(bnome, item, qt);
+			
 			break;
 		case 3:
-
+			apresentaT(item, qt);
 			break;
 		case 4:
 
@@ -104,6 +103,17 @@ int insere(int cont, ITEM *item) {
 		qt++;
 		return qt;
 	}
+}
+
+void apresentaT(ITEM *item, int qt) {
+	for(int i=0; i<qt; i++) {
+			printf("%s\n", item[i].nome);
+			printf("%d\n", item[i].setor);
+			printf("%d\n", item[i].quant);
+			printf("%2.f\n", item[i].valor);
+	}
+}
+
 }
 
 void buscaN(char bnome[15], ITEM *item, int qt) {
