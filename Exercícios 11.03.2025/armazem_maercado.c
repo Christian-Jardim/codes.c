@@ -3,7 +3,7 @@
 
 enum tipo {hortifruti,bebidas,mercearia,higiene,acougue,laticineos,frios,doces,padaria};
 
-typedef struct {
+typedef struct produto{
 	char nome[15]
 	enum tipo setor;
 	int quant;
