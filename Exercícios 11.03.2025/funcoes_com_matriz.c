@@ -12,7 +12,7 @@ typedef struct {
 } ITEM;
 
 void menu();
-int insere(int cont, ITEM *item);
+int insere(ITEM *item);
 void apresenta(char prod, ITEM *item);
 void apresentaT(ITEM *item, int qt);
 
@@ -33,7 +33,7 @@ int main() {
 		scanf("%d",&op);
 		switch(op) {
 		case 1:
-			qt = insere(cont, item);
+			qt = insere(item);
 			break;
 		case 2:
 			
@@ -51,7 +51,7 @@ int main() {
 			break;
 		case 6:
 			printf("1 - Hortifruti\n2 - Bebidas\n3 - Mercearia\n4 - Higiene\n5 - Acougue\n6 - Laticineos\n7 - Frios\n8 - Doces\n9 - Padaria\n\n");
-			printf("Infoeme o setor do produto dentre as opcoes acima: ");
+			printf("Informe o setor do produto dentre as opcoes acima: ");
 			scanf("%d", &snome);
 			buscaS(snome, item, qt);
 			break;
@@ -86,10 +86,9 @@ void menu() {
 	printf("10 - Sair\n\n");
 }
 
-int insere(int cont, ITEM *item) {
+int insere(ITEM *item) {
 	int set,qt;
-
-	for(int i=0; i<cont; i++) {
+	
 		printf("\nDigite o nome do produto: ");
 		scanf(" %[^\n]", item[i].nome);
 		printf("1 - Hortifruti\n2 - Bebidas\n3 - Mercearia\n4 - Higiene\n5 - Acougue\n6 - Laticineos\n7 - Frios\n8 - Doces\n9 - Padaria\n\n");
@@ -102,7 +101,6 @@ int insere(int cont, ITEM *item) {
 		scanf("%f", &item[i].valor);
 		qt++;
 		return qt;
-	}
 }
 
 void apresentaT(ITEM *item, int qt) {
