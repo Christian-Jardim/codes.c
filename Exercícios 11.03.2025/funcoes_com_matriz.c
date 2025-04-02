@@ -27,7 +27,7 @@ int main() {
 	do {
 		printf("Informe a quantidade de produtos a serem cadastrados: ");
 		scanf("%d", &cont);
-		ITEM *item = (ITEM *) calloc(cont, sizeof(ITEM));
+		item = (ITEM *) malloc(cont * sizeof(ITEM));
 		menu();
 		printf("Escolha uma opcao dentre as acima: ");
 		scanf("%d",&op);
