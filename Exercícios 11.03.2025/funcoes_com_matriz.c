@@ -27,7 +27,7 @@ int main() {
 	do {
 		printf("Informe a quantidade de produtos a serem cadastrados: ");
 		scanf("%d", &cont);
-		item = (ITEM *) malloc(cont * sizeof(ITEM));
+		*item = (ITEM *) malloc(cont * sizeof(ITEM));
 		menu();
 		printf("Escolha uma opcao dentre as acima: ");
 		scanf("%d",&op);
@@ -90,25 +90,25 @@ int insere(ITEM *item) {
 	int set,qt;
 	
 		printf("\nDigite o nome do produto: ");
-		scanf(" %[^\n]", item[i].nome);
+		scanf(" %[^\n]", item[i]->nome);
 		printf("1 - Hortifruti\n2 - Bebidas\n3 - Mercearia\n4 - Higiene\n5 - Acougue\n6 - Laticineos\n7 - Frios\n8 - Doces\n9 - Padaria\n\n");
 		printf("O setor do produto dentre as opcoes acima: ");
 		scanf("%d", &set);
-		item[i].setor = set;
+		item[i]->setor = set;
 		printf("Digite a quantidade do produto: ");
-		scanf("%d", &item[i].quant);
+		scanf("%d", &item[i]->quant);
 		printf("Digite o valor do produto: ");
-		scanf("%f", &item[i].valor);
+		scanf("%f", &item[i->valor);
 		qt++;
 		return qt;
 }
 
 void apresentaT(ITEM *item, int qt) {
 	for(int i=0; i<qt; i++) {
-			printf("%s\n", item[i].nome);
-			printf("%d\n", item[i].setor);
-			printf("%d\n", item[i].quant);
-			printf("%2.f\n", item[i].valor);
+			printf("%s\n", item[i]->nome);
+			printf("%d\n", item[i]->setor);
+			printf("%d\n", item[i]->quant);
+			printf("%2.f\n", item[i]->valor);
 	}
 }
 
@@ -116,29 +116,29 @@ void apresentaT(ITEM *item, int qt) {
 
 void buscaN(char bnome[15], ITEM *item, int qt) {
 	for(int i=0; i<qt; i++) {
-		if(strcmp(bnome, item[i].nome) == 0) {
-			printf("%s\n", item[i].nome);
-			printf("%d\n", item[i].setor);
-			printf("%d\n", item[i].quant);
-			printf("%2.f\n", item[i].valor);
+		if(strcmp(bnome, item[i]->nome) == 0) {
+			printf("%s\n", item[i]->nome);
+			printf("%d\n", item[i]->setor);
+			printf("%d\n", item[i]->quant);
+			printf("%2.f\n", item[i]->valor);
 		}
 	}
 }
 
 void buscaS(int snome, ITEM *item, int qt) {
 	for(int i=0; i<qt; i++) {
-		if(snome == item[i].setor) {
-			printf("%s\n", item[i].nome);
-			printf("%d\n", item[i].setor);
-			printf("%d\n", item[i].quant);
-			printf("%2.f\n", item[i].valor);
+		if(snome == item[i]->setor) {
+			printf("%s\n", item[i]->nome);
+			printf("%d\n", item[i]->setor);
+			printf("%d\n", item[i]->quant);
+			printf("%2.f\n", item[i]->valor);
 		}
 	}
 }
 
 int venda(char v[15], ITEM *item, int qt) {
 	for(int i=0; i<qt; i++) {
-		if(strcmp(v, item[i].nome) == 0) {
+		if(strcmp(v, item[i]->nome) == 0) {
 			qt--;
 		}
 	}
