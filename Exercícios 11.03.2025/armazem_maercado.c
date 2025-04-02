@@ -18,7 +18,8 @@ void apresenta(Item *item, int qt);
 void apresenta1(Item *item, int qt);
 void apresentaT(Item *item, int qt);
 void buscaN(Item *item, int qt);
-
+void buscaS(Item *item, int qt);
+void venda(Item *item, int qt);
 
 int main() {
 	int cont,op,qt=0;
@@ -49,6 +50,12 @@ int main() {
 			break;
 		case 6:
 			buscaN(item,qt);
+			break;
+		case 7:
+			buscaS(item,qt);
+			break;
+		case 8:
+			venda(item,qt);
 			break;
 		case 11:
 			free(item);
@@ -91,7 +98,8 @@ int insere(Item *item, int qt) {
 	scanf("%d", &item[qt].quant);
 	printf("\nO seu valor: ");
     scanf("%f", &item[qt].valor);
-	printf("\nO seu setor: ");
+    printf("1-hortifruti; 2-bebidas; 3-mercearia; 4-higiene; 5-acougue; 6-laticineos; 7-frios; 8-doces;9-padaria");
+	printf("\nO seu setor, dentre as opcoes acima: ");
 	scanf("%d", &s);
 	item[qt].setor = s;
 
@@ -100,37 +108,37 @@ int insere(Item *item, int qt) {
 }
 
 void apresenta(Item *item, int i) {
-	printf("\n%s", item[i].nome);
-    printf("\n%d", item[i].quant);
-    printf("\n%.2f", item[i].valor);
-	printf("\n%d", item[i].setor);
+	printf("\nProduto: %s", item[i].nome);
+    printf("\nQuantidade: %d", item[i].quant);
+    printf("\nValor: %.2f", item[i].valor);
+    printf("\nSetor: ");
 	switch(item[i].setor) {
 	case 1:
-		printf("\nhortifruti");
+		printf("hortifruti\n");
 		break;
 	case 2:
-		printf("\nbebidas");
+		printf("bebidas\n");
 		break;
 	case 3:
-		printf("\nmercearia");
+		printf("mercearia\n");
 		break;
 	case 4:
-		printf("\nhigiene");
+		printf("higiene\n");
 		break;
 	case 5:
-		printf("\nacougue");
+		printf("acougue\n");
 		break;
 	case 6:
-		printf("\nlaticineos");
+		printf("laticineos\n");
 		break;
 	case 7:
-		printf("\nfrios");
+		printf("frios\n");
 		break;
 	case 8:
-		printf("\ndoces");
+		printf("doces\n");
 		break;
 	case 9:
-		printf("\npadaria");
+		printf("padaria\n");
 		break;
 	}
 }
@@ -164,6 +172,36 @@ void buscaN(Item *item, int qt) {
 	for(int i=0; i<qt; i++) {
 		if(strcmp(p, item[i].nome) == 0) {
 			apresenta(item,i);
+		}
+	}
+}
+
+void buscaS(Item *item, int qt) {
+    int s;
+
+    printf("\n\n1-hortifruti; 2-bebidas; 3-mercearia; 4-higiene; 5-acougue; 6-laticineos; 7-frios; 8-doces; 9-padaria");
+	printf("\nO setor do produto, dentre as opcoes acima: ");
+	scanf("%d", &s);
+	
+	for(int i=0; i<qt; i++) {
+		if(item[i].setor == s) {
+			apresenta(item,i);
+		}
+	}
+}
+
+void venda(Item *item, int qt) {
+	char p[15];
+	int qv;
+
+	printf("\nDigite o nome do produto que foi vendido: ");
+	scanf(" %[^\n]", p);
+    printf("\nA quantidade que foi vendida: ");
+	scanf("%d", &qv);	
+
+	for(int i=0; i<qt; i++) {
+		if(strcmp(p, item[i].nome) == 0) {
+			item[i].quant = item[i].quant - qv;
 		}
 	}
 }
