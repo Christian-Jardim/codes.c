@@ -17,6 +17,7 @@ int insere(Item *item, int qt);
 void apresenta(Item *item, int qt);
 void apresenta1(Item *item, int qt);
 void apresentaT(Item *item, int qt);
+int balanco(int qt, Item *item);
 void buscaN(Item *item, int qt);
 void buscaS(Item *item, int qt);
 void venda(Item *item, int qt);
@@ -46,7 +47,7 @@ int main() {
 			apresentaT(item,qt);
 			break;
 		case 5:
-
+			balanco(qt, item);
 			break;
 		case 6:
 			buscaN(item,qt);
@@ -56,6 +57,12 @@ int main() {
 			break;
 		case 8:
 			venda(item,qt);
+			break;
+		case 9:
+			carrega(item,qt);
+			break;
+		case 10:
+			gera(item,qt);
 			break;
 		case 11:
 			free(item);
@@ -163,7 +170,18 @@ void apresentaT(Item *item, int qt) {
 	}
 }
 
-void buscaN(Item *item, int qt) {
+void balanco(int qt, Item *item) {
+	int i=0 qtp;
+
+	if(i<qt) {
+		qtp+=item[i].quant;
+	}
+	else {
+		return qtp
+	}
+}
+
+int buscaN(Item *item, int qt) {
 	char p[15];
 
 	printf("\nDigite o nome do produto: ");
@@ -204,4 +222,9 @@ void venda(Item *item, int qt) {
 			item[i].quant = item[i].quant - qv;
 		}
 	}
+}
+
+void gera(int qt, Item *item) {
+	FILE *arq;
+	fopen()
 }
