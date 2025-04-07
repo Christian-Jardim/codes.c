@@ -21,6 +21,8 @@ int balanco(int qt, Item *item);
 void buscaN(Item *item, int qt);
 void buscaS(Item *item, int qt);
 void venda(Item *item, int qt);
+int carrega(Item *item);
+int gera(int qt, Item *item);
 
 int main() {
 	int cont,op,qt=0;
@@ -59,10 +61,10 @@ int main() {
 			venda(item,qt);
 			break;
 		case 9:
-			carrega(item,qt);
+		    carrega(item);
 			break;
 		case 10:
-			gera(item,qt);
+			gera(qt,item);
 			break;
 		case 11:
 			free(item);
@@ -104,8 +106,8 @@ int insere(Item *item, int qt) {
 	printf("\nO sua quantidade: ");
 	scanf("%d", &item[qt].quant);
 	printf("\nO seu valor: ");
-    scanf("%f", &item[qt].valor);
-    printf("1-hortifruti; 2-bebidas; 3-mercearia; 4-higiene; 5-acougue; 6-laticineos; 7-frios; 8-doces;9-padaria");
+	scanf("%f", &item[qt].valor);
+	printf("\n1-hortifruti; 2-bebidas; 3-mercearia; 4-higiene; 5-acougue; 6-laticineos; 7-frios; 8-doces;9-padaria");
 	printf("\nO seu setor, dentre as opcoes acima: ");
 	scanf("%d", &s);
 	item[qt].setor = s;
@@ -116,9 +118,9 @@ int insere(Item *item, int qt) {
 
 void apresenta(Item *item, int i) {
 	printf("\nProduto: %s", item[i].nome);
-    printf("\nQuantidade: %d", item[i].quant);
-    printf("\nValor: %.2f", item[i].valor);
-    printf("\nSetor: ");
+	printf("\nQuantidade: %d", item[i].quant);
+	printf("\nValor: %.2f", item[i].valor);
+	printf("\nSetor: ");
 	switch(item[i].setor) {
 	case 1:
 		printf("hortifruti\n");
@@ -170,18 +172,18 @@ void apresentaT(Item *item, int qt) {
 	}
 }
 
-void balanco(int qt, Item *item) {
-	int i=0 qtp;
+int balanco(int qt, Item *item) {
+	int i=0,qtp;
 
 	if(i<qt) {
 		qtp+=item[i].quant;
 	}
 	else {
-		return qtp
+		return qtp;
 	}
 }
 
-int buscaN(Item *item, int qt) {
+void buscaN(Item *item, int qt) {
 	char p[15];
 
 	printf("\nDigite o nome do produto: ");
@@ -195,12 +197,12 @@ int buscaN(Item *item, int qt) {
 }
 
 void buscaS(Item *item, int qt) {
-    int s;
+	int s;
 
-    printf("\n\n1-hortifruti; 2-bebidas; 3-mercearia; 4-higiene; 5-acougue; 6-laticineos; 7-frios; 8-doces; 9-padaria");
+	printf("\n\n1-hortifruti; 2-bebidas; 3-mercearia; 4-higiene; 5-acougue; 6-laticineos; 7-frios; 8-doces; 9-padaria");
 	printf("\nO setor do produto, dentre as opcoes acima: ");
 	scanf("%d", &s);
-	
+
 	for(int i=0; i<qt; i++) {
 		if(item[i].setor == s) {
 			apresenta(item,i);
@@ -214,8 +216,8 @@ void venda(Item *item, int qt) {
 
 	printf("\nDigite o nome do produto que foi vendido: ");
 	scanf(" %[^\n]", p);
-    printf("\nA quantidade que foi vendida: ");
-	scanf("%d", &qv);	
+	printf("\nA quantidade que foi vendida: ");
+	scanf("%d", &qv);
 
 	for(int i=0; i<qt; i++) {
 		if(strcmp(p, item[i].nome) == 0) {
@@ -224,7 +226,38 @@ void venda(Item *item, int qt) {
 	}
 }
 
-void gera(int qt, Item *item) {
+int carrega(Item *item) {
+    int qt;
+    FILE *arq;
+    if((arq=fopen("armazem_aed.txt", "r"))==NULL) {
+		return 1;
+	}
+	else {
+		fscanf(arq,"%d\n",&qt);
+		for(int i=0; i<qt; i++) {
+			fscanf(arq,"%s\n",&item[i].nome);
+			fscanf(arq,"%d\n",&item[i].setor);
+			fscanf(arq,"%d\n",&item[i].quant);
+			fscanf(arq,"%.2f\n",&item[i].valor);
+		}
+	}
+	fclose(arq);
+	return qt;
+}
+
+int gera(int qt, Item *item) {
 	FILE *arq;
-	fopen()
+	if((arq=fopen("armazem_aed.txt", "w"))==NULL) {
+		return 1;
+	}
+	else {
+		fprintf(arq,"%d\n",qt);
+		for(int i=0; i<qt; i++) {
+			fprintf(arq,"%s\n",item[i].nome);
+			fprintf(arq,"%d\n",item[i].setor);
+			fprintf(arq,"%d\n",item[i].quant);
+			fprintf(arq,"%.2f\n",item[i].valor);
+		}
+	}
+	fclose(arq);
 }
