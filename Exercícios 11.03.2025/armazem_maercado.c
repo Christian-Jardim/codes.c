@@ -227,7 +227,7 @@ void venda(Item *item, int qt) {
 }
 
 int carrega(Item *item) {
-    int qt;
+    int qt,s;
     FILE *arq;
     if((arq=fopen("armazem_aed.txt", "r"))==NULL) {
 		return 1;
@@ -235,10 +235,11 @@ int carrega(Item *item) {
 	else {
 		fscanf(arq,"%d\n",&qt);
 		for(int i=0; i<qt; i++) {
-			fscanf(arq,"%s\n",&item[i].nome);
-			fscanf(arq,"%d\n",&item[i].setor);
+			fscanf(arq,"%s\n",item[i].nome);
+			fscanf(arq,"%d\n",&s);
+			item[i].setor = s;
 			fscanf(arq,"%d\n",&item[i].quant);
-			fscanf(arq,"%.2f\n",&item[i].valor);
+			fscanf(arq,"%f\n",&item[i].valor);
 		}
 	}
 	fclose(arq);
