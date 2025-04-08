@@ -17,7 +17,7 @@ int insere(Item *item, int qt, int cont);
 void apresenta(Item *item, int qt);
 void apresenta1(Item *item, int qt);
 void apresentaT(Item *item, int qt);
-int balanco(int i, int qt, Item *item, int qp);
+float balanco(int i, int qt, Item *item, int qp);
 void buscaN(Item *item, int qt);
 void buscaS(Item *item, int qt);
 void venda(Item *item, int qt);
@@ -67,17 +67,18 @@ int main() {
 			break;
 		case 10:
 			gera(qt,item);
+			return 0;
 			break;
 		case 11:
-		    	cola(qt,item)
+		    cola(qt,item);
 			break;
 		case 12:
-		    	free(item);
+		    free(item);
 			break;
 		default:
 			printf("\nOpcao invalida");
 		}
-	} while(op != 11);
+	} while(op != 12);
 	return 0;
 }
 
@@ -184,15 +185,15 @@ void apresentaT(Item *item, int qt) {
 	}
 }
 
-int balanco(int i, int qt, Item *item, int qp) {
+float balanco(int i, int qt, Item *item, int qp) {
 
 	if(i<qt) {
-		qp+=item[i].quant;
+		qp+=item[i].quant*item[i].valor;
 		i++;
 		balanco(i, qt, item, qp);
 	}
 	else {
-		printf("%d",qp);
+		printf("\n%d",qp);
 		return qp;
 	}
 }
@@ -277,9 +278,7 @@ int gera(int qt, Item *item) {
 		}
 	}
 	fclose(arq);
-	return 1;
 }
-
 
 int cola(int qt, Item *item) {
 	FILE *arq = fopen("armazem_aed.txt", "a");
@@ -297,5 +296,4 @@ int cola(int qt, Item *item) {
 		}
 	}
 	fclose(arq);
-	return 1;
 }
