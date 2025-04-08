@@ -22,14 +22,15 @@ void apresentaT(Item *item, int qt) {
         }
 }
 
-int balanco(int qt, Item *item) {
-        int i=0,qtp;
+int balanco(int i, int qt, Item *item, int qp) {
 
         if(i<qt) {
-                qtp+=item[i].quant;
+                qp+=item[i].quant;
+											i++;
+											balanco(i,qt,item,qp)
         }
         else {
-                return qtp;
+                return qp;
         }
 }
 
