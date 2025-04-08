@@ -230,7 +230,7 @@ int carrega(Item *item) {
     int qt,s;
     FILE *arq;
     if((arq=fopen("armazem_aed.txt", "r"))==NULL) {
-		return 1;
+		printf("oi");
 	}
 	else {
 		fscanf(arq,"%d\n",&qt);
@@ -249,7 +249,7 @@ int carrega(Item *item) {
 int gera(int qt, Item *item) {
 	FILE *arq;
 	if((arq=fopen("armazem_aed.txt", "w"))==NULL) {
-		return 1;
+		printf("oi");
 	}
 	else {
 		fprintf(arq,"%d\n",qt);
