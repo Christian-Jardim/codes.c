@@ -35,7 +35,7 @@ int main() {
 			venda(item,qt);
 			break;
 		case 9:
-		    carrega(item);
+     qt = carrega(item);
 			break;
 		case 10:
 			gera(qt,item);
@@ -43,6 +43,7 @@ int main() {
 		case 11:
 			free(item);
 			return 0;
+			break;
 		}
 	} while(op != 11);
 }
