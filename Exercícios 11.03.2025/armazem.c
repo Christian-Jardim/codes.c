@@ -17,7 +17,7 @@ int insere(Item *item, int qt, int cont);
 void apresenta(Item *item, int qt);
 void apresenta1(Item *item, int qt);
 void apresentaT(Item *item, int qt);
-float balanco(int i, int qt, Item *item, int qp);
+float balanco(int i, int qt, Item *item, int vt);
 void buscaN(Item *item, int qt);
 void buscaS(Item *item, int qt);
 void venda(Item *item, int qt);
@@ -185,15 +185,15 @@ void apresentaT(Item *item, int qt) {
 	}
 }
 
-float balanco(int i, int qt, Item *item, int qp) {
+float balanco(int i, int qt, Item *item, int vt) {
 
 	if(i<qt) {
-		qp+=item[i].quant*item[i].valor;
+		vt+=item[i].quant*item[i].valor;
 		i++;
-		balanco(i, qt, item, qp);
+		balanco(i, qt, item, vt);
 	}
 	else {
-		printf("\n%d",qp);
+		printf("\nO estoque vale: R$%d",qp);
 		return qp;
 	}
 }
