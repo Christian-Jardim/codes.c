@@ -12,8 +12,8 @@ typedef struct {
 } Item;
 
 void menu();
-Item* realocar(Item *item);
-int insere(Item *item, int qt);
+int realocar(Item *item);
+int insere(Item *item, int qt, int cont);
 void apresenta(Item *item, int qt);
 void apresenta1(Item *item, int qt);
 void apresentaT(Item *item, int qt);
@@ -37,10 +37,10 @@ int main() {
 		scanf("%d", &op);
 		switch(op) {
 		case 1:
-			item = realocar(item);
+			cont = realocar(item);
 			break;
 		case 2:
-			qt = insere(item,qt);
+			qt = insere(item,qt,cont);
 			break;
 		case 3:
 			apresenta1(item,qt);
@@ -88,33 +88,37 @@ void menu() {
 	printf("\n11 - Sair");
 }
 
-Item *realocar(Item *item) {
+int realocar(Item *item) {
 	int mp;
 
 	printf("\nInsira quantos elementos a mais serao cadastrados: ");
 	scanf("%d", &mp);
-
+    mp++;
 	item = (Item*)realloc(item,sizeof(Item*) * mp);
-
-	return item;
+	return mp;
 }
 
-int insere(Item *item, int qt) {
+int insere(Item *item, int qt, int cont) {
 	int s;
+	if(qt == cont || qt > cont) {
+		printf("\nEspaco insuficiente, aloque mais espaco.\n");
+		return 1;
+	}
 
-	printf("\nDigite o nome do produto: ");
-	scanf(" %[^\n]", item[qt].nome);
-	printf("\nO sua quantidade: ");
-	scanf("%d", &item[qt].quant);
-	printf("\nO seu valor: ");
-	scanf("%f", &item[qt].valor);
-	printf("\n1-hortifruti; 2-bebidas; 3-mercearia; 4-higiene; 5-acougue; 6-laticineos; 7-frios; 8-doces;9-padaria");
-	printf("\nO seu setor, dentre as opcoes acima: ");
-	scanf("%d", &s);
-	item[qt].setor = s;
-
-	qt++;
-	return qt;
+	else {
+		printf("\nDigite o nome do produto: ");
+		scanf(" %[^\n]", item[qt].nome);
+		printf("\nO sua quantidade: ");
+		scanf("%d", &item[qt].quant);
+		printf("\nO seu valor: ");
+		scanf("%f", &item[qt].valor);
+		printf("\n1-hortifruti; 2-bebidas; 3-mercearia; 4-higiene; 5-acougue; 6-laticineos; 7-frios; 8-doces;9-padaria");
+		printf("\nO seu setor, dentre as opcoes acima: ");
+		scanf("%d", &s);
+		item[qt].setor = s;
+		qt++;
+		return qt;
+	}
 }
 
 void apresenta(Item *item, int i) {
@@ -174,14 +178,14 @@ void apresentaT(Item *item, int qt) {
 }
 
 int balanco(int i, int qt, Item *item, int qp) {
-    
+
 	if(i<qt) {
 		qp+=item[i].quant;
 		i++;
 		balanco(i, qt, item, qp);
 	}
 	else {
-	    printf("%d",qp);
+		printf("%d",qp);
 		return qp;
 	}
 }
