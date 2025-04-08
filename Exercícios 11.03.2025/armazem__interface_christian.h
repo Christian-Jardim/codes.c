@@ -13,7 +13,7 @@ int insere(Item *item, int qt);
 void apresenta(Item *item, int qt);
 void apresenta1(Item *item, int qt);
 void apresentaT(Item *item, int qt);
-int balanco(int qt, Item *item);
+int balanco(int i, int qt, Item *item, int qp);
 void buscaN(Item *item, int qt);
 void buscaS(Item *item, int qt);
 void venda(Item *item, int qt);
