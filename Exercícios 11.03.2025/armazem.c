@@ -12,7 +12,7 @@ typedef struct {
 } Item;
 
 void menu();
-int realocar(Item *item);
+Item *realocar(Item *item);
 int insere(Item *item, int qt, int cont);
 void apresenta(Item *item, int qt);
 void apresenta1(Item *item, int qt);
@@ -37,7 +37,8 @@ int main() {
 		scanf("%d", &op);
 		switch(op) {
 		case 1:
-			cont = realocar(item);
+			item = realocar(item);
+			cont++;
 			break;
 		case 2:
 			qt = insere(item,qt,cont);
@@ -49,7 +50,7 @@ int main() {
 			apresentaT(item,qt);
 			break;
 		case 5:
-			balanco(0, qt, item,0);
+			balanco(0,qt,item,0);
 			break;
 		case 6:
 			buscaN(item,qt);
@@ -67,11 +68,13 @@ int main() {
 			gera(qt,item);
 			break;
 		case 11:
-			free(item);
-			return 0;
+		    	free(item);
 			break;
+		default:
+			printf("\nOpcao invalida");
 		}
 	} while(op != 11);
+	return 0;
 }
 
 void menu() {
@@ -88,23 +91,23 @@ void menu() {
 	printf("\n11 - Sair");
 }
 
-int realocar(Item *item) {
+Item *realocar(Item *item) {
 	int mp;
 
 	printf("\nInsira quantos elementos a mais serao cadastrados: ");
 	scanf("%d", &mp);
-    mp++;
-	item = (Item*)realloc(item,sizeof(Item*) * mp);
-	return mp;
+	mp+=1;
+	Item *itens = (Item*)realloc(item,sizeof(Item) * mp);
+	return itens;
 }
 
 int insere(Item *item, int qt, int cont) {
 	int s;
+
 	if(qt == cont || qt > cont) {
 		printf("\nEspaco insuficiente, aloque mais espaco.\n");
 		return 1;
 	}
-
 	else {
 		printf("\nDigite o nome do produto: ");
 		scanf(" %[^\n]", item[qt].nome);
@@ -235,9 +238,10 @@ void venda(Item *item, int qt) {
 
 int carrega(Item *item) {
 	int qt,s;
-	FILE *arq;
-	if((arq=fopen("armazem_aed.txt", "r"))==NULL) {
-		printf("oi");
+	FILE *arq = fopen("armazem_aed.txt", "r");
+	if(arq == NULL) {
+		printf("Erro ao carregar o arquivo");
+		return 1;
 	}
 	else {
 		fscanf(arq,"%d\n",&qt);
@@ -254,9 +258,10 @@ int carrega(Item *item) {
 }
 
 int gera(int qt, Item *item) {
-	FILE *arq;
-	if((arq=fopen("armazem_aed.txt", "w"))==NULL) {
-		printf("oi");
+	FILE *arq = fopen("armazem_aed.txt", "w");
+	if(arq == NULL) {
+		printf("Erro ao gerar o arquivo");
+		return 1;
 	}
 	else {
 		fprintf(arq,"%d\n",qt);
@@ -268,4 +273,5 @@ int gera(int qt, Item *item) {
 		}
 	}
 	fclose(arq);
+	return 1;
 }
