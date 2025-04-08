@@ -23,7 +23,7 @@ int main() {
 			apresentaT(item,qt);
 			break;
 		case 5:
-			balanco(qt, item);
+			balanco(0, qt, item, 0);
 			break;
 		case 6:
 			buscaN(item,qt);
