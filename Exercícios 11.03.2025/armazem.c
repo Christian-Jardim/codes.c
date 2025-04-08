@@ -67,7 +67,6 @@ int main() {
 			break;
 		case 10:
 			gera(qt,item);
-			return 0;
 			break;
 		case 11:
 		    cola(qt,item);
