@@ -20,4 +20,3 @@ void buscaS(Item *item, int qt);
 void venda(Item *item, int qt);
 int carrega(Item *item);
 int gera(int qt, Item *item);
-int cola(int qt, Item *item);
