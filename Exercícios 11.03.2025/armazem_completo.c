@@ -23,7 +23,6 @@ void buscaS(Item *item, int qt);
 void venda(Item *item, int qt);
 int carrega(Item *item);
 int gera(int qt, Item *item);
-int cola(int qt, Item *item);
 
 int main() {
 	int cont,op,qt=0;
@@ -69,10 +68,7 @@ int main() {
 			gera(qt,item);
 			break;
 		case 11:
-		    cola(qt,item);
-			break;
-		case 12:
-		    free(item);
+		   	free(item);
 			break;
 		default:
 			printf("\nOpcao invalida");
@@ -265,24 +261,6 @@ int gera(int qt, Item *item) {
 	FILE *arq = fopen("armazem_aed.txt", "w");
 	if(arq == NULL) {
 		printf("Erro ao gerar o arquivo");
-		return 1;
-	}
-	else {
-		fprintf(arq,"%d\n",qt);
-		for(int i=0; i<qt; i++) {
-			fprintf(arq,"%s\n",item[i].nome);
-			fprintf(arq,"%d\n",item[i].setor);
-			fprintf(arq,"%d\n",item[i].quant);
-			fprintf(arq,"%.2f\n",item[i].valor);
-		}
-	}
-	fclose(arq);
-}
-
-int cola(int qt, Item *item) {
-	FILE *arq = fopen("armazem_aed.txt", "a");
-	if(arq == NULL) {
-		printf("Erro ao abrir o arquivo");
 		return 1;
 	}
 	else {
