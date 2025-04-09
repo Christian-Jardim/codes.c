@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include "stdiac.h"
 
 int main() {
 	int cont,op,qt=0;
