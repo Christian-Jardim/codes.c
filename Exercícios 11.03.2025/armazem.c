@@ -47,14 +47,11 @@ int main() {
 			gera(qt,item);
 			break;
 		case 11:
-		    cola(qt,item);
-			break;
-		case 12:
 		    free(item);
 			break;
 		default:
 			printf("\nOpcao invalida");
 		}
-	} while(op != 12);
+	} while(op != 11);
 	return 0;
 }
