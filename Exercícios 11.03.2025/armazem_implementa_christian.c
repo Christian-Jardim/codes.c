@@ -14,8 +14,7 @@ void menu() {
 	printf("\n8 - Venda");
 	printf("\n9 - Carregar por arquivo");
 	printf("\n10 - Gerar arquivo");
-	printf("\n11 - Adicionar ao arquivo");
-	printf("\n12 - Sair");
+	printf("\n11 - Sair");
 }
 
 Item *realocar(Item *item) {
@@ -187,24 +186,6 @@ int gera(int qt, Item *item) {
 	FILE *arq = fopen("armazem_aed.txt", "w");
 	if(arq == NULL) {
 		printf("Erro ao gerar o arquivo");
-		return 1;
-	}
-	else {
-		fprintf(arq,"%d\n",qt);
-		for(int i=0; i<qt; i++) {
-			fprintf(arq,"%s\n",item[i].nome);
-			fprintf(arq,"%d\n",item[i].setor);
-			fprintf(arq,"%d\n",item[i].quant);
-			fprintf(arq,"%.2f\n",item[i].valor);
-		}
-	}
-	fclose(arq);
-}
-
-int cola(int qt, Item *item) {
-	FILE *arq = fopen("armazem_aed.txt", "a");
-	if(arq == NULL) {
-		printf("Erro ao abrir o arquivo");
 		return 1;
 	}
 	else {
