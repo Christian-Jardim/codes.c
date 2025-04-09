@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "stdiacj.h"
 
 void menu() {
 	printf("\n1 - Escolher quantos produtos a mais serao cadastrados");
