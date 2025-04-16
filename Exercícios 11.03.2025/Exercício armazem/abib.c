@@ -114,7 +114,7 @@ float balanco(int i, int qt, Item *item, int vt) {
 		balanco(i, qt, item, vt);
 	}
 	else {
-		printf("\nO estoque vale: R$%d",qp);
+		printf("\nO estoque vale: R$%d",vt);
 	}
 }
 
