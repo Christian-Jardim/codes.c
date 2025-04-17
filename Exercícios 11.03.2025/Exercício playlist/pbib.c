@@ -49,3 +49,14 @@ void insere(desc *descritor, nodo *nodo, musica *musica){
     printf("Informe um codigo para identificar essa musica: ");
     scanf("%d",&nodo->info->codigo);
 }
+
+void mostra_playlist(desc *p) {
+    nodo *aux=p->primeiro_nodo;
+    do {
+       printf("\nTitulo da musica: %s",aux->info->titulo);
+       printf("\nNome do artista: %s",aux->info->artista);
+       printf("\nLetra da musica: %s",aux->info->letra);
+       printf("\nCodigo da musica: %d",aux->info->codigo);
+       printf("\nQuantidade de reproducoes: %d",aux->info->execucoes);
+    } while(aux->prox!=NULL);
+}
