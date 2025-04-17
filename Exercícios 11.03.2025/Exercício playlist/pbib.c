@@ -58,5 +58,6 @@ void mostra_playlist(desc *p) {
        printf("\nLetra da musica: %s",aux->info->letra);
        printf("\nCodigo da musica: %d",aux->info->codigo);
        printf("\nQuantidade de reproducoes: %d",aux->info->execucoes);
+       aux=aux->prox;
     } while(aux->prox!=NULL);
 }
