@@ -25,3 +25,4 @@ desc *cria_desc();
 nodo *cria_nodo();
 musica *cria_espaco();
 void insere(desc *p, nodo *n, musica *s);
+void mostra_playlist(desc *p);
