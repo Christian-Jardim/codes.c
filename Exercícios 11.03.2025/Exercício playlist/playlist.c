@@ -25,7 +25,7 @@ int main() {
 
 			break;
 		case 5:
-
+			mostra_playlist(playlist);
 			break;
 		case 6:
 			printf("\nVoce saiu!");
