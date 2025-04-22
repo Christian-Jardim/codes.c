@@ -36,13 +36,21 @@ void insere(char *title, char *artist, char *lyrics, int *code, int *posicao) {
 	musica *song=cria_espaco();
 	
 	if(descritor->primeiro_nodo == NULL || posicao == 0) {
-		nodo->prox=descritor->primeiro_nodo;
-		nodo->info=musica;
-		descritor->primeiro_nodo=nodo;
+		node->prox=descritor->primeiro_nodo;
+		node->info=musica;
+		descritor->primeiro_nodo=node;
 		descritor->tamanho++;
 	}
-else{
-nodo *aux=p->primeiro_nodo;
+	else{
+		nodo *aux=p->primeiro_nodo;
+		int indice=0;
+		if(descritor->tamanho < posicao) {
+			while(aux->prox != NULL) {
+				aux=aux->prox;
+			}
+			aux->prox = node;
+			node->info = song;
+			
 }
 
 void mostra_playlist(desc *p) {
