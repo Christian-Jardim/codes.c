@@ -45,12 +45,12 @@ void insere(char *title, char *artist, char *lyrics, int *code, int *posicao) {
 
 void mostra_playlist(desc *p) {
 	nodo *aux=p->primeiro_nodo;
-	do {
+	while(aux != NULL) {
 		printf("\nTitulo da musica: %s",aux->info->titulo);
 		printf("\nNome do artista: %s",aux->info->artista);
 		printf("\nLetra da musica: %s",aux->info->letra);
 		printf("\nCodigo da musica: %d",aux->info->codigo);
 		printf("\nQuantidade de reproducoes: %d",aux->info->execucoes);
 		aux=aux->prox;
-	} while(aux->prox!=NULL);
+	}
 }
