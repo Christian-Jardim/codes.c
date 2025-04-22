@@ -13,51 +13,44 @@ void menu() {
 }
 
 desc *cria_desc(void) {
-    desc *nDesc = (desc *)malloc(sizeof(desc));
+	desc *nDesc = (desc *)malloc(sizeof(desc));
 	nDesc->tamanho = 0;
 	nDesc->primeiro_nodo=NULL;
 	return nDesc;
 }
 
 nodo *cria_nodo(void) {
-    nodo *nNodo=(nodo *)malloc(sizeof(nodo));
+	nodo *nNodo=(nodo *)malloc(sizeof(nodo));
 	nNodo->prox=NULL;
 	nNodo->info=NULL;
-	return nNodo;  
+	return nNodo;
 }
 
 musica *cria_espaco(void) {
-    musica *nMusica = (musica*)malloc(sizeof(musica));
-	return nMusica;   
+	musica *nMusica = (musica*)malloc(sizeof(musica));
+	return nMusica;
 }
 
-void insere(desc *descritor, nodo *nodo, musica *musica){
-    nodo->prox=descritor->primeiro_nodo;
-    nodo->info=musica;
-    descritor->primeiro_nodo=nodo;
-    descritor->tamanho++;
-    
-    printf("Digite o titulo da musica: ");
-    scanf(" %[^\n]",nodo->info->titulo);
-    setbuf(stdin,NULL);
-    printf("Digite o nome do artista: ");
-    scanf(" %[^\n]",nodo->info->artista);
-    setbuf(stdin,NULL);
-    printf("Digite a letra da musica: ");
-    scanf(" %[^\n]",nodo->info->letra);
-    setbuf(stdin,NULL);
-    printf("Informe um codigo para identificar essa musica: ");
-    scanf("%d",&nodo->info->codigo);
+void insere(char *title, char *artist, char *lyrics, int *code, int *posicao) {
+	nodo *node=cria_nodo(); 
+	musica *song=cria_espaco();
+	
+	if(descritor->primeiro_nodo == NULL || posicao == 0) {
+		nodo->prox=descritor->primeiro_nodo;
+		nodo->info=musica;
+		descritor->primeiro_nodo=nodo;
+		descritor->tamanho++;
+	}
 }
 
 void mostra_playlist(desc *p) {
-    nodo *aux=p->primeiro_nodo;
-    do {
-       printf("\nTitulo da musica: %s",aux->info->titulo);
-       printf("\nNome do artista: %s",aux->info->artista);
-       printf("\nLetra da musica: %s",aux->info->letra);
-       printf("\nCodigo da musica: %d",aux->info->codigo);
-       printf("\nQuantidade de reproducoes: %d",aux->info->execucoes);
-       aux=aux->prox;
-    } while(aux->prox!=NULL);
+	nodo *aux=p->primeiro_nodo;
+	do {
+		printf("\nTitulo da musica: %s",aux->info->titulo);
+		printf("\nNome do artista: %s",aux->info->artista);
+		printf("\nLetra da musica: %s",aux->info->letra);
+		printf("\nCodigo da musica: %d",aux->info->codigo);
+		printf("\nQuantidade de reproducoes: %d",aux->info->execucoes);
+		aux=aux->prox;
+	} while(aux->prox!=NULL);
 }
