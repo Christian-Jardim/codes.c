@@ -24,5 +24,5 @@ void menu();
 desc *cria_desc();
 nodo *cria_nodo();
 musica *cria_espaco();
-void insere(desc *p, nodo *n, musica *s);
+void insere(char *title, char *artist, char *lyrics, int *code, int *posicao);
 void mostra_playlist(desc *p);
