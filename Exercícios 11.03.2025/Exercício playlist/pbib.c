@@ -41,6 +41,8 @@ void insere(char *title, char *artist, char *lyrics, int *code, int *posicao) {
 		descritor->primeiro_nodo=nodo;
 		descritor->tamanho++;
 	}
+else{
+nodo *aux=p->primeiro_nodo;
 }
 
 void mostra_playlist(desc *p) {
