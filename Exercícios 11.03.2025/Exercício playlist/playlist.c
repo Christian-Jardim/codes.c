@@ -15,8 +15,8 @@ int main() {
 			desc *playlist=cria_desc();
 			break;
 		case 2:
-		    printf("Digite a posicao na qual quer inserir: ");
-		    scanf("%d",&posicao);
+		    	printf("Digite a posicao na qual quer inserir: ");
+		    	scanf("%d",&posicao);
 			printf("Digite o titulo da musica: ");
 			scanf(" %[^\n]",title);
 			setbuf(stdin,NULL);
