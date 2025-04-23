@@ -31,29 +31,29 @@ musica *cria_espaco(void) {
 	return nMusica;
 }
 
-void insere(char *title, char *artist, char *lyrics, int *code, int *posicao) {
+void insere(desc *playlist, char *title, char *artist, char *lyrics, int *code, int *posicao) {
 	nodo *node=cria_nodo(); 
 	musica *song=cria_espaco();
 	
-	if(descritor->primeiro_nodo == NULL || posicao == 0) {
-		node->prox=descritor->primeiro_nodo;
-		node->info=musica;
-		descritor->primeiro_nodo=node;
-		descritor->tamanho++;
+	if(playlist->primeiro_nodo == NULL || posicao == 0) {
+		node->prox=playlist->primeiro_nodo;
+		node->info=song;
+		playlist->primeiro_nodo=node;
+		playlist->tamanho++;
 	}
 	else{
-		nodo *aux=p->primeiro_nodo;
+		nodo *aux=playlist->primeiro_nodo;
 		int indice=0;
-		if(descritor->tamanho < posicao) {
+		if(playlist->tamanho < *posicao) {
 			while(aux->prox != NULL) {
 				aux=aux->prox;
 			}
 			aux->prox = node;
 			node->info = song;
-			song->titulo = title;
-			song->artista = artist;
-			song->letra = lyrics;
-			song->codigo = code;
+			song.titulo = title;
+			song.artista = artist;
+			song.letra = lyrics;
+			song.codigo = *code;
 		}
 	}
 }
