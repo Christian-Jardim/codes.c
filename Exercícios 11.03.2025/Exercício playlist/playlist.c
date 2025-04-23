@@ -4,7 +4,7 @@
 #include "playcj.h"
 
 int main() {
-	int op,posicao;
+	int op,posicao,code;
 	char title[256], artist[256], lyrics [256];
 	do {
 		menu();
@@ -15,8 +15,8 @@ int main() {
 			desc *playlist=cria_desc();
 			break;
 		case 2:
-		    	printf("Digite a posicao na qual quer inserir: ");
-		    	scanf("%d",&posicao);
+		    printf("Digite a posicao na qual quer inserir: ");
+		    scanf("%d",&posicao);
 			printf("Digite o titulo da musica: ");
 			scanf(" %[^\n]",title);
 			setbuf(stdin,NULL);
@@ -28,7 +28,7 @@ int main() {
 			setbuf(stdin,NULL);
 			printf("Informe um codigo para identificar essa musica: ");
 			scanf("%d",&code);
-			insere(title,artist,lyrics,&code,&posicao);
+			insere(playlist,title,artist,lyrics,&code,&posicao);
 			break;
 		case 3:
 
