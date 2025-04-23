@@ -124,12 +124,16 @@ void insere(desc *playlist, char *title, char *artist, char *lyrics, int *code, 
 			}
 			aux->prox = node;
 			node->info = song;
-			song.titulo = title;
-			song.artista = artist;
-			song.letra = lyrics;
-			song.codigo = *code;
+			strcpy(song->titulo, title);
+			strcpy(song->artista, artist);
+			strcpy(song->letra, lyrics);
+			song->codigo = *code;
 		}
 	}
+}
+
+void insere(desc *playlist, char *title, char *artist, char *lyrics, int *code, int *posicao) {
+
 }
 
 void mostra_playlist(desc *p) {
