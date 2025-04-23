@@ -61,7 +61,7 @@ int main() {
 			setbuf(stdin,NULL);
 			printf("Informe um codigo para identificar essa musica: ");
 			scanf("%d",&code);
-		valida_posicao(playlist,node,song,title,artist,lyrics,&code,&posicao);
+			valida_posicao(playlist,node,song,title,artist,lyrics,&code,&posicao);
 			break;
 		case 3:
 
@@ -110,7 +110,7 @@ musica *cria_espaco(void) {
 	return nMusica;
 }
 
-void valida_posicao(desc *playlist, char *title, char *artist, char *lyrics, int *code, int *posicao) {
+void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao) {
 	
 	if(playlist->primeiro_nodo == NULL || posicao == 0) {
 		node->prox=playlist->primeiro_nodo;
@@ -135,7 +135,7 @@ void valida_posicao(desc *playlist, char *title, char *artist, char *lyrics, int
 	}
 }
 
-void insere(nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao) {
+void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao) {
 
 }
 
