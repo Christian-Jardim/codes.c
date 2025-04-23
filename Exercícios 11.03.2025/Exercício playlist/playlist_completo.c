@@ -28,8 +28,10 @@ void menu();
 desc *cria_desc();
 nodo *cria_nodo();
 musica *cria_espaco();
-void insere(desc *playlist, char *title, char *artist, char *lyrics, int *code, int *posicao);
-void mostra_playlist(desc *p); 
+void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao);
+void mostra_playlist(desc *p);
+void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao);
+void mostra_playlist(desc *p);  
 
 int main() {
 	int op,posicao,code;
@@ -43,8 +45,11 @@ int main() {
 			desc *playlist=cria_desc();
 			break;
 		case 2:
-		   	printf("Digite a posicao na qual quer inserir: ");
-		   	scanf("%d",&posicao);
+			nodo *node=cria_nodo(); 
+			musica *song=cria_espaco(); 
+
+			printf("Digite a posicao na qual quer inserir: ");
+			scanf("%d",&posicao);
 			printf("Digite o titulo da musica: ");
 			scanf(" %[^\n]",title);
 			setbuf(stdin,NULL);
@@ -56,7 +61,7 @@ int main() {
 			setbuf(stdin,NULL);
 			printf("Informe um codigo para identificar essa musica: ");
 			scanf("%d",&code);
-			insere(playlist,title,artist,lyrics,&code,&posicao);
+		valida_posicao(playlist,node,song,title,artist,lyrics,&code,&posicao);
 			break;
 		case 3:
 
@@ -105,9 +110,7 @@ musica *cria_espaco(void) {
 	return nMusica;
 }
 
-void insere(desc *playlist, char *title, char *artist, char *lyrics, int *code, int *posicao) {
-	nodo *node=cria_nodo(); 
-	musica *song=cria_espaco();
+void valida_posicao(desc *playlist, char *title, char *artist, char *lyrics, int *code, int *posicao) {
 	
 	if(playlist->primeiro_nodo == NULL || posicao == 0) {
 		node->prox=playlist->primeiro_nodo;
@@ -132,7 +135,7 @@ void insere(desc *playlist, char *title, char *artist, char *lyrics, int *code, 
 	}
 }
 
-void insere(desc *playlist, char *title, char *artist, char *lyrics, int *code, int *posicao) {
+void insere(nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao) {
 
 }
 
