@@ -50,7 +50,12 @@ void insere(char *title, char *artist, char *lyrics, int *code, int *posicao) {
 			}
 			aux->prox = node;
 			node->info = song;
-			
+			song->titulo = title;
+			song->artista = artist;
+			song->letra = lyrics;
+			song->codigo = code;
+		}
+	}
 }
 
 void mostra_playlist(desc *p) {
