@@ -145,6 +145,7 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 
 void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
   node->info = song;
+	node->prox = NULL;
 	strcpy(song->titulo, title);
 	strcpy(song->artista, artist);
 	strcpy(song->letra, lyrics);
