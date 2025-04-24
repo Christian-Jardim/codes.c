@@ -127,6 +127,19 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 			aux->prox = node;
 			insere(playlist,node,song,title,artist,lyrics,code);
 		}
+		else{
+			nodo *anterior;
+			while(aux != NULL){
+				anterior = aux;
+				aux = aux->prox; 
+				indice++;
+				if(indice == posicao){
+					node->prox	= aux;
+					anterior->prox = node;
+					insere(playlist,node,song,title,artist,lyrics,code);
+				}
+			}
+		}
 	}
 }
 
