@@ -31,6 +31,7 @@ musica *cria_espaco();
 void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao);
 void mostra_playlist(desc *p);
 void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
+nodo *remover(desc *playlist, int code);
 void mostra_playlist(desc *p);
 
 int main() {
@@ -149,6 +150,33 @@ void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist,
 	song->codigo = *code; 
 	playlist->tamanho++; 
 }
+
+nodo *remover(desc *playlist, int code) {
+    if(playlist->primeiro_nodo == NULL) {
+        printf("Playlist vazia!");
+        return NULL;
+    }
+    else {
+        nodo *aux = playlist->primeiro_nodo;
+        if(*code == 0) {
+            playlist->primeiro_nodo = playlist->primeiro_nodo->prox;
+            playlist->tamanho--;
+            return aux;
+        }
+        else {
+            while(aux != NULL) {
+               anterior = aux;
+               aux = aux->prox;
+               if(aux->info->codigo == *code) {
+                   anterior->prox = aux->prox;
+                   playlist->tamanho--;
+                   return aux;
+               }
+            }
+        }
+    }
+}
+
 
 void mostra_playlist(desc *p) {
 	nodo *aux=p->primeiro_nodo;
