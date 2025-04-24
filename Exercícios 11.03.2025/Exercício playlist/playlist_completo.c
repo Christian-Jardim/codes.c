@@ -62,7 +62,9 @@ int main() {
 			valida_posicao(playlist,node,song,title,artist,lyrics,&code,&posicao);
 			break;
 		case 3:
-
+			printf("\Digite o código da musica que quer remover: ");
+			scanf("%d",&code);
+			remover(playlist,&code);
 			break;
 		case 4:
 
