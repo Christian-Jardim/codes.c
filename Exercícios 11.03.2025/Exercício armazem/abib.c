@@ -20,7 +20,7 @@ void menu() {
 Item *realocar(Item *item) {
 	int mp;
 
-	printf("\nInsira quantos elementos a mais serao cadastrados: ");
+	printf("\n\nInsira quantos elementos a mais serao cadastrados: ");
 	scanf("%d", &mp);
 	mp+=1;
 	Item *itens = (Item*)realloc(item,sizeof(Item) * mp);
@@ -30,14 +30,14 @@ Item *realocar(Item *item) {
 int insere(Item *item, int qt, int cont) {
 	int s;
 
-	if(qt == cont || qt > cont) {
+	if(qt == cont) {
 		printf("\nEspaco insuficiente, aloque mais espaco.\n");
 		return 1;
 	}
 	else {
 		printf("\nDigite o nome do produto: ");
-		scanf(" %[^\n]", item[qt].nome);
-		printf("\nO sua quantidade: ");
+		scanf("%[^\n]s",item[qt].nome);
+		printf("\nA sua quantidade: ");
 		scanf("%d", &item[qt].quant);
 		printf("\nO seu valor: ");
 		scanf("%f", &item[qt].valor);
@@ -163,7 +163,10 @@ void venda(Item *item, int qt) {
 
 int carrega(Item *item) {
 	int qt,s;
-	FILE *arq = fopen("armazem_aed.txt", "r");
+  char arquivo[20];
+  printf("Nome do arquivo: ");
+  scanf("%s", arquivo);
+	FILE *arq = fopen(arquivo, "r");
 	if(arq == NULL) {
 		printf("Erro ao carregar o arquivo");
 		return 1;
@@ -171,19 +174,23 @@ int carrega(Item *item) {
 	else {
 		fscanf(arq,"%d\n",&qt);
 		for(int i=0; i<qt; i++) {
-			fscanf(arq,"%s\n",item[i].nome);
+			fscanf(arq,"%[^\n]s\n",item[i].nome);
 			fscanf(arq,"%d\n",&s);
 			item[i].setor = s;
 			fscanf(arq,"%d\n",&item[i].quant);
 			fscanf(arq,"%f\n",&item[i].valor);
 		}
+		printf("\nArquivo carregado: %s\n",arquivo);
 	}
 	fclose(arq);
 	return qt;
 }
 
 int gera(int qt, Item *item) {
-	FILE *arq = fopen("armazem_aed.txt", "w");
+  char arquivo[20];
+  printf("\nNome do arquivo: ");
+  scanf("%s", arquivo);
+	FILE *arq = fopen(arquivo, "w");
 	if(arq == NULL) {
 		printf("Erro ao gerar o arquivo");
 		return 1;
@@ -197,5 +204,6 @@ int gera(int qt, Item *item) {
 			fprintf(arq,"%.2f\n",item[i].valor);
 		}
 	}
+	printf("\nArquivo gerado: %s\n",arquivo);
 	fclose(arq);
 }
