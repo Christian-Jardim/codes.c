@@ -2,6 +2,10 @@
 // 16/03/2025
 // Christian de Vargas Jardim (christianjardim.aluno@unipampa.edu.br)
 
+// Lista 1
+// 16/03/2025
+// Christian de Vargas Jardim (christianjardim.aluno@unipampa.edu.br)
+
 #include <stdio.h>
 #include <stdlib.h>
 
