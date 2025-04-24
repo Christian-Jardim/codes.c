@@ -51,14 +51,11 @@ int main() {
 			printf("Digite a posicao na qual quer inserir: ");
 			scanf("%d",&posicao);
 			printf("Digite o titulo da musica: ");
-			scanf(" %[^\n]",title);
-			setbuf(stdin,NULL);
+			scanf(" %[^\n]s",title);
 			printf("Digite o nome do artista: ");
-			scanf(" %[^\n]",artist);
-			setbuf(stdin,NULL);
+			scanf(" %[^\n]s",artist);
 			printf("Digite a letra da musica: ");
-			scanf(" %[^\n]",lyrics);
-			setbuf(stdin,NULL);
+			scanf(" %[^\n]s",lyrics);
 			printf("Informe um codigo para identificar essa musica: ");
 			scanf("%d",&code);
 			valida_posicao(playlist,node,song,title,artist,lyrics,&code,&posicao);
@@ -160,8 +157,7 @@ void mostra_playlist(desc *p) {
 		printf("\nNome do artista: %s",aux->info->artista);
 		printf("\nLetra da musica: %s",aux->info->letra);
 		printf("\nCodigo da musica: %d",aux->info->codigo);
-		printf("\nQuantidade de reproducoes: %d",aux->info->execucoes);
-		printf("\n");
+		printf("\nQuantidade de reproducoes: %d\n",aux->info->execucoes);
 		aux=aux->prox;
 	}
 }
