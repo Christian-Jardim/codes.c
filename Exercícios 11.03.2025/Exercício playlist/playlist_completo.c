@@ -30,8 +30,8 @@ nodo *cria_nodo();
 musica *cria_espaco();
 void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao);
 void mostra_playlist(desc *p);
-void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao);
-void mostra_playlist(desc *p);  
+void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
+void mostra_playlist(desc *p);
 
 int main() {
 	int op,posicao,code;
@@ -45,8 +45,8 @@ int main() {
 			desc *playlist=cria_desc();
 			break;
 		case 2:
-			nodo *node=cria_nodo(); 
-			musica *song=cria_espaco(); 
+			nodo *node=cria_nodo();
+			musica *song=cria_espaco();
 
 			printf("Digite a posicao na qual quer inserir: ");
 			scanf("%d",&posicao);
@@ -111,14 +111,13 @@ musica *cria_espaco(void) {
 }
 
 void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao) {
-	
+
 	if(playlist->primeiro_nodo == NULL || posicao == 0) {
 		node->prox=playlist->primeiro_nodo;
-		node->info=song;
 		playlist->primeiro_nodo=node;
-		playlist->tamanho++;
+		insere(playlist,node,song,title,artist,lyrics,code);
 	}
-	else{
+	else {
 		nodo *aux=playlist->primeiro_nodo;
 		int indice=0;
 		if(playlist->tamanho < *posicao) {
@@ -126,17 +125,18 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 				aux=aux->prox;
 			}
 			aux->prox = node;
-			node->info = song;
-			strcpy(song->titulo, title);
-			strcpy(song->artista, artist);
-			strcpy(song->letra, lyrics);
-			song->codigo = *code;
+			insere(playlist,node,song,title,artist,lyrics,code);
 		}
 	}
 }
 
-void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao) {
-
+void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
+  node->info = song;
+	strcpy(song->titulo, title);
+	strcpy(song->artista, artist);
+	strcpy(song->letra, lyrics);
+	song->codigo = *code; 
+	playlist->tamanho++; 
 }
 
 void mostra_playlist(desc *p) {
