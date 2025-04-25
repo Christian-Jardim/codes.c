@@ -209,3 +209,7 @@ void mostra_musica(nodo *aux) {
 	printf("\nCodigo da musica: %d",aux->info->codigo);
 	printf("\nQuantidade de reproducoes: %d\n",aux->info->execucoes);
 }
+
+void libera(desc *playlist) {
+
+}
