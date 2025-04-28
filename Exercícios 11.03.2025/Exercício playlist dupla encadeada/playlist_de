@@ -17,7 +17,7 @@ struct musica {
 struct nodo {
         nodo *prox;
         musica *info;
-				nodo *ant;
+nodo *ant;
 };
 
 struct desc {
@@ -135,12 +135,12 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
                         insere(playlist,node,song,title,artist,lyrics,code);
                 } else {
                         while(aux != NULL) {
-                                aux = aux->prox;
-                                indice++;
                                 if(indice == *posicao) {
-                                        node->prox = aux;
-                                        aux->ant->prox = node;
+                               		node->prox = aux;
+                               		aux->ant->prox = node;
                                         insere(playlist,node,song,title,artist,lyrics,code);
+aux = aux->prox;
+indice++;
                                 }
                         }
                 }
