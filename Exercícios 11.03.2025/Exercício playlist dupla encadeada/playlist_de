@@ -107,7 +107,7 @@ desc *cria_desc(void) {
 nodo *cria_nodo(void) {
         nodo *nNodo=(nodo *)malloc(sizeof(nodo));
         nNodo->prox=NULL;
-				nNodo->ant=NULL;
+	nNodo->ant=NULL;
         nNodo->info=NULL;
         return nNodo;
 }
@@ -139,8 +139,8 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
                                		node->prox = aux;
                                		aux->ant->prox = node;
                                         insere(playlist,node,song,title,artist,lyrics,code);
-aux = aux->prox;
-indice++;
+				aux = aux->prox;
+				indice++;
                                 }
                         }
                 }
@@ -173,17 +173,16 @@ nodo *remover_encontra(desc *playlist, int code1, int code2) {
                         }
                 } else {
                         while (aux->prox != NULL) {
-                                nodo *anterior = aux;
-                                aux = aux->prox;
                                 if (aux->info->codigo == code1) {
                                         if (code2 == 0) {
-                                                anterior->prox = aux->prox;
+                                                aux->ant->prox = aux->prox;
                                                 playlist->tamanho--;
                                                 return aux;
                                         } else {
                                                 return aux;
                                         }
                                 }
+				aux = aux->prox;
                         }
                         return NULL;
                 }
@@ -221,9 +220,8 @@ void libera(desc *playlist) {
         nodo *aux = playlist->primeiro_nodo;
         nodo *anterior;
         while(aux != NULL) {
-                anterior = aux;
                 aux = aux->prox;
-                free(anterior);
+                free(aux->ant);
         }
         free(aux);
         playlist->primeiro_nodo = NULL;
