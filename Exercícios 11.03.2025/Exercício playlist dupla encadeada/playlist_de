@@ -17,6 +17,7 @@ struct musica {
 struct nodo {
         nodo *prox;
         musica *info;
+				nodo *ant;
 };
 
 struct desc {
@@ -106,6 +107,7 @@ desc *cria_desc(void) {
 nodo *cria_nodo(void) {
         nodo *nNodo=(nodo *)malloc(sizeof(nodo));
         nNodo->prox=NULL;
+				nNodo->ant=NULL;
         nNodo->info=NULL;
         return nNodo;
 }
@@ -119,6 +121,7 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 
         if(playlist->primeiro_nodo == NULL || posicao == 0) {
                 node->prox=playlist->primeiro_nodo;
+								node->ant=playlist->primeiro_nodo;
                 playlist->primeiro_nodo=node;
                 insere(playlist,node,song,title,artist,lyrics,code);
         } else {
@@ -131,14 +134,12 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
                         aux->prox = node;
                         insere(playlist,node,song,title,artist,lyrics,code);
                 } else {
-                        nodo *anterior;
                         while(aux != NULL) {
-                                anterior = aux;
                                 aux = aux->prox;
                                 indice++;
                                 if(indice == *posicao) {
                                         node->prox = aux;
-                                        anterior->prox = node;
+                                        aux->prox = node;
                                         insere(playlist,node,song,title,artist,lyrics,code);
                                 }
                         }
