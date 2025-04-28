@@ -139,7 +139,7 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
                                 indice++;
                                 if(indice == *posicao) {
                                         node->prox = aux;
-                                        aux->prox = node;
+                                        aux->ant->prox = node;
                                         insere(playlist,node,song,title,artist,lyrics,code);
                                 }
                         }
