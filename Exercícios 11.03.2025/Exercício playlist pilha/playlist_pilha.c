@@ -33,7 +33,7 @@ void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist,
 nodo *remover_encontra(desc *playlist, int code1, int code2);
 void mostra_musica(nodo *aux);
 void mostra_playlist(desc *p);
-void toca();
+void toca(nodo *aux);
 void libera(desc *playlist);
 
 int main() {
