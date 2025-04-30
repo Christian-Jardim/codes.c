@@ -137,10 +137,13 @@ void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist,
 }
 
 nodo *remove(desc *playlist, int code1, int code2) {
-    playlist->primeiro_nodo = playlist->primeiro_nodo->prox;
-		playlist->tamanho--;
-		return aux;
+	nodo *aux = playlist->primeiro_nodo;
+	playlist->primeiro_nodo = playlist->primeiro_nodo->prox;
+	playlist->tamanho--;
+	return aux;
 }
+
+
 
 void mostra_playlist(desc *p) {
 	nodo *aux=p->primeiro_nodo;
