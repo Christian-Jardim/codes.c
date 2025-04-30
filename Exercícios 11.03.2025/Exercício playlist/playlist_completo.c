@@ -33,6 +33,7 @@ void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist,
 nodo *remover_encontra(desc *playlist, int code1, int code2);
 void mostra_musica(nodo *aux);
 void mostra_playlist(desc *p);
+void toca(nodo *aux);
 void libera(desc *playlist);
 
 int main() {
@@ -213,6 +214,17 @@ void mostra_musica(nodo *aux) {
 		printf("\nLetra da musica: %s",aux->info->letra);
 		printf("\nCodigo da musica: %d",aux->info->codigo);
 		printf("\nQuantidade de reproducoes: %d\n",aux->info->execucoes);
+	}
+}
+
+void toca(nodo *aux) {
+	if(aux == NULL) {
+		printf("Nao ha musica com este codigo na playlist!\n");
+	} else {
+		printf("\nTitulo da musica: %s",aux->info->titulo);
+		printf("\nNome do artista: %s",aux->info->artista);
+		printf("\nLetra da musica: %s",aux->info->letra);
+		aux->info->execucoes++;
 	}
 }
 
