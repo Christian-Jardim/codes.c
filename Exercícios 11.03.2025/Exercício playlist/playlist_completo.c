@@ -80,7 +80,7 @@ int main() {
 		case 6:
 			printf("\nDigite o codigo da musica que quer trocar: ");
 			scanf("%d",&code);
-			mostra_musica(encontrar(playlist,code));
+			mostra_musica(remover_encontra(playlist,code,1));
 			break;
 		case 7:
 			libera(playlist);
@@ -89,7 +89,7 @@ int main() {
 		default:
 			printf("\nOpcao invalida\n");
 		}
-	} while(op != 6);
+	} while(op != 7);
 	return 0;
 }
 
@@ -155,7 +155,6 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 
 void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
 	node->info = song;
-	node->prox = NULL;
 	strcpy(song->titulo, title);
 	strcpy(song->artista, artist);
 	strcpy(song->letra, lyrics);
