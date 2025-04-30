@@ -78,9 +78,14 @@ int main() {
 			mostra_playlist(playlist);
 			break;
 		case 6:
+			printf("\nDigite o codigo da musica que quer trocar: ");
+			scanf("%d",&code);
+			mostra_musica(encontrar(playlist,code));
+			break;
+		case 7:
 			libera(playlist);
 			printf("\nVoce saiu!");
-			break;;
+			break;
 		default:
 			printf("\nOpcao invalida\n");
 		}
@@ -94,7 +99,8 @@ void menu() {
 	printf("\n3 - Remover uma musica");
 	printf("\n4 - Encontrar uma musica");
 	printf("\n5 - Mostrar toda a playlist");
-	printf("\n6 - Sair");
+	printf("\n6 - Tocar musica");
+	printf("\n7 - Sair");
 }
 
 desc *cria_desc(void) {
