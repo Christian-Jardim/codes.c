@@ -28,9 +28,10 @@ void menu();
 desc *cria_desc();
 nodo *cria_nodo();
 musica *cria_espaco();
-void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
+void cria_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
 void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
-nodo *remover_encontra(desc *playlist, int code1, int code2);
+nodo *remover(desc *playlist);
+nodo *encontrar(desc *playlist, int code);
 void mostra_musica(nodo *aux);
 void mostra_playlist(desc *p);
 void toca(nodo *aux);
@@ -50,8 +51,8 @@ int main() {
 		case 2:
 			nodo *node=cria_nodo();
 			musica *song=cria_espaco();
-      
-			printf("Digite o titulo da musica: ");
+
+			printf("\nDigite o titulo da musica: ");
 			scanf(" %[^\n]s",title);
 			printf("Digite o nome do artista: ");
 			scanf(" %[^\n]s",artist);
@@ -59,25 +60,23 @@ int main() {
 			scanf(" %[^\n]s",lyrics);
 			printf("Informe um codigo para identificar essa musica: ");
 			scanf("%d",&code);
-			valida_posicao(playlist,node,song,title,artist,lyrics,&code);
+			cria_posicao(playlist,node,song,title,artist,lyrics,&code);
 			break;
 		case 3:
-			printf("\nDigite o codigo da musica que quer remover: ");
-			scanf("%d",&code);
-			nodo *removido = remover_encontra(playlist,code,0);
+			remover(playlist);
 			break;
 		case 4:
 			printf("\nDigite o codigo da musica que quer encontrar: ");
 			scanf("%d",&code);
-			mostra_musica(remover_encontra(playlist,code,1));
+			mostra_musica(encontrar(playlist,code));
 			break;
 		case 5:
 			mostra_playlist(playlist);
 			break;
-    		case 6:
+		case 6:
 			printf("\nDigite o codigo da musica que quer trocar: ");
 			scanf("%d",&code);
-			mostra_musica(remover_encontra(playlist,code,1));
+			mostra_musica(encontrar(playlist,code));
 			break;
 		case 7:
 			libera(playlist);
@@ -86,7 +85,7 @@ int main() {
 		default:
 			printf("\nOpcao invalida\n");
 		}
-	} while(op != 7;
+	} while(op != 7);
 	return 0;
 }
 
@@ -97,7 +96,7 @@ void menu() {
 	printf("\n4 - Encontrar uma musica");
 	printf("\n5 - Mostrar toda a playlist");
 	printf("\n6 - Tocar uma musica");
-  printf("\n7 - Sair");
+	printf("\n7 - Sair");
 }
 
 desc *cria_desc(void) {
@@ -119,7 +118,7 @@ musica *cria_espaco(void) {
 	return nMusica;
 }
 
-void cria_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code, int *posicao) {
+void cria_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
 	node->prox=playlist->primeiro_nodo;
 	playlist->primeiro_nodo=node;
 	insere(playlist,node,song,title,artist,lyrics,code);
@@ -127,7 +126,6 @@ void cria_posicao(desc *playlist, nodo *node, musica *song, char *title, char *a
 
 void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
 	node->info = song;
-	node->prox = NULL;
 	strcpy(song->titulo, title);
 	strcpy(song->artista, artist);
 	strcpy(song->letra, lyrics);
@@ -135,7 +133,7 @@ void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist,
 	playlist->tamanho++;
 }
 
-nodo *remove(desc *playlist, int code1, int code2) {
+nodo *remover(desc *playlist) {
 	nodo *aux = playlist->primeiro_nodo;
 	playlist->primeiro_nodo = playlist->primeiro_nodo->prox;
 	playlist->tamanho--;
@@ -143,7 +141,7 @@ nodo *remove(desc *playlist, int code1, int code2) {
 }
 
 
-encontra(desc *playlist, int code) {
+nodo *encontrar(desc *playlist, int code) {
 	if (playlist->primeiro_nodo == NULL) {
 		printf("\nPlaylist vazia!\n");
 		return NULL;
@@ -155,7 +153,7 @@ encontra(desc *playlist, int code) {
 			while (aux->prox != NULL) {
 				nodo *anterior = aux;
 				aux = aux->prox;
-				if (aux->info->codigo == code1) {
+				if (aux->info->codigo == code) {
 					return aux;
 				}
 			}
@@ -190,7 +188,7 @@ void mostra_musica(nodo *aux) {
 
 void toca(nodo *aux) {
 	if(aux == NULL) {
-			printf("Nao ha musica com este codigo na playlist!\n");
+		printf("Nao ha musica com este codigo na playlist!\n");
 	} else {
 		printf("\nTitulo da musica: %s",aux->info->titulo);
 		printf("\nNome do artista: %s",aux->info->artista);
