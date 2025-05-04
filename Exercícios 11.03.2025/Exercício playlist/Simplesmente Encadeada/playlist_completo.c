@@ -189,8 +189,6 @@ nodo *remover_encontra(desc *playlist, int code1, int code2) {
 	}
 }
 
-
-
 void mostra_playlist(desc *p) {
 	nodo *aux=p->primeiro_nodo;
 	if(aux == NULL) {
@@ -214,6 +212,17 @@ void mostra_musica(nodo *aux) {
 		printf("\nCodigo da musica: %d",aux->info->codigo);
 		printf("\nQuantidade de reproducoes: %d\n",aux->info->execucoes);
 	}
+}
+
+void toca(nodo *aux) {
+        if(aux == NULL) {
+                printf("Nao ha musica com este codigo na playlist!\n");
+        } else {
+                printf("\nTitulo da musica: %s",aux->info->titulo);
+                printf("\nNome do artista: %s",aux->info->artista);
+                printf("\nLetra da musica: %s",aux->info->letra);
+                aux->info->execucoes++;
+        }
 }
 
 void libera(desc *playlist) {
