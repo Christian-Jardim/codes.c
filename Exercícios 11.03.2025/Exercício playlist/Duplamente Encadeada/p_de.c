@@ -35,6 +35,7 @@ nodo *remover_encontra(desc *playlist, int code1, int code2);
 void mostra_musica(nodo *aux);
 void mostra_playlist(desc *p);
 void toca(nodo *aux);
+void ver_tamanho(desc *playlist);
 void libera(desc *playlist);
 
 int main() {
@@ -167,7 +168,7 @@ void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist,
 	playlist->tamanho++;
 }
 
-nodo *remover_encontra(desc *playlist, int code1, int code2) {
+nodo *remover_encontra(desc *playlist, int code1, int code2, int code3, int code4) {
 	if (playlist->primeiro_nodo == NULL) {
 		printf("\nPlaylist vazia!\n");
 		return NULL;
@@ -235,6 +236,10 @@ void toca(nodo *aux) {
 		printf("\nLetra da musica: %s",aux->info->letra);
 		aux->info->execucoes++;
 	}
+}
+
+void ver_tamanho(desc *playlist) {
+        printf("\nA playlist possui %d musica(s)!\n",playlist->tamanho);
 }
 
 void libera(desc *playlist) {
