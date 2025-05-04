@@ -24,7 +24,6 @@ desc *cria_desc(void) {
 nodo *cria_nodo(void) {
 	nodo *nNodo=(nodo *)malloc(sizeof(nodo));
 	nNodo->prox=NULL;
-	nNodo->ant=NULL;
 	nNodo->info=NULL;
 	return nNodo;
 }
@@ -46,27 +45,23 @@ void valida_code(desc *playlist, int *code) {
 void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int code, int posicao) {
 	if(playlist->primeiro_nodo == NULL || posicao == 0) {
 		node->prox = playlist->primeiro_nodo;
-		node->ant = NULL;
 		playlist->primeiro_nodo = node;
 		insere(playlist,node,song,title,artist,lyrics,code);
 	} else {
-		nodo *aux=playlist->primeiro_nodo;
-		int indice=0;
-		if(playlist->tamanho <= posicao) {
+		nodo *aux = playlist->primeiro_nodo;
+		if(playlist->tamanho < posicao) {
 			while(aux->prox != NULL) {
-				aux=aux->prox;
+				aux = aux->prox;
 			}
 			node->prox = aux->prox;
-			node->ant = aux;
 			aux->prox = node;
 			insere(playlist,node,song,title,artist,lyrics,code);
 		} else {
-			while(aux != NULL) {
+			int indice = 1;
+			while(aux->prox != NULL) {
 				if(indice == posicao) {
-					node->prox = aux;
-					node->ant = aux->ant;
-					aux->ant->prox = node;
-					aux->ant = node;
+					node->prox = aux->prox;
+					aux->prox = node;
 					insere(playlist,node,song,title,artist,lyrics,code);
 					return;
 				}
@@ -106,9 +101,9 @@ nodo *remover_encontra(desc *playlist, int code, int sinal1, int sinal2, int sin
 			}
 		} else {
 			while (aux->prox != NULL) {
-				if (aux->info->codigo == code) {
+				if (aux->prox->info->codigo == code) {
 					if (sinal1 == 0) {
-						aux->ant->prox = aux->prox;
+						aux->prox = aux->prox->prox;
 						playlist->tamanho--;
 						return aux;
 					} else {
