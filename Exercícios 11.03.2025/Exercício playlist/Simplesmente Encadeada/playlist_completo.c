@@ -17,6 +17,7 @@ struct musica {
 struct nodo {
 	nodo *prox;
 	musica *info;
+	nodo *ant;
 };
 
 struct desc {
@@ -28,12 +29,12 @@ void menu();
 desc *cria_desc();
 nodo *cria_nodo();
 musica *cria_espaco();
+void valida_code(desc * playlist, int *code);
 void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int code, int posicao);
-void valida_code(desc *playlist, int *code);
 void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int code);
-nodo *remover_encontra(desc *playlist, int code1, int code2, int code3, int code4);
-void mostra_musica(nodo *aux, int code);
-void mostra_playlist(desc *playlist);
+nodo *remover_encontra(desc *playlist, int code, int sinal1, int sinal2, int sinal3);
+void mostra_musica(nodo *aux, int sinal);
+void mostra_playlist(desc *p);
 void toca(nodo *aux);
 void ver_tamanho(desc *playlist);
 void libera(desc *playlist);
@@ -52,7 +53,6 @@ int main() {
 		case 2:
 			nodo *node=cria_nodo();
 			musica *song=cria_espaco();
-
 			printf("\nDigite a posicao na qual quer inserir: ");
 			scanf("%d",&posicao);
 			printf("Digite o titulo da musica: ");
@@ -80,7 +80,7 @@ int main() {
 			mostra_playlist(playlist);
 			break;
 		case 6:
-			printf("Digite o codigo da musica que quer tocar: ");
+			printf("\nDigite o codigo da musica que quer tocar: ");
 			scanf("%d",&code);
 			toca(remover_encontra(playlist,code,1,1,1));
 			break;
@@ -119,6 +119,7 @@ desc *cria_desc(void) {
 nodo *cria_nodo(void) {
 	nodo *nNodo=(nodo *)malloc(sizeof(nodo));
 	nNodo->prox=NULL;
+	nNodo->ant=NULL;
 	nNodo->info=NULL;
 	return nNodo;
 }
@@ -140,29 +141,32 @@ void valida_code(desc *playlist, int *code) {
 void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int code, int posicao) {
 	if(playlist->primeiro_nodo == NULL || posicao == 0) {
 		node->prox = playlist->primeiro_nodo;
+		node->ant = NULL;
 		playlist->primeiro_nodo = node;
 		insere(playlist,node,song,title,artist,lyrics,code);
 	} else {
 		nodo *aux=playlist->primeiro_nodo;
-		if(playlist->tamanho < posicao) {
+		int indice=0;
+		if(playlist->tamanho <= posicao) {
 			while(aux->prox != NULL) {
 				aux=aux->prox;
 			}
 			node->prox = aux->prox;
+			node->ant = aux;
 			aux->prox = node;
 			insere(playlist,node,song,title,artist,lyrics,code);
 		} else {
-			nodo *anterior;
-			int indice = 0;
 			while(aux != NULL) {
-				anterior = aux;
-				aux = aux->prox;
-				indice++;
 				if(indice == posicao) {
 					node->prox = aux;
-					anterior->prox = node;
+					node->ant = aux->ant;
+					aux->ant->prox = node;
+					aux->ant = node;
 					insere(playlist,node,song,title,artist,lyrics,code);
+					return;
 				}
+				aux = aux->prox;
+				indice++;
 			}
 		}
 	}
@@ -177,9 +181,9 @@ void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist,
 	playlist->tamanho++;
 }
 
-nodo *remover_encontra(desc *playlist, int code1, int code2, int code3, int code4) {
+nodo *remover_encontra(desc *playlist, int code, int sinal1, int sinal2, int sinal3) {
 	if (playlist->primeiro_nodo == NULL) {
-		if(code4 == 0) {
+		if(sinal3 == 0) {
 			return NULL;
 		} else {
 			printf("\nPlaylis vazia!\n");
@@ -187,8 +191,8 @@ nodo *remover_encontra(desc *playlist, int code1, int code2, int code3, int code
 		}
 	} else {
 		nodo *aux = playlist->primeiro_nodo;
-		if (aux->info->codigo == code1) {
-			if (code2 == 0) {
+		if (aux->info->codigo == code) {
+			if (sinal1 == 0) {
 				playlist->primeiro_nodo = aux->prox;
 				playlist->tamanho--;
 				return aux;
@@ -197,19 +201,18 @@ nodo *remover_encontra(desc *playlist, int code1, int code2, int code3, int code
 			}
 		} else {
 			while (aux->prox != NULL) {
-				nodo *anterior = aux;
-				aux = aux->prox;
-				if (aux->info->codigo == code1) {
-					if (code2 == 0) {
-						anterior->prox = aux->prox;
+				if (aux->info->codigo == code) {
+					if (sinal1 == 0) {
+						aux->ant->prox = aux->prox;
 						playlist->tamanho--;
 						return aux;
 					} else {
 						return aux;
 					}
 				}
+				aux = aux->prox;
 			}
-			if(code3 != 0) {
+			if(sinal2 != 0) {
 				printf("\nNao ha musica com esse codigo na playlist!\n");
 			}
 			return NULL;
@@ -217,8 +220,8 @@ nodo *remover_encontra(desc *playlist, int code1, int code2, int code3, int code
 	}
 }
 
-void mostra_playlist(desc *playlist) {
-	nodo *aux=playlist->primeiro_nodo;
+void mostra_playlist(desc *p) {
+	nodo *aux=p->primeiro_nodo;
 	if(aux == NULL) {
 		printf("\nPlaylist vazia!\n");
 	} else {
@@ -229,14 +232,15 @@ void mostra_playlist(desc *playlist) {
 	}
 }
 
-void mostra_musica(nodo *aux, int code) {
+void mostra_musica(nodo *aux, int sinal) {
 	if(aux == NULL) {
-		return;
-	} else {
+		printf("Nao ha musica com este codigo na playlist!\n");
+	}
+	else {
 		printf("\nTitulo da musica: %s",aux->info->titulo);
 		printf("\nNome do artista: %s",aux->info->artista);
 		printf("\nLetra da musica: %s\n",aux->info->letra);
-		if(code != 1) {
+		if(sinal != 1) {
 			printf("\nCodigo da musica: %d",aux->info->codigo);
 			printf("\nQuantidade de reproducoes: %d\n",aux->info->execucoes);
 		}
@@ -260,9 +264,8 @@ void libera(desc *playlist) {
 	nodo *aux = playlist->primeiro_nodo;
 	nodo *anterior;
 	while(aux != NULL) {
-		anterior = aux;
 		aux = aux->prox;
-		free(anterior);
+		free(aux->ant);
 	}
 	free(aux);
 	playlist->primeiro_nodo = NULL;
