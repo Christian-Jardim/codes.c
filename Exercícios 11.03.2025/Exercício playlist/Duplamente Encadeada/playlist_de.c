@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "playlist.h"
+#include "playlist_de.h"
 
 int main() {
 	int op,posicao,code;
