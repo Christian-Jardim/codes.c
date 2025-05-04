@@ -139,7 +139,7 @@ void mostra_musica(nodo *aux, int sinal) {
 	else {
 		printf("\nTitulo da musica: %s",aux->info->titulo);
 		printf("\nNome do artista: %s",aux->info->artista);
-		printf("\nLetra da musica: %s\n",aux->info->letra);
+		printf("\nLetra da musica: %s",aux->info->letra);
 		if(sinal != 1) {
 			printf("\nCodigo da musica: %d",aux->info->codigo);
 			printf("\nQuantidade de reproducoes: %d\n",aux->info->execucoes);
