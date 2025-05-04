@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "playlist_de.h"
+#include "playlist.h"
 
 void menu() {
 	printf("\n1 - Criar uma playlist");
