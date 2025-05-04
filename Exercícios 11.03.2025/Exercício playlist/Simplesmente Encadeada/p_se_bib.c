@@ -49,7 +49,7 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 		insere(playlist,node,song,title,artist,lyrics,code);
 	} else {
 		nodo *aux = playlist->primeiro_nodo;
-		if(playlist->tamanho < posicao) {
+		if(playlist->tamanho <= posicao) {
 			while(aux->prox != NULL) {
 				aux = aux->prox;
 			}
@@ -58,16 +58,16 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 			insere(playlist,node,song,title,artist,lyrics,code);
 		} else {
 			int indice = 1;
-			do {
-				if(indice == posicao) {
+			while(aux->prox != NULL) {
+				if(aux->prox->info->codigo == posicao) {
 					node->prox = aux->prox;
 					aux->prox = node;
 					insere(playlist,node,song,title,artist,lyrics,code);
-					return;
+					break;
 				}
 				aux = aux->prox;
 				indice++;
-			} while(aux->prox != NULL);
+			}
 		}
 	}
 }
