@@ -164,8 +164,9 @@ void libera(desc *playlist) {
 	nodo *aux = playlist->primeiro_nodo;
 	nodo *anterior;
 	while(aux != NULL) {
+		anterior = aux;
 		aux = aux->prox;
-		free(aux->ant);
+		free(anterior);
 	}
 	free(aux);
 	playlist->primeiro_nodo = NULL;
