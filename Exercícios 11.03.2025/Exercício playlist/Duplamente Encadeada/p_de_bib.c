@@ -99,6 +99,7 @@ nodo *remover_encontra(desc *playlist, int code, int sinal1, int sinal2, int sin
 		if (aux->info->codigo == code) {
 			if (sinal1 == 0) {
 				playlist->primeiro_nodo = aux->prox;
+				aux->prox->ant = NULL;
 				playlist->tamanho--;
 				return aux;
 			} else {
@@ -109,6 +110,7 @@ nodo *remover_encontra(desc *playlist, int code, int sinal1, int sinal2, int sin
 				if (aux->info->codigo == code) {
 					if (sinal1 == 0) {
 						aux->ant->prox = aux->prox;
+						aux->prox->ant = aux->ant;
 						playlist->tamanho--;
 						return aux;
 					} else {
@@ -168,7 +170,7 @@ void ver_tamanho(desc *playlist) {
 void libera(desc *playlist) {
 	nodo *aux = playlist->primeiro_nodo;
 	nodo *anterior;
-	while(aux != NULL) {
+	while(aux->prox != NULL) {
 		aux = aux->prox;
 		free(aux->ant);
 	}
