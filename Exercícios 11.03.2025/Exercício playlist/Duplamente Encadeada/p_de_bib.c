@@ -68,7 +68,7 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 					aux->ant->prox = node;
 					aux->ant = node;
 					insere(playlist,node,song,title,artist,lyrics,code);
-					return;
+					break;
 				}
 				aux = aux->prox;
 				indice++;
@@ -85,13 +85,12 @@ void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist,
 	song->codigo = code;
 	playlist->tamanho++;
 }
-
 nodo *remover_encontra(desc *playlist, int code, int sinal1, int sinal2, int sinal3) {
 	if (playlist->primeiro_nodo == NULL) {
-		if(sinal3 == 0) {
+		if (sinal3 == 0) {
 			return NULL;
 		} else {
-			printf("\nPlaylis vazia!\n");
+			printf("\nPlaylist vazia!\n");
 			return NULL;
 		}
 	} else {
@@ -99,18 +98,22 @@ nodo *remover_encontra(desc *playlist, int code, int sinal1, int sinal2, int sin
 		if (aux->info->codigo == code) {
 			if (sinal1 == 0) {
 				playlist->primeiro_nodo = aux->prox;
-				aux->prox->ant = NULL;
+				if (aux->prox != NULL) {  // evita erro quando sC3 hC! 1 elemento
+					aux->prox->ant = NULL;
+				}
 				playlist->tamanho--;
 				return aux;
 			} else {
 				return aux;
 			}
 		} else {
-			while (aux->prox != NULL) {
+			while (aux != NULL) {
 				if (aux->info->codigo == code) {
 					if (sinal1 == 0) {
 						aux->ant->prox = aux->prox;
-						aux->prox->ant = aux->ant;
+						if (aux->prox != NULL) {
+							aux->prox->ant = aux->ant;
+						}
 						playlist->tamanho--;
 						return aux;
 					} else {
@@ -119,7 +122,7 @@ nodo *remover_encontra(desc *playlist, int code, int sinal1, int sinal2, int sin
 				}
 				aux = aux->prox;
 			}
-			if(sinal2 != 0) {
+			if (sinal2 != 0) {
 				printf("\nNao ha musica com esse codigo na playlist!\n");
 			}
 			return NULL;
