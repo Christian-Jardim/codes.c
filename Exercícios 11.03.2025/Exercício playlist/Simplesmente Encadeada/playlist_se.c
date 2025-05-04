@@ -47,6 +47,7 @@ int main() {
 			printf("\nDigite o codigo da musica que quer tocar: ");
 			scanf("%d",&code);
 			toca(remover_encontra(playlist,code,1,1,1));
+			printf("\n");
 			break;
 		case 7:
 			ver_tamanho(playlist);
