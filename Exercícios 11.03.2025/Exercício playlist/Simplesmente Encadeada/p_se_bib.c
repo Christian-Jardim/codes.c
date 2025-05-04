@@ -58,7 +58,7 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 			insere(playlist,node,song,title,artist,lyrics,code);
 		} else {
 			int indice = 1;
-			while(aux->prox != NULL) {
+			do {
 				if(indice == posicao) {
 					node->prox = aux->prox;
 					aux->prox = node;
@@ -67,7 +67,7 @@ void valida_posicao(desc *playlist, nodo *node, musica *song, char *title, char 
 				}
 				aux = aux->prox;
 				indice++;
-			}
+			} while(aux->prox != NULL);
 		}
 	}
 }
