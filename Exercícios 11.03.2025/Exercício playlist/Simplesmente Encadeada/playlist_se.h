@@ -13,7 +13,6 @@ struct musica {
 struct nodo {
 	nodo *prox;
 	musica *info;
-	nodo *ant;
 };
 
 struct desc {
