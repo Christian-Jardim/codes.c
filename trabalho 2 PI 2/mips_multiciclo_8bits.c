@@ -46,9 +46,9 @@ typedef struct pilha {
 } Pilha;
 
 void menu();
-int carrega_mem(char mem[256][17]);
-void print_mem_dat(char mem[256][17]);
-void print_mem_inst(char mem[256][17]);
+int carrega_mem(char mem[512][17]);
+void print_mem_dat(char mem[512][17]);
+void print_mem_inst(char mem[512][17]);
 void printReg(int *reg);
 
 int main() {
@@ -104,7 +104,7 @@ void menu() {
 }
 
 // carrega memoria de instrucoes a partir de um "arquivo.mem"
-int carrega_mem(char mem[256][17]) {
+int carrega_mem(char mem[512][17]) {
 	char arquivo[20];
 	// abre o arquivo em modo leitura
 	printf("Nome do arquivo: ");
@@ -137,7 +137,7 @@ int carrega_mem(char mem[256][17]) {
 }
 
 // imprime memoria de instrucoes
-void print_mem_inst(char mem[256][17]) {
+void print_mem_inst(char mem[512][17]) {
 	printf("\n############## INSTRUCOES ##############\n");
 	for (int i = 0; i < 256; i++)
 	{
@@ -147,7 +147,7 @@ void print_mem_inst(char mem[256][17]) {
 }
 
 // imprime memoria de dados
-void print_mem_dat(char mem[256][17]) {
+void print_mem_dat(char mem[512][17]) {
 	printf("\n############## DADOS ##############\n\n");
 	for(int i=256; i<512; i++) {
 		printf("[%d]. %s   ", i, mem[i]);
