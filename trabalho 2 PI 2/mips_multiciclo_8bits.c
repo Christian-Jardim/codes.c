@@ -91,17 +91,16 @@ int main() {
 
 void menu() {
 	printf("\n\n *** MENU *** \n");
-	printf("1 - Carregar memoria de instrucoes\n");
-	printf("2 - Carregar memoria de dados\n");
-	printf("3 - Imprimir memorias\n");
-	printf("4 - Imprimir banco de registradores\n");
-	printf("5 - Imprimir todo o simulador\n");
-	printf("6 - Salvar .asm\n");
-	printf("7 - Salvar .dat\n");
-	printf("8 - Executar programa\n");
-	printf("9 - Executar instrucao\n");
-	printf("10 - Volta uma instrucao\n");
-	printf("11 - Sair\n\n");
+	printf("1 - Carregar memoria");
+	printf("2 - Imprimir memoria\n");
+	printf("3 - Imprimir banco de registradores\n");
+	printf("4 - Imprimir todo o simulador\n");
+	printf("5 - Salvar .asm\n");
+	printf("6 - Salvar .dat\n");
+	printf("7 - Executar programa\n");
+	printf("8 - Executar instrucao\n");
+	printf("9 - Volta uma instrucao\n");
+	printf("10 - Sair\n\n");
 }
 
 // carrega memoria de instrucoes a partir de um "arquivo.mem"
