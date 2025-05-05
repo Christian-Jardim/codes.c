@@ -4,6 +4,7 @@
 
 #define MEM char mem[512][17] = {{'\0'}}
 #define REGISTRADOR int registrador[8] = {0}
+#define PC int pc = 0
 
 //STRUCTS e ENUMS
 typedef enum tipo {
@@ -57,7 +58,8 @@ int main() {
 	Pilha p;
 	MEM;
 	REGISTRADOR;
-	int op, resul, pc = 0;
+	PC;
+	int op,resul,est = 0;
 
 	do {
 		menu();
