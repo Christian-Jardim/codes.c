@@ -191,6 +191,7 @@ int executa_step(char mem[512][17], Instrucao *in, Decodificador *d, int *pc, in
 		switch(est) {
 		case 0:
 			empilha(p,registrador,mem, pc);
+			decodificarInstrucao(meminst[*pc], in, d);
 			break;
 		case 1:
             break;
