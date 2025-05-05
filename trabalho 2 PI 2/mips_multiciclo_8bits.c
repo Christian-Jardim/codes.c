@@ -95,10 +95,10 @@ void menu() {
 	printf("2 - Imprimir memoria\n");
 	printf("3 - Imprimir banco de registradores\n");
 	printf("4 - Imprimir todo o simulador\n");
-	printf("5 - Salvar .asm\n");
-	printf("6 - Salvar .dat\n");
-	printf("7 - Executar programa\n");
-	printf("8 - Executar instrucao\n");
+	printf("5 - Executar step\n");
+	printf("6 - Executar programa\n");
+	printf("7 - Salvar .asm\n");
+	printf("8 - Salvar .dat\n");
 	printf("9 - Volta uma instrucao\n");
 	printf("10 - Sair\n\n");
 }
@@ -138,7 +138,7 @@ int carrega_mem(char mem[256][17]) {
 
 // imprime memoria de instrucoes
 void print_mem_inst(char mem[256][17]) {
-	printf("\n############## MEMORIA DE INSTRUCOES ##############\n");
+	printf("\n############## INSTRUCOES ##############\n");
 	for (int i = 0; i < 256; i++)
 	{
 		printf("\n[%d]: %s\n", i,mem[i]);
@@ -148,7 +148,7 @@ void print_mem_inst(char mem[256][17]) {
 
 // imprime memoria de dados
 void print_mem_dat(char mem[256][17]) {
-	printf("\n############## MEMORIA DE DADOS ##############\n\n");
+	printf("\n############## DADOS ##############\n\n");
 	for(int i=256; i<512; i++) {
 		printf("[%d]. %s   ", i, mem[i]);
 		if (i % 8 == 7)
