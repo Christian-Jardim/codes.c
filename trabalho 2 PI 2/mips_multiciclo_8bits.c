@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MEM char mem[256][17] = {{'\0'}}
+#define MEM char mem[512][17] = {{'\0'}}
 #define REGISTRADOR int registrador[8] = {0}
 
 //STRUCTS e ENUMS
