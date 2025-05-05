@@ -1,0 +1,167 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MEM char mem[256][17] = {{'\0'}}
+#define REGISTRADOR int registrador[8] = {0}
+
+//STRUCTS e ENUMS
+typedef enum tipo {
+	Tipo_R=0,
+	Tipo_I=1,
+	Tipo_J=2,
+	Tipo_OUTROS=3
+} Tipo_Instrucao;
+
+typedef struct instrucao {
+	char opcode[5];
+	char rs[4];
+	char rt[4];
+	char rd[4];
+	char funct[4];
+	char imm[7];
+	char addr[8];
+} Instrucao;
+
+typedef struct decodificador {
+	int opcode;
+	int rs;
+	int rt;
+	int rd;
+	int funct;
+	int imm;
+	int addr;
+	Tipo_Instrucao tipo;
+} Decodificador;
+
+typedef struct Nodo {
+	int ra[8];
+	int mda[256];
+	int pca;
+	struct Nodo *prox;
+} Nodo;
+
+typedef struct pilha {
+	Nodo *topo;
+} Pilha;
+
+void menu();
+int carrega_mem(char mem[256][17]);
+void print_mem_dat(char mem[256][17]);
+void print_mem_inst(char mem[256][17]);
+void printReg(int *reg);
+
+int main() {
+	Instrucao in;
+	Decodificador d;
+	Pilha p;
+	MEM;
+	REGISTRADOR;
+	int op, resul, pc = 0;
+
+	do {
+		menu();
+		printf("Sua escolha: ");
+		scanf("%d", &op);
+		printf("\n");
+		switch (op) {
+		case 1:
+			carrega_mem(mem);
+			break;
+		case 2:
+			print_mem_inst(mem);
+			print_mem_dat(mem);
+			break;
+		case 3:
+			printReg(registrador);
+			break;
+		case 4:
+			print_mem_inst(mem);
+			print_mem_dat(mem);
+			printReg(registrador);
+			printf("\n\nPC: %d", pc);
+			break;
+		case 5:
+			printf("Voce saiu!!!");
+			break;
+		}
+	} while(op != 5);
+	return 0;
+}
+
+void menu() {
+	printf("\n\n *** MENU *** \n");
+	printf("1 - Carregar memoria de instrucoes\n");
+	printf("2 - Carregar memoria de dados\n");
+	printf("3 - Imprimir memorias\n");
+	printf("4 - Imprimir banco de registradores\n");
+	printf("5 - Imprimir todo o simulador\n");
+	printf("6 - Salvar .asm\n");
+	printf("7 - Salvar .dat\n");
+	printf("8 - Executar programa\n");
+	printf("9 - Executar instrucao\n");
+	printf("10 - Volta uma instrucao\n");
+	printf("11 - Sair\n\n");
+}
+
+// carrega memoria de instrucoes a partir de um "arquivo.mem"
+int carrega_mem(char mem[256][17]) {
+	char arquivo[20];
+	// abre o arquivo em modo leitura
+	printf("Nome do arquivo: ");
+	scanf("%s", arquivo);
+	FILE *arq = fopen (arquivo, "r");
+	if (!arq)
+	{
+		perror ("Erro ao abrir arquivo") ;
+		exit (1) ;
+	}
+	int i = 0;
+	char linha[20]; // Buffer para leitura
+	while (i < 256 && fgets(linha, sizeof(linha), arq)) {
+		// Remover quebras de linha e caracteres extras
+		linha[strcspn(linha, "\r\n")] = '\0';
+
+		// Ignorar linhas vazias
+		if (strlen(linha) == 0) {
+			continue;
+		}
+
+		strncpy(mem[i], linha, 16); // Copia atC) 16 caracteres
+		mem[i][16] = '\0'; // Garante terminaC'C#o de string
+		i++; // AvanC'a corretamente para a prC3xima posiC'C#o
+	}
+	while (fscanf(arq, "%s", &mem[i]) != EOF) {
+		i++;
+	}
+	fclose(arq);
+}
+
+// imprime memoria de instrucoes
+void print_mem_inst(char mem[256][17]) {
+	printf("\n############## MEMORIA DE INSTRUCOES ##############\n");
+	for (int i = 0; i < 256; i++)
+	{
+		printf("\n[%d]: %s\n", i,mem[i]);
+		printf("\n");
+	}
+}
+
+// imprime memoria de dados
+void print_mem_dat(char mem[256][17]) {
+	printf("\n############## MEMORIA DE DADOS ##############\n\n");
+	for(int i=256; i<512; i++) {
+		printf("[%d]. %s   ", i, mem[i]);
+		if (i % 8 == 7)
+		{
+			printf("\n");
+		}
+	}
+}
+
+// imprime banco de registradores
+void printReg(int *reg) {
+	for(int i=0; i<8; i++) {
+		printf("\nREGISTRADOR [%d] - %d", i, reg[i]);
+	}
+}
