@@ -4,17 +4,19 @@
 
 #define MEM char mem[256][17] = {{'\0'}}
 
-typedef struct sinais{
-    int EscPC,
-       IouD,
-       EscMem,
-       EscRI,
-       RegDest,
-       MemParaReg,
-       EscReg,
-       ULAFontA,
-       ULAFontB,
-       ControleULA;
+typedef struct sinais {
+	int EscPC,
+	    IouD,
+	    EscMem,
+	    EscRI,
+	    RegDest,
+	    MemParaReg,
+	    EscReg,
+	    ULAFontA,
+	    ULAFontB,
+	    ControleULA,
+	    FontePC,
+	    Branch;
 } Sinais;
 
 typedef struct registradores {
@@ -65,6 +67,7 @@ typedef struct Nodo {
 	int ba;
 	int ula_saidaa;
 	char rdma[17];
+	char da[128][17];
 	int est_a;
 	struct Nodo *prox;
 } Nodo;
@@ -73,8 +76,10 @@ typedef struct pilha {
 	Nodo *topo;
 } Pilha;
 
+char *le_mem(int i_ou_d,char[256][17],Registradores *r,Decodificador *d);
+
 void inicia_pilha(Pilha *p);
-void empilha(Pilha *p,Decodificador *d,char mem[256][17],char *ri,int *r,int *pc);
+void empilha(Pilha *p,Decodificador *d,char mem[256][17],Registradores *r,int *est);
 
 int carrega_mem(char mem[256][17]);
 
@@ -83,8 +88,8 @@ void print_mem(char mem[256][17]);
 void printReg(int *reg);
 void printInstrucao(Decodificador *d);
 
-int executa_step(char mem[256][17],Instrucao *in,Decodificador *d,Registradores *,Pilha *p,Sinais *s,int est);
-int controle(int opcode, int est,Sinais *s);
+int executa_step(char mem[256][17],Instrucao *in,Decodificador *d,Registradores *,Pilha *p,Sinais *s,int *est);
+int controle(int opcode, int *est,Sinais *s);
 
 void decodificarInstrucao(const char *bin, Instrucao *in, Decodificador *d);
 void copiarBits(const char *instrucao, char *destino, int inicio, int tamanho);
@@ -96,7 +101,7 @@ int ULA_op2(int est,int saida_b,int imm);
 int ULA(int op1,int op2,int opULA,int *flag,int *overflow);
 
 int main() {
-    Sinais s;
+	Sinais s;
 	Instrucao in;
 	Decodificador d;
 	Registradores r;
@@ -118,19 +123,19 @@ int main() {
 			print_mem(mem);
 			break;
 		case 3:
-			printReg(reg);
+			printReg(r.br);
 			break;
 		case 4:
 			print_mem(mem);
-			printReg(reg);
-			printf("\n\nPC: %d", pc);
-			printf("\n\nRI: %s", ri);
-			printf("\n\nA: %d", saida_a);
-			printf("\n\nB: %d", saida_b);
-			printf("\n\nULA-SAIDA: %d", ula_saida);
+			printReg(r.br);
+			printf("\n\nPC: %d", r.pc);
+			printf("\n\nRI: %s", r.ri);
+			printf("\n\nA: %d", r.a);
+			printf("\n\nB: %d", r.b);
+			printf("\n\nULA-SAIDA: %d", r.ula_saida);
 			break;
 		case 5:
-			est = executa_step(mem,&in,&d,&r,&p,&s,est);
+			est = executa_step(mem,&in,&d,&r,&p,&s,&est);
 			break;
 		case 6:
 			printf("Voce saiu!!!");
@@ -216,38 +221,39 @@ void printReg(int *reg) {
 	}
 }
 
-int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradores *r,Pilha *p,Sinais *s,int est) {
+int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradores *r,Pilha *p,Sinais *s,int *est) {
 
 	int flag = 0, overflow = 0, jump=0;
 
-	switch(est) {
+	switch(*est) {
 	case 0: //Estado 0
-		if (strcmp(mem[*pc], "0000000000000000") == 0 || r->pc > 127) {
+		if (strcmp(mem[r->pc], "0000000000000000") == 0 || r->pc > 127) {
 			printf("\nFim do programa!");
 			return 0;
 		}
 
 		else {
-			empilha(p,d,mem,r,);
-			strcpy(r->ri,mem[*pc]);
-			*pc = ULA(ULA_op1(est,r->a,*pc),ULA_op2(est,r->b,d->imm),0,&flag,&overflow);
+			empilha(p,d,mem,r,est);
+			controle(d->opcode,est,s);
+			strcpy(r->ri,le_mem(s->IouD,mem,r,d));
+			r->pc = ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,&flag,&overflow);
 			return 1;
 		}
 		break;
 
 	case 1: //Estado 1
-		decodificarInstrucao(r->,in,d);
+		decodificarInstrucao(r->ri,in,d);
 		printInstrucao(d);
-		r->a = reg[d->rs];
-		r->b = reg[d->rt];
-		r->ula_saida = ULA(ULA_op1(est,r->a,r->pc),ULA_op2(est,r->b,d->imm),0,&flag,&overflow);
+		r->a = r->br[d->rs];
+		r->b = r->br[d->rt];
+		r->ula_saida = ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,&flag,&overflow);
 
 		if(d->opcode == 2) {
 			copiarBits(r->ri, in->addr, 8, 8);
 			jump = binarioParaDecimal(in->addr, 0);
 		}
 
-		return controle(d->opcode,est);
+		return controle(d->opcode,est,s);
 		break;
 
 	case 2: //Estado 2 - executa lw,sw e addi
@@ -259,7 +265,7 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 			r->ula_saida = ULA(r->a, d->imm, 0, &flag, &overflow);
 		}
 
-		return controle(d->opcode, est);
+		return controle(d->opcode, est,s);
 		break;
 
 	case 3: //Estado 3 - acessa a memC3ria (lw)
@@ -268,7 +274,7 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 		break;
 
 	case 4: //Estado 4 - escreve no registrador (lw)
-		reg[d->rt] = binarioParaDecimal(r->rdm, 1);
+		r->br[d->rt] = binarioParaDecimal(r->rdm, 1);
 		return 0;
 		break;
 
@@ -276,7 +282,7 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 		break;
 
 	case 6: //Estado 6 - escreve no registrador (addi)
-		reg[d->rt] = r->ula_saida;
+		r->br[d->rt] = r->ula_saida;
 		return 0;
 		break;
 
@@ -286,7 +292,7 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 		break;
 
 	case 8: //Estado 8 - escreve no registrador (r)
-		reg[d->rd] = r->ula_saida;
+		r->br[d->rd] = r->ula_saida;
 		return 0;
 		break;
 
@@ -305,10 +311,10 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 	}
 }
 
-void empilha(Pilha *p,Decodificador *d,char mem[256][17],Registradores *r,int est) {
+void empilha(Pilha *p,Decodificador *d,char mem[256][17],Registradores *r,int *est) {
 	Nodo *nNodo = (Nodo*)malloc(sizeof(Nodo));
 	int i;
-	nNodo->est_a = est;
+	nNodo->est_a = *est;
 	nNodo->pca=r->pc;
 	for(i=128; i<256; i++) {
 		strcpy(nNodo->da[i],mem[i]);
@@ -362,18 +368,20 @@ int binarioParaDecimal(const char *bin, int sinal) {
 
 // Controle para o proximo estado
 int controle(int opcode, int *est,Sinais *s) {
-	switch(est) {
+	switch(*est) {
 	case 0:
-	    s->EscPC = 1;
-	    s->IouD = 0;
-	    s->EscMem = 0;
-	    s->EscRI = 1;
-	    s->RegDest = 0;
-	    s->MemParaReg = 0;
-	    s->EscReg = 0;
-	    s->ULAFontA = 0;
-	    s->ULAFontB = 1;
-	    s->ControleULA = 0;
+		s->EscPC = 1;
+		s->IouD = 0;
+		s->EscMem = 0;
+		s->EscRI = 1;
+		s->RegDest = 0;
+		s->MemParaReg = 0;
+		s->EscReg = 0;
+		s->ULAFontA = 0;
+		s->ULAFontB = 1;
+		s->ControleULA = 0;
+		s->FontePC = 0;
+		s->Branch = 0;
 		*est = 1;
 
 	case 1:
@@ -522,4 +530,15 @@ void printInstrucao(Decodificador *d) {
 void decodifica_dado(const char *data,Instrucao *in,Decodificador *d) {
 	copiarBits(data, in->dado, 8, 8);    // Copia os 4 bits do opcode (4 bits)
 	d->dado = binarioParaDecimal(in->dado, 1);
+}
+
+char *le_mem(int i_ou_d,char mem[256][17],Registradores *r,Decodificador *d) {
+    char saida[17];
+    if(i_ou_d == 0) {
+        strcpy(saida,mem[r->pc]);
+    }
+    else if(i_ou_d == 1) {
+        strcpy(saida,mem[d->imm]);
+    }
+    return saida;
 }
