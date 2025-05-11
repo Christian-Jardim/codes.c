@@ -4,7 +4,7 @@
 
 typedef struct musica musica;
 typedef struct nodo nodo;
-typedef struct desc desc;
+typedef struct pilha pilha;
 
 struct musica {
 	char titulo[256];
@@ -19,23 +19,23 @@ struct nodo {
 	musica *info;
 };
 
-struct desc {
+struct pilha {
 	nodo *primeiro_nodo;
 	int tamanho;
 };
 
 void menu();
-desc *cria_desc();
+pilha *cria_pilha();
 nodo *cria_nodo();
 musica *cria_espaco();
-void cria_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
-void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
-nodo *remover(desc *playlist);
-nodo *encontrar(desc *playlist, int code);
+void cria_posicao(pilha *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
+void insere(pilhq *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
+nodo *remover(pilha *playlist);
+nodo *encontrar(pilha *playlist, int code);
 void mostra_musica(nodo *aux);
-void mostra_playlist(desc *p);
+void mostra_playlist(pilha *p);
 void toca(nodo *aux);
-void libera(desc *playlist);
+void libera(pilha *playlist);
 
 int main() {
 	int op,posicao,code;
@@ -46,7 +46,7 @@ int main() {
 		scanf("%d", &op);
 		switch(op) {
 		case 1:
-			desc *playlist=cria_desc();
+			pilha *playlist=cria_pilha();
 			break;
 		case 2:
 			nodo *node=cria_nodo();
@@ -99,11 +99,11 @@ void menu() {
 	printf("\n7 - Sair");
 }
 
-desc *cria_desc(void) {
-	desc *nDesc = (desc *)malloc(sizeof(desc));
-	nDesc->tamanho = 0;
-	nDesc->primeiro_nodo=NULL;
-	return nDesc;
+pilha *cria_desc(void) {
+	desc *nPilha = (pilha *)malloc(sizeof(pilha));
+	nPilha->tamanho = 0;
+	nPilha->primeiro_nodo=NULL;
+	return nPilha;
 }
 
 nodo *cria_nodo(void) {
@@ -118,13 +118,13 @@ musica *cria_espaco(void) {
 	return nMusica;
 }
 
-void cria_posicao(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
+void cria_posicao(pilha *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
 	node->prox=playlist->primeiro_nodo;
 	playlist->primeiro_nodo=node;
 	insere(playlist,node,song,title,artist,lyrics,code);
 }
 
-void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
+void insere(pilha *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
 	node->info = song;
 	strcpy(song->titulo, title);
 	strcpy(song->artista, artist);
@@ -133,7 +133,7 @@ void insere(desc *playlist, nodo *node, musica *song, char *title, char *artist,
 	playlist->tamanho++;
 }
 
-nodo *remover(desc *playlist) {
+nodo *remover(pilha *playlist) {
 	nodo *aux = playlist->primeiro_nodo;
 	playlist->primeiro_nodo = playlist->primeiro_nodo->prox;
 	playlist->tamanho--;
@@ -141,7 +141,7 @@ nodo *remover(desc *playlist) {
 }
 
 
-nodo *encontrar(desc *playlist, int code) {
+nodo *encontrar(pilha *playlist, int code) {
 	if (playlist->primeiro_nodo == NULL) {
 		printf("\nPlaylist vazia!\n");
 		return NULL;
@@ -162,7 +162,7 @@ nodo *encontrar(desc *playlist, int code) {
 	}
 }
 
-void mostra_playlist(desc *p) {
+void mostra_playlist(pilha *p) {
 	nodo *aux=p->primeiro_nodo;
 	if(aux == NULL) {
 		printf("\nPlaylist vazia!\n");
@@ -197,7 +197,7 @@ void toca(nodo *aux) {
 	}
 }
 
-void libera(desc *playlist) {
+void libera(pilha *playlist) {
 	nodo *aux = playlist->primeiro_nodo;
 	nodo *anterior;
 	while(aux != NULL) {
