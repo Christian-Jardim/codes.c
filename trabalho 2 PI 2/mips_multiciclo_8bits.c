@@ -76,7 +76,7 @@ typedef struct pilha {
 	Nodo *topo;
 } Pilha;
 
-char *le_mem(int i_ou_d,char[256][17],Registradores *r,Decodificador *d);
+void escreve_ri(Registradores *r,int EscRI,char inst[17]);
 
 void inicia_pilha(Pilha *p);
 void empilha(Pilha *p,Decodificador *d,char mem[256][17],Registradores *r,int *est);
@@ -235,7 +235,7 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 		else {
 			empilha(p,d,mem,r,est);
 			controle(d->opcode,est,s);
-			escreve_ri(r,s->IouD,mem);
+			escreve_ri(r,s->EscRI,mem[r->pc]);
 			r->pc =  ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,&flag,&overflow);
 			return 1;
 		}
@@ -532,13 +532,8 @@ void decodifica_dado(const char *data,Instrucao *in,Decodificador *d) {
 	d->dado = binarioParaDecimal(in->dado, 1);
 }
 
-char *le_mem(int i_ou_d,char mem[256][17],Registradores *r,Decodificador *d) {
-    char saida[17];
-    if(i_ou_d == 0) {
-        strcpy(saida,mem[r->pc]);
-    }
-    else if(i_ou_d == 1) {
-        strcpy(saida,mem[d->imm]);
-    }
-    return saida;
+void escreve_ri(Registradores *r,int EscRI,char inst[17]) {
+	if(EscRI == 1) {
+		strcpy(r->ri,inst);
+	}
 }
