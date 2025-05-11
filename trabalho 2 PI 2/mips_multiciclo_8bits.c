@@ -235,8 +235,8 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 		else {
 			empilha(p,d,mem,r,est);
 			controle(d->opcode,est,s);
-			escreve_ri(r,s->IouD);
-			r->pc = ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,&flag,&overflow);
+			escreve_ri(r,s->IouD,mem);
+			r->pc =  ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,&flag,&overflow);
 			return 1;
 		}
 		break;
