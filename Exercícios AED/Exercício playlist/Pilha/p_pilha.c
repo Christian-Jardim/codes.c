@@ -133,33 +133,43 @@ void insere(pilha *playlist, nodo *node, musica *song, char *title, char *artist
 	playlist->tamanho++;
 }
 
-nodo *remover(pilha *playlist) {
-	nodo *aux = playlist->primeiro_nodo;
-	playlist->primeiro_nodo = playlist->primeiro_nodo->prox;
-	playlist->tamanho--;
-	return aux;
-}
-
-
-nodo *encontrar(pilha *playlist, int code) {
-	if (playlist->primeiro_nodo == NULL) {
-		printf("\nPlaylist vazia!\n");
-		return NULL;
-	} else {
-		nodo *aux = playlist->primeiro_nodo;
-		if (aux->info->codigo == code) {
-			return aux;
-		} else {
-			while (aux->prox != NULL) {
-				nodo *anterior = aux;
-				aux = aux->prox;
-				if (aux->info->codigo == code) {
-					return aux;
-				}
-			}
-			return NULL;
-		}
-	}
+nodo *remover_encontra(pilha *playlist, int code, sinal1, int sinal2, int sinal3) {
+        if (playlist->primeiro_nodo == NULL) {
+                if(sinal3 == 0) {
+                        return NULL;
+                } else {
+                        printf("\nPlaylis vazia!\n");
+                        return NULL;
+                }
+        } else {
+                nodo *aux = playlist->primeiro_nodo;
+                if (aux->info->codigo == code) {
+                        if (sinal1 == 0) {
+                                playlist->primeiro_nodo = aux->prox;
+                                playlist->tamanho--;
+                                return aux;
+                        } else {
+                                return aux;
+                        }
+                } else {
+                        while (aux->prox != NULL) {
+                                if (aux->prox->info->codigo == code) {
+                                        if (sinal1 == 0) {
+                                                aux->prox = aux->prox->prox;
+                                                playlist->tamanho--;
+                                                return aux;
+                                        } else {
+                                                return aux;
+                                        }
+                                }
+                                aux = aux->prox;
+                        }
+                        if(sinal2 != 0) {
+                                printf("\nNao ha musica com esse codigo na playlist!\n");
+                        }
+                        return NULL;
+                }
+        }
 }
 
 void mostra_playlist(pilha *p) {
