@@ -28,10 +28,9 @@ void menu();
 pilha *cria_pilha();
 nodo *cria_nodo();
 musica *cria_espaco();
-void cria_posicao(pilha *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
-void insere(pilhq *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code);
+void insere(pilhq *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int code);
 nodo *remover(pilha *playlist);
-nodo *encontrar(pilha *playlist, int code);
+nodo *encontra(pilha *playlist, int code);
 void mostra_musica(nodo *aux);
 void mostra_playlist(pilha *p);
 void toca(nodo *aux);
@@ -60,10 +59,11 @@ int main() {
 			scanf(" %[^\n]s",lyrics);
 			printf("Informe um codigo para identificar essa musica: ");
 			scanf("%d",&code);
-			cria_posicao(playlist,node,song,title,artist,lyrics,&code);
+			insere(playlist,node,song,title,artist,lyrics,code);
 			break;
 		case 3:
-			remover(playlist);
+			nodo *removido = remover(playlist);
+			mostra_musica = (playlist->primeiro_nodo);
 			break;
 		case 4:
 			printf("\nDigite o codigo da musica que quer encontrar: ");
@@ -74,9 +74,9 @@ int main() {
 			mostra_playlist(playlist);
 			break;
 		case 6:
-			printf("\nDigite o codigo da musica que quer trocar: ");
+			printf("\nDigite o codigo da musica que quer tocar: ");
 			scanf("%d",&code);
-			mostra_musica(encontrar(playlist,code));
+			mostra_musica(encontra(playlist,code));
 			break;
 		case 7:
 			libera(playlist);
@@ -118,59 +118,39 @@ musica *cria_espaco(void) {
 	return nMusica;
 }
 
-void cria_posicao(pilha *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
-	node->prox=playlist->primeiro_nodo;
-	playlist->primeiro_nodo=node;
-	insere(playlist,node,song,title,artist,lyrics,code);
-}
-
 void insere(pilha *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int *code) {
+	node->prox = playlist->primeiro_nodo;
+	playlist->primeiro_nodo = node;
 	node->info = song;
 	strcpy(song->titulo, title);
 	strcpy(song->artista, artist);
 	strcpy(song->letra, lyrics);
-	song->codigo = *code;
+	song->codigo = code;
 	playlist->tamanho++;
 }
 
-nodo *remover_encontra(pilha *playlist, int code, sinal1, int sinal2, int sinal3) {
+nodo *encontra(pilha *playlist, int code) {
         if (playlist->primeiro_nodo == NULL) {
-                if(sinal3 == 0) {
-                        return NULL;
-                } else {
-                        printf("\nPlaylis vazia!\n");
-                        return NULL;
+                printf("\nPlaylis vazia!\n");
+                return NULL;
                 }
         } else {
                 nodo *aux = playlist->primeiro_nodo;
-                if (aux->info->codigo == code) {
-                        if (sinal1 == 0) {
-                                playlist->primeiro_nodo = aux->prox;
-                                playlist->tamanho--;
-                                return aux;
-                        } else {
-                                return aux;
-                        }
-                } else {
-                        while (aux->prox != NULL) {
+                while (aux->prox != NULL) {
                                 if (aux->prox->info->codigo == code) {
-                                        if (sinal1 == 0) {
-                                                aux->prox = aux->prox->prox;
-                                                playlist->tamanho--;
-                                                return aux;
-                                        } else {
-                                                return aux;
+return aux;
                                         }
                                 }
                                 aux = aux->prox;
                         }
-                        if(sinal2 != 0) {
-                                printf("\nNao ha musica com esse codigo na playlist!\n");
-                        }
                         return NULL;
                 }
-        }
-}
+       }
+
+nodo *remover(pilha *playlist, nodo *aux) {
+	playlist->primeiro_nodo = aux->prox;
+	playlist->tamanho--;
+	return aux;
 
 void mostra_playlist(pilha *p) {
 	nodo *aux=p->primeiro_nodo;
