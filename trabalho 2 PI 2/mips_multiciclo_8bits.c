@@ -76,10 +76,17 @@ typedef struct pilha {
 	Nodo *topo;
 } Pilha;
 
+typedef struct ALUout {
+    int flag_zero;
+    int resultado;
+    int overflow;
+} ALUout;
+
+//Sinal para autorizar escrita no RI
 void escreve_ri(Registradores *r,int EscRI,char inst[17]);
 
 void inicia_pilha(Pilha *p);
-void empilha(Pilha *p,Decodificador *d,char mem[256][17],Registradores *r,int *est);
+void empilha(Pilha *p,Decodificador *d,char (*mem)[17],Registradores *r,int *est);
 
 int carrega_mem(char mem[256][17]);
 
@@ -88,7 +95,7 @@ void print_mem(char mem[256][17]);
 void printReg(int *reg);
 void printInstrucao(Decodificador *d);
 
-int executa_step(char mem[256][17],Instrucao *in,Decodificador *d,Registradores *,Pilha *p,Sinais *s,int *est);
+int executa_step(char (*mem)[17],Instrucao *in,Decodificador *d,Registradores *,Pilha *p,Sinais *s,ALUout *saida,int *est);
 int controle(int opcode, int *est,Sinais *s);
 
 void decodificarInstrucao(const char *bin, Instrucao *in, Decodificador *d);
@@ -96,16 +103,17 @@ void copiarBits(const char *instrucao, char *destino, int inicio, int tamanho);
 int binarioParaDecimal(const char *bin, int sinal);
 void decodifica_dado(const char *data,Instrucao *in,Decodificador *d);
 
-int ULA_op1(int est,int pc,int saida_a);
-int ULA_op2(int est,int saida_b,int imm);
-int ULA(int op1,int op2,int opULA,int *flag,int *overflow);
+int ULA_op1(int est,int pc,int a);
+int ULA_op2(int est,int b,int imm);
+int ULA(int op1,int op2,int opULA,ALUout *saida);
 
 int main() {
-	Sinais s;
+	Sinais s = {0};
 	Instrucao in;
 	Decodificador d;
-	Registradores r;
+	Registradores r = {0};
 	Pilha p;
+	ALUout saida = {0};
 	MEM;
 	int op,est = 0;
 	inicia_pilha(&p);
@@ -135,7 +143,7 @@ int main() {
 			printf("\n\nULA-SAIDA: %d", r.ula_saida);
 			break;
 		case 5:
-			est = executa_step(mem,&in,&d,&r,&p,&s,&est);
+			est = executa_step(mem,&in,&d,&r,&p,&s,&saida,&est);
 			break;
 		case 6:
 			printf("Voce saiu!!!");
@@ -221,9 +229,9 @@ void printReg(int *reg) {
 	}
 }
 
-int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradores *r,Pilha *p,Sinais *s,int *est) {
+int executa_step(char (*mem)[17], Instrucao *in, Decodificador *d,Registradores *r,Pilha *p,Sinais *s,ALUout *saida,int *est) {
 
-	int flag = 0, overflow = 0, jump=0;
+	int jump=0;
 
 	switch(*est) {
 	case 0: //Estado 0
@@ -236,7 +244,7 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 			empilha(p,d,mem,r,est);
 			controle(d->opcode,est,s);
 			escreve_ri(r,s->EscRI,mem[r->pc]);
-			r->pc =  ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,&flag,&overflow);
+			r->pc =  ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
 			return 1;
 		}
 		break;
@@ -246,7 +254,7 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 		printInstrucao(d);
 		r->a = r->br[d->rs];
 		r->b = r->br[d->rt];
-		r->ula_saida = ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,&flag,&overflow);
+		r->ula_saida = ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,saida);
 
 		if(d->opcode == 2) {
 			copiarBits(r->ri, in->addr, 8, 8);
@@ -258,11 +266,11 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 
 	case 2: //Estado 2 - executa lw,sw e addi
 		if(d->opcode == 11 || d->opcode == 15) {
-			r->ula_saida = ULA(r->a, d->imm, 0, &flag, &overflow);
+			r->ula_saida = ULA(r->a, d->imm, 0,saida);
 		}
 
 		if(d->opcode == 4) {
-			r->ula_saida = ULA(r->a, d->imm, 0, &flag, &overflow);
+			r->ula_saida = ULA(r->a, d->imm, 0,saida);
 		}
 
 		return controle(d->opcode, est,s);
@@ -287,7 +295,7 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 		break;
 
 	case 7: //Estado 7 - executa r
-		r->ula_saida = ULA(r->a, r->b, d->funct, &flag, &overflow);
+		r->ula_saida = ULA(r->a, r->b, d->funct,saida);
 		return 8;
 		break;
 
@@ -311,7 +319,7 @@ int executa_step(char mem[256][17], Instrucao *in, Decodificador *d,Registradore
 	}
 }
 
-void empilha(Pilha *p,Decodificador *d,char mem[256][17],Registradores *r,int *est) {
+void empilha(Pilha *p,Decodificador *d,char (*mem)[17],Registradores *r,int *est) {
 	Nodo *nNodo = (Nodo*)malloc(sizeof(Nodo));
 	int i;
 	nNodo->est_a = *est;
@@ -382,7 +390,7 @@ int controle(int opcode, int *est,Sinais *s) {
 		s->ControleULA = 0;
 		s->FontePC = 0;
 		s->Branch = 0;
-		*est = 1;
+		return 1;
 
 	case 1:
 		if(opcode == 11 || opcode == 15 || opcode == 4)
@@ -419,22 +427,22 @@ int controle(int opcode, int *est,Sinais *s) {
 }
 
 // MUX para o operando 1 da ULA
-int ULA_op1(int est,int pc,int saida_a) {
+int ULA_op1(int est,int pc,int a) {
 	int saida;
 	if(est == 0) {
 		saida = pc;
 	}
 	else if(est == 2 || est == 7 || est == 9) {
-		saida = saida_a;
+		saida = a;
 	}
 	return saida;
 }
 
 // MUX para o operando 2 da ULA
-int ULA_op2(int est,int saida_b,int imm) {
+int ULA_op2(int est,int b,int imm) {
 	int saida;
 	if(est == 7 || est == 9) {
-		saida = saida_b;
+		saida = b;
 	}
 	else if(est == 0) {
 		saida = 1;
@@ -445,48 +453,47 @@ int ULA_op2(int est,int saida_b,int imm) {
 	return saida;
 }
 
-int ULA(int op1, int op2, int opULA, int *flag, int *overflow) {
-
-	int resultado;
-	*flag = 0;
-	*overflow = 0;
-
+int ULA(int op1, int op2, int opULA, ALUout *saida) {
 	switch(opULA) {
 	case 0:
-		resultado = op1 + op2;
-
-		if ((op1 > 0 && op2 > 0 && resultado < 0) || (op1 < 0 && op2 < 0 && resultado > 0)) {
-			*overflow = 1;
-			printf("OVERFLOW - ADD: %d + %d = %d\n", op1, op2, resultado);
+		saida->resultado = op1 + op2;
+        
+        if(saida->resultado == 0) {
+			saida->flag_zero = 1;
+		}
+        
+		if ((op1 > 0 && op2 > 0 && saida->resultado < 0) || (op1 < 0 && op2 < 0 && saida->resultado > 0)) {
+			saida->overflow = 1;
+			printf("OVERFLOW - ADD: %d + %d = %d\n", op1, op2, saida->resultado);
 		}
 		break;
 
 	case 2:
-		resultado = op1 - op2;
-
-		if(resultado == 0) {
-			*flag = 1;
+		saida->resultado = op1 - op2;
+		
+		if(saida->resultado == 0) {
+			saida->flag_zero = 1;
 		}
 
-		if ((op1 > 0 && op2 < 0 && resultado < 0) || (op1 < 0 && op2 > 0 && resultado > 0)) {
-			*overflow = 1;
-			printf("OVERFLOW - SUB: %d - %d = %d\n", op1, op2, resultado);
+		if ((op1 > 0 && op2 < 0 && saida->resultado < 0) || (op1 < 0 && op2 > 0 && saida->resultado > 0)) {
+			saida->overflow = 1;
+			printf("OVERFLOW - SUB: %d - %d = %d\n", op1, op2, saida->resultado);
 		}
 		break;
 
 	case 4:
-		resultado = op1 & op2;
+		saida->resultado = op1 & op2;
 		break;
 
 	case 5:
-		resultado = op1 | op2;
+		saida->resultado = op1 | op2;
 		break;
 
 	default:
-		resultado = 0;
+		saida->resultado = 0;
 		printf("OPERACCO DESCONHECIDA: %d\n", opULA);
 	}
-	return resultado;
+	return saida->resultado;
 }
 
 // Funcao para imprimir a instrucao
@@ -532,6 +539,7 @@ void decodifica_dado(const char *data,Instrucao *in,Decodificador *d) {
 	d->dado = binarioParaDecimal(in->dado, 1);
 }
 
+//Sinal para autorizar escrita no RI
 void escreve_ri(Registradores *r,int EscRI,char inst[17]) {
 	if(EscRI == 1) {
 		strcpy(r->ri,inst);
