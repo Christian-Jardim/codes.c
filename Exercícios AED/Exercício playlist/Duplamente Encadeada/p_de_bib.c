@@ -98,7 +98,7 @@ nodo *remover_encontra(desc *playlist, int code, int sinal1, int sinal2, int sin
 		if (aux->info->codigo == code) {
 			if (sinal1 == 0) {
 				playlist->primeiro_nodo = aux->prox;
-				if (aux->prox != NULL) {  // evita erro quando sC3 hC! 1 elemento
+				if (aux->prox != NULL) {
 					aux->prox->ant = NULL;
 				}
 				playlist->tamanho--;
