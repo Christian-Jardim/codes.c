@@ -1,6 +1,13 @@
+
+      
+      ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
+      escreve_pc(&r->pc, s->EscPC, PCFonte(saida->resultado, r->ula_saida, s->FontePC), s->Branch, saida->flag_zero);
+      estado(est,d->opcode);
   case 1: //Estado 1
     empilha(p,d,mem,r,est);
     controle(d->opcode,est,s);
+		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
+    strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
     decodificarInstrucao(r->ri,in,d);
     printInstrucao(d);
     r->a = r->br[d->rs];
