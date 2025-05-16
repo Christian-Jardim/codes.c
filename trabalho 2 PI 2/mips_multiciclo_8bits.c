@@ -86,10 +86,13 @@ typedef struct ALUout {
 void escreve_ri(char *ri,int EscRI,char inst[17]);
 void escreve_pc(int *pc, int EscPC, int FontePC);
 void escreve_mem(char (*mem)[17],int EscMem,int b,int IouD);
+void escreve_br(int *reg, int EscReg, int dado);
 
 //MUX
 int IOuD(int IouD, int pc, int imm); //Seleciona se o endereco a ser acessado vem do PC ou do IMEDIATO
 int PCFonte(int resul, int reg_ula, int FontePC); // Seleciona se o incremento so PC vem da soma com o IMEDIATO 1 ou do BRANCH EQUAL
+int RegiDest(int rs, int rt, int RegDest);
+int MemReg(int ula_saida, int dado, int MemParaReg);
 int ULA_op1(int est,int pc,int a); //Seleciona o primeiro operando da ULA
 int ULA_op2(int est,int b,int imm);//Seleciona o segundo operando da ULA
 
@@ -265,6 +268,8 @@ int executa_step(char (*mem)[17], Instrucao *in, Decodificador *d,Registradores 
 			controle(d->opcode,est,s);
 			escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
 			strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
+			decodifica_dado(r->rdm,in,d);
+			escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
 			ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
 			escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
 			escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
@@ -810,4 +815,28 @@ int And(int op1, int op2) {
 
 int Or(int op1, int op2) {
 	return op1 | op2;
+}
+
+int RegiDest(int rs, int rt, int RegDest) {
+	switch (RegDest) {
+	case 0:
+		return rs;
+	case 1:
+		return rt;
+	}
+}
+
+void escreve_br(int *reg, int EscReg, int dado) {
+    if(EscReg == 1) {
+        *reg = dado;
+    }
+}
+
+int MemReg(int ula_saida, int dado, int MemParaReg) {
+    switch (MemParaReg) {
+        case 0:
+           return ula_saida;
+        case 1:
+           return dado;
+    }
 }
