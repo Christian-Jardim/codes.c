@@ -1,7 +1,7 @@
 
       
-      ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-      escreve_pc(&r->pc, s->EscPC, PCFonte(saida->resultado, r->ula_saida, s->FontePC), s->Branch, saida->flag_zero);
+      
+      
       estado(est,d->opcode);
   case 1: //Estado 1
     empilha(p,d,mem,r,est);
@@ -12,8 +12,9 @@
     printInstrucao(d);
     r->a = r->br[d->rs];
     r->b = r->br[d->rt];
-    ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,saida);
-    r->ula_saida = saida->resultado;
+   ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,saida);
+		r->ula_saida = saida->resultado; 
+		escreve_pc(&r->pc, s->EscPC, PCFonte(saida->resultado, r->ula_saida, s->FontePC), s->Branch, saida->flag_zero);
     if(d->opcode == 2) {
       copiarBits(r->ri, in->addr, 8, 8);
       jump = binarioParaDecimal(in->addr, 0);
