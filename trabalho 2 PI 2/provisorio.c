@@ -91,7 +91,7 @@ int IOuD(int IouD, int pc, int imm); //Seleciona se o endereco a ser acessado ve
 int PCFonte(int resul, int reg_ula, int FontePC); // Seleciona se o incremento so PC vem da soma com o IMEDIATO 1 ou do BRANCH EQUAL
 int ULA_op1(int est,int pc,int a); //Seleciona o primeiro operando da ULA
 int ULA_op2(int est,int b,int imm);//Seleciona o segundo operando da ULA
-int RegiDest(int rs, int rt, int RegDest);
+int RegiDest(int rt, int rd, int RegDest);
 int MemReg(int ula_saida, int dado, int MemParaReg);
 void escreve_mem(char (*mem)[17],int EscMem,int b,int IouD);
 void escreve_br(int *reg, int EscReg, int dado);
@@ -279,7 +279,7 @@ int executa_step(char (*mem)[17], Instrucao *in, Decodificador *d,Registradores 
 	strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
 	decodificarInstrucao(r->ri,in,d);
 	decodifica_dado(r->rdm,in,d);
-	escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
+	escreve_br(&r->br[RegiDest(d->rt,d->rd,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
 	printInstrucao(d);
 	r->a = r->br[d->rs];
 	r->b = r->br[d->rt];
@@ -294,12 +294,12 @@ int executa_step(char (*mem)[17], Instrucao *in, Decodificador *d,Registradores 
 
 }
 
-int RegiDest(int rs, int rt, int RegDest) {
+int RegiDest(int rt, int rd, int RegDest) {
 	switch (RegDest) {
 	case 0:
-		return rs;
-	case 1:
 		return rt;
+	case 1:
+		return rd;
 	}
 }
 
