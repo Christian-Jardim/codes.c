@@ -3,6 +3,8 @@ empilha(p,d,mem,r,est);
 		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
     strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
     decodificarInstrucao(r->ri,in,d);
+		decodifica_dado(r->rdm,in,d);
+            escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
     printInstrucao(d);
     r->a = r->br[d->rs];
     r->b = r->br[d->rt];
