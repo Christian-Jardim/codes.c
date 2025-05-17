@@ -84,18 +84,17 @@ typedef struct ALUout {
 
 //Controle de escrita
 void escreve_ri(char *ri,int EscRI,char inst[17]);
-void escreve_pc(int *pc, int EscPC, int FontePC);
-void escreve_mem(char (*mem)[17],int EscMem,int b,int IouD);
-void escreve_br(int *reg, int EscReg, int dado);
+void escreve_pc(int *pc, int EscPC, int FontePC, int Branch, int flag_zero);
 
 //MUX
 int IOuD(int IouD, int pc, int imm); //Seleciona se o endereco a ser acessado vem do PC ou do IMEDIATO
 int PCFonte(int resul, int reg_ula, int FontePC); // Seleciona se o incremento so PC vem da soma com o IMEDIATO 1 ou do BRANCH EQUAL
-int RegiDest(int rs, int rt, int RegDest);
-int MemReg(int ula_saida, int dado, int MemParaReg);
 int ULA_op1(int est,int pc,int a); //Seleciona o primeiro operando da ULA
 int ULA_op2(int est,int b,int imm);//Seleciona o segundo operando da ULA
-
+int RegiDest(int rs, int rt, int RegDest);
+int MemReg(int ula_saida, int dado, int MemParaReg);
+void escreve_mem(char (*mem)[17],int EscMem,int b,int IouD);
+void escreve_br(int *reg, int EscReg, int dado);
 
 void inicia_pilha(Pilha *p);
 void empilha(Pilha *p,Decodificador *d,char (*mem)[17],Registradores *r,int *est);
@@ -117,8 +116,12 @@ int binarioParaDecimal(const char *bin, int sinal);
 void decodifica_dado(const char *data,Instrucao *in,Decodificador *d);
 
 void ULA(int op1,int op2,int opULA,ALUout *saida);
-int And(int op1, int op2);
-int Or(int op1, int op2);
+
+void int_para_binario_recursiva(int valor, char *binario, int pos);
+void int_para_binario(int valor, char *binario);
+
+void executa_run(char (*mem)[17], Instrucao *in, Decodificador *d, Registradores *r, Pilha *p, Sinais *s, ALUout *saida, int *est);
+void salvarAssembly(char mem[256][17]);
 
 int main() {
 	Sinais s = {0};
@@ -159,16 +162,27 @@ int main() {
 			if(strlen(mem[0]) > 0) {
 				executa_step(mem,&in,&d,&r,&p,&s,&saida,&est);
 			} else {
-				printf("Nenhuma memC3ria carregada!\n");
+				printf("Nenhuma memoria carregada!\n");
 			}
 			break;
 		case 6:
+			if(strlen(mem[0]) > 0) {
+				executa_run(mem, &in, &d, &r, &p, &s, &saida, &est);
+			}
+			else {
+				printf("Nenhuma memoria carregada!\n");
+			}
+			break;
+		case 7:
+			salvarAssembly(mem);
+			break;
+		case 8:
 			printf("Voce saiu!!!");
 			break;
 		default:
 			printf("Opcao invalida!");
 		}
-	} while(op != 6);
+	} while(op != 8);
 	return 0;
 }
 
@@ -183,11 +197,11 @@ void menu() {
 	printf("3 - Imprimir banco de registradores\n");
 	printf("4 - Imprimir todo o simulador\n");
 	printf("5 - Executar step\n");
-	printf("6 - Sair\n");
-	//printf("6 - Executar instrucao\n");
-	//printf("7 - Salvar .asm\n");
-	//printf("8 - Salvar .dat\n");
-	//printf("9 - Volta um step\n");
+	printf("6 - Executar run\n");
+	printf("7 - Salvar .asm\n");
+	printf("8 - Sair\n");
+	//printf("9 - Salvar .dat\n");
+	//printf("10 - Volta um step\n");
 }
 
 // Carrega memoria
@@ -252,187 +266,55 @@ void printReg(int *reg) {
 	for(int i=0; i<8; i++) {
 		printf("\nREGISTRADOR [%d]:  %d", i, reg[i]);
 	}
+	printf("\n");
 }
 
 int executa_step(char (*mem)[17], Instrucao *in, Decodificador *d,Registradores *r,Pilha *p,Sinais *s,ALUout *saida,int *est) {
 	int jump=0;
+	char binario[17];
 
-	switch(*est) {
-	case 0: //Estado 0
-		if (strcmp(mem[r->pc], "0000000000000000") == 0 || r->pc > 127) {
-			printf("\nFim do programa!");
-			return 0;
-		}
-		else {
-			empilha(p,d,mem,r,est);
-			controle(d->opcode,est,s);
-			escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-			strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-			decodifica_dado(r->rdm,in,d);
-			escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-			r->a = r->br[d->rs];
-			r->b = r->br[d->rt];
-			ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-			escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-			escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-			estado(est,d->opcode);
-		}
-		break;
+	empilha(p,d,mem,r,est);
+	controle(d->opcode,est,s);
+	escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
+	strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
+	decodificarInstrucao(r->ri,in,d);
+	decodifica_dado(r->rdm,in,d);
+	escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
+	printInstrucao(d);
+	r->a = r->br[d->rs];
+	r->b = r->br[d->rt];
+	ULA(ULA_op1(*est,r->a,r->pc),ULA_op2(*est,r->b,d->imm),0,saida);
+	r->ula_saida = saida->resultado;
+	escreve_pc(&r->pc, s->EscPC, PCFonte(saida->resultado, r->ula_saida, s->FontePC), s->Branch, saida->flag_zero);
+	if(d->opcode == 2) {
+		copiarBits(r->ri, in->addr, 8, 8);
+		jump = binarioParaDecimal(in->addr, 0);
+	}
+	estado(est,d->opcode);
 
-	case 1: //Estado 1empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
+}
 
-		break;
+int RegiDest(int rs, int rt, int RegDest) {
+	switch (RegDest) {
+	case 0:
+		return rs;
+	case 1:
+		return rt;
+	}
+}
 
-	case 2: //Estado 2 - executa lw,sw e addi
-		empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
-		break;
+void escreve_br(int *reg, int EscReg, int dado) {
+	if(EscReg == 1) {
+		*reg = dado;
+	}
+}
 
-	case 3: //Estado 3 - acessa a memC3ria (lw)
-		empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
-		break;
-
-	case 4: //Estado 4 - escreve no registrador (lw)
-		empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
-		break;
-
-	case 5:
-		empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
-		break;
-
-	case 6: //Estado 6 - escreve no registrador (addi)
-		empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
-		break;
-
-	case 7: //Estado 7 - executa r
-		empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
-		break;
-
-	case 8: //Estado 8 - escreve no registrador (r)
-		empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
-		break;
-
-	case 9: //Estado 9 - executa beq
-		empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
-		break;
-
-	case 10: //Estado 10 - executa jump
-		empilha(p,d,mem,r,est);
-		controle(d->opcode,est,s);
-		escreve_ri(r->ri,s->EscRI,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		strcpy(r->rdm,mem[IOuD(s->IouD,r->pc,d->imm)]);
-		decodifica_dado(r->rdm,in,d);
-		escreve_br(&r->br[RegiDest(d->rs,d->rt,s->RegDest)],s->EscReg,MemReg(r->ula_saida,d->dado,s->MemParaReg));
-		r->a = r->br[d->rs];
-		r->b = r->br[d->rt];
-		ULA(ULA_op1(*est,r->pc,r->a),ULA_op2(*est,r->b,d->imm),0,saida);
-		escreve_mem(mem,s->EscMem,r->b,IOuD(s->IouD,r->pc,d->imm));
-		escreve_pc(&r->pc, Or(s->EscPC,And(s->Branch,saida->flag_zero)), PCFonte(saida->resultado, r->ula_saida, s->FontePC));
-		estado(est,d->opcode);
-		break;
-
-	default:
-		printf("ESTADO DESCONHECIDO");
-		return 0;
-		break;
+int MemReg(int ula_saida, int dado, int MemParaReg) {
+	switch (MemParaReg) {
+	case 0:
+		return ula_saida;
+	case 1:
+		return dado;
 	}
 }
 
@@ -495,6 +377,30 @@ int binarioParaDecimal(const char *bin, int sinal) {
 		valor = valor - (1 << bits);
 	}
 	return valor;
+}
+
+void escreve_mem(char (*mem)[17],int EscMem,int b,int IouD) {
+	if(EscMem == 1) {
+		int indice = 0;
+		char bin[17] = "0000000000000000";
+		if (b == 0) {
+			return;
+		}
+
+		while (b > 0) {
+			bin[indice++] = (b % 2) + '0';
+			b /= 2;
+		}
+
+		bin[indice] = '\0';
+
+		for (int i = 0; i < indice / 2; i++) {
+			char temp = bin[i];
+			bin[i] = bin[indice - i - 1];
+			bin[indice - i - 1] = temp;
+		}
+		strcpy(mem[IouD],bin);
+	}
 }
 
 // Controle para o proximo estado
@@ -774,33 +680,33 @@ void printInstrucao(Decodificador *d) {
 	case 0: // Tipo R (add, sub, and, or)
 		switch (d->funct) {
 		case 0:
-			printf("add $%d, $%d, $%d\n", d->rd, d->rs, d->rt);
+			printf("add $%d, $%d, $%d", d->rd, d->rs, d->rt);
 			break;
 		case 2:
-			printf("sub $%d, $%d, $%d\n", d->rd, d->rs, d->rt);
+			printf("sub $%d, $%d, $%d", d->rd, d->rs, d->rt);
 			break;
 		case 4:
-			printf("and $%d, $%d, $%d\n", d->rd, d->rs, d->rt);
+			printf("and $%d, $%d, $%d", d->rd, d->rs, d->rt);
 			break;
 		case 5:
-			printf("or $%d, $%d, $%d\n", d->rd, d->rs, d->rt);
+			printf("or $%d, $%d, $%d", d->rd, d->rs, d->rt);
 			break;
 		}
 		break;
 	case 4: // addi
-		printf("addi $%d, $%d, %d\n", d->rt, d->rs, d->imm);
+		printf("addi $%d, $%d, %d", d->rt, d->rs, d->imm);
 		break;
 	case 11: // lw
-		printf("lw $%d, %d($%d)\n", d->rt, d->imm, d->rs);
+		printf("lw $%d, %d($%d)", d->rt, d->imm, d->rs);
 		break;
 	case 15: // sw
-		printf("sw $%d, %d($%d)\n", d->rt, d->imm, d->rs);
+		printf("sw $%d, %d($%d)", d->rt, d->imm, d->rs);
 		break;
 	case 8: // beq
-		printf("beq $%d, $%d, %d\n", d->rs, d->rt, d->imm);
+		printf("beq $%d, $%d, %d", d->rs, d->rt, d->imm);
 		break;
 	case 2: // j
-		printf("j %d\n", d->addr);
+		printf("j %d", d->addr);
 		break;
 	}
 }
@@ -818,41 +724,24 @@ void escreve_ri(char *ri,int EscRI,char inst[17]) {
 	}
 }
 
-void escreve_pc(int *pc, int EscPC, int FontePC) {
+void escreve_pc(int *pc, int EscPC, int FontePC, int Branch, int flag_zero) {
 	if (EscPC == 1) {
-		*pc = FontePC;
-	}
-}
-
-void escreve_mem(char (*mem)[17],int EscMem,int b,int IouD) {
-	if(EscMem == 1) {
-		int indice = 0;
-		char bin[17] = "0000000000000000";
-		if (b == 0) {
-			return;
+		if (Branch == 1) {
+			if (flag_zero == 1) {
+				*pc = FontePC;
+			}
 		}
-
-		while (b > 0) {
-			bin[indice++] = (b % 2) + '0';
-			b /= 2;
+		else {
+			*pc = FontePC;
 		}
-
-		bin[indice] = '\0';
-
-		for (int i = 0; i < indice / 2; i++) {
-			char temp = bin[i];
-			bin[i] = bin[indice - i - 1];
-			bin[indice - i - 1] = temp;
-		}
-		strcpy(mem[IouD],bin);
 	}
 }
 
 int IOuD(int IouD, int pc, int imm) {
-	switch(IouD) {
-	case 0:
+	if(IouD == 0) {
 		return pc;
-	case 1:
+	}
+	else if(IouD == 1) {
 		return imm;
 	}
 }
@@ -870,34 +759,111 @@ int PCFonte(int resul, int reg_ula, int FontePC) {
 	}
 }
 
-int And(int op1, int op2) {
-	return op1 & op2;
+// FunC'C#o auxiliar recursiva
+void int_para_binario_recursiva(int valor, char *binario, int pos) {
+	if(pos < 0) {
+		return;
+	}
+
+	if(valor & 1) {
+		binario[pos] = '1';
+	}
+	else {
+		binario[pos] = '0';
+	}
+
+	int_para_binario_recursiva(valor >> 1, binario, pos-1);
 }
 
-int Or(int op1, int op2) {
-	return op1 | op2;
+// FunC'C#o principal
+void int_para_binario(int valor, char *binario) {
+	int i;
+
+	for(i = 0; i < 16; i++) {
+		binario[i] = '0';
+	}
+
+	binario[16] = '\0';
+
+	int_para_binario_recursiva(valor, binario, 15);
 }
 
-int RegiDest(int rs, int rt, int RegDest) {
-	switch (RegDest) {
-	case 0:
-		return rs;
-	case 1:
-		return rt;
+// FunC'C#o para executar o run
+void executa_run(char (*mem)[17], Instrucao *in, Decodificador *d, Registradores *r, Pilha *p, Sinais *s, ALUout *saida, int *est) {
+	int executa = 1;
+
+	while(executa == 1) {
+		executa_step(mem, in, d, r, p, s, saida, est);
+
+		if(r->pc > 127 || strcmp(mem[r->pc], "0000000000000000") == 0) {
+			executa = 0;
+			printf("\n\nExecuC'C#o concluC-da. Estado final:");
+			print_mem(mem);
+			printReg(r->br);
+			printf("\nPC: %d", r->pc);
+			printf("\nRI: %s", r->ri);
+			printf("\nA: %d", r->a);
+			printf("\nB: %d", r->b);
+			printf("\nULA-SAIDA: %d\n", r->ula_saida);
+		}
 	}
 }
 
-void escreve_br(int *reg, int EscReg, int dado) {
-	if(EscReg == 1) {
-		*reg = dado;
-	}
-}
+// funcao para conversao das instrucoes para assembly e salvar "arquivo.asm"
+void salvarAssembly(char mem[256][17]) {
+	char arquivo[20];
 
-int MemReg(int ula_saida, int dado, int MemParaReg) {
-	switch (MemParaReg) {
-	case 0:
-		return ula_saida;
-	case 1:
-		return dado;
+	printf("Nome do arquivo .asm: ");
+	scanf("%s", arquivo);
+
+	FILE *arq = fopen(arquivo, "w");
+	if (!arq) {
+		perror("Erro ao criar arquivo");
+		return;
 	}
+
+	for (int i = 0; i < 128; i++) {
+		if (mem[i][0] == '\0') continue; // Ignora posiC'C5es vazias
+
+		struct instrucao inst;
+		Decodificador d;
+		decodificarInstrucao(mem[i], &inst, &d);
+
+		// Converte para assembly e escreve no arquivo
+		switch (d.opcode) {
+		case 0: // Tipo R (add, sub, and, or)
+			switch (d.funct) {
+			case 0:
+				fprintf(arq, "add $%d, $%d, $%d\n", d.rd, d.rs, d.rt);
+				break;
+			case 2:
+				fprintf(arq, "sub $%d, $%d, $%d\n", d.rd, d.rs, d.rt);
+				break;
+			case 4:
+				fprintf(arq, "and $%d, $%d, $%d\n", d.rd, d.rs, d.rt);
+				break;
+			case 5:
+				fprintf(arq, "or $%d, $%d, $%d\n", d.rd, d.rs, d.rt);
+				break;
+			}
+			break;
+		case 4: // addi
+			fprintf(arq, "addi $%d, $%d, %d\n", d.rt, d.rs, d.imm);
+			break;
+		case 11: // lw
+			fprintf(arq, "lw $%d, %d($%d)\n", d.rt, d.imm, d.rs);
+			break;
+		case 15: // sw
+			fprintf(arq, "sw $%d, %d($%d)\n", d.rt, d.imm, d.rs);
+			break;
+		case 8: // beq
+			fprintf(arq, "beq $%d, $%d, %d\n", d.rs, d.rt, d.imm);
+			break;
+		case 2: // j
+			fprintf(arq, "j %d\n", d.addr);
+			break;
+		}
+	}
+	fclose(arq);
+	printf("Arquivo %s salvo com sucesso!\n", arquivo);
 }
