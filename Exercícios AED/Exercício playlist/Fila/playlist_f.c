@@ -20,13 +20,12 @@ int main() {
 			break;
 		case 2:
 			libera(playlist);
-			printf("\nPlaylist esvaziada!");
 			break;
 		case 3:
 			empty(playlist);
 			break;
 		case 4:
-			printf("\nO tamanho da playlist e: %d",tamanho(playlist));
+			tamanho(playlist);
 			break;
 		case 5:
 			node = cria_nodo();
