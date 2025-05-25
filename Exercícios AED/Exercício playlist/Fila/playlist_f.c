@@ -6,6 +6,9 @@
 
 int main() {
 	int op,posicao,code;
+	fila *playlist = NULL;
+	nodo *node = NULL;
+	musica *song = NULL;
 	char title[256], artist[256], lyrics [256];
 	do {
 		menu();
@@ -13,7 +16,7 @@ int main() {
 		scanf("%d", &op);
 		switch(op) {
 		case 1:
-			fila *playlist = cria_fila();
+			playlist = cria_fila();
 			break;
 		case 2:
 			libera(playlist);
@@ -26,8 +29,8 @@ int main() {
 			printf("\nO tamanho da playlist e: %d",tamanho(playlist));
 			break;
 		case 5:
-			nodo *node=cria_nodo();
-			musica *song=cria_espaco();
+			node = cria_nodo();
+			song = cria_espaco();
 
 			printf("\nDigite o titulo da musica: ");
 			scanf(" %[^\n]s",title);
