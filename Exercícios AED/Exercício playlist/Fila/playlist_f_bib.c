@@ -38,10 +38,14 @@ musica *cria_espaco(void) {
 }
 
 void empty(fila *playlist) {
-	if(check_empty(playlist)) {
-		printf("\nA playlist esta vazia!");
+	if(playlist == NULL) {
+		printf("\nCrie uma playlist primeiro!");
 	} else {
-		printf("\nA playlist nao esta vazia!");
+		if(check_empty(playlist)) {
+			printf("\nA playlist esta vazia!");
+		} else {
+			printf("\nA playlist nao esta vazia!");
+		}
 	}
 }
 
@@ -49,75 +53,97 @@ bool check_empty(fila *playlist) {
 	return playlist->primeiro_nodo == playlist->ultimo_nodo;
 }
 
-int tamanho(fila *playlist) {
-	return playlist->tamanho;
+void tamanho(fila *playlist) {
+	if(playlist == NULL) {
+		printf("\nCrie uma playlist primeiro!");
+	} else {
+		printf("\nO tamanho da playlist e: %d",playlist->tamanho);
+	}
 }
 
 void insere(fila *playlist, nodo *node, musica *song, char *title, char *artist, char *lyrics, int code) {
-	node->info = song;
-	strcpy(song->titulo, title);
-	strcpy(song->artista, artist);
-	strcpy(song->letra, lyrics);
-	song->codigo = code;
-	playlist->tamanho++;
-
-	if(playlist->primeiro_nodo == NULL) {
-		playlist->primeiro_nodo = node;
+	if(playlist == NULL) {
+		printf("\nCrie uma playlist primeiro!");
 	} else {
-		if(playlist->ultimo_nodo == NULL) {
-			node->prox = NULL;
-			playlist->ultimo_nodo = node;
-			playlist->primeiro_nodo->prox = node;
+		node->info = song;
+		strcpy(song->titulo, title);
+		strcpy(song->artista, artist);
+		strcpy(song->letra, lyrics);
+		song->codigo = code;
+		playlist->tamanho++;
+
+		if(playlist->primeiro_nodo == NULL) {
+			playlist->primeiro_nodo = node;
 		} else {
-			playlist->ultimo_nodo->prox = node;
-			playlist->ultimo_nodo = node;
+			if(playlist->ultimo_nodo == NULL) {
+				node->prox = NULL;
+				playlist->ultimo_nodo = node;
+				playlist->primeiro_nodo->prox = node;
+			} else {
+				playlist->ultimo_nodo->prox = node;
+				playlist->ultimo_nodo = node;
+			}
 		}
 	}
 }
 
 nodo *encontra(fila *playlist, int code) {
-	if (playlist->primeiro_nodo == NULL) {
-		printf("\nPlaylis vazia!\n");
+	if(playlist == NULL) {
+		printf("\nCrie uma playlist primeiro!");
 		return NULL;
 	} else {
-		nodo *aux = playlist->primeiro_nodo;
-		while (aux != NULL) {
-			if (aux->info->codigo == code) {
-				return aux;
+		if (playlist->primeiro_nodo == NULL) {
+			printf("\nPlaylis vazia!\n");
+			return NULL;
+		} else {
+			nodo *aux = playlist->primeiro_nodo;
+			while (aux != NULL) {
+				if (aux->info->codigo == code) {
+					return aux;
+				}
+				aux = aux->prox;
 			}
-			aux = aux->prox;
+			printf("\nNao ha musica com este codigo na playlist!\n");
+			return NULL;
 		}
-		return NULL;
 	}
 }
 
 nodo *remover(fila *playlist) {
-	if (playlist->primeiro_nodo == NULL) {
-		printf("\nPlaylis vazia!\n");
-		return NULL;
+	if(playlist == NULL) {
+		printf("\nCrie uma playlist primeiro!");
 	} else {
-		nodo *aux = playlist->primeiro_nodo;
-		playlist->primeiro_nodo = aux->prox;
-		playlist->tamanho--;
-		free(aux);
-		printf("\nMusica removida!");
+		if (playlist->primeiro_nodo == NULL) {
+			printf("\nPlaylis vazia!\n");
+			return NULL;
+		} else {
+			nodo *aux = playlist->primeiro_nodo;
+			playlist->primeiro_nodo = aux->prox;
+			playlist->tamanho--;
+			free(aux);
+			printf("\nMusica removida!");
+		}
 	}
 }
 void mostra_playlist(fila *p) {
-	nodo *aux=p->primeiro_nodo;
-	if(aux == NULL) {
-		printf("\nPlaylist vazia!\n");
+	if(p == NULL) {
+		printf("\nCrie uma playlist primeiro!");
 	} else {
-		while(aux != NULL) {
-			mostra_musica(aux,0);
-			aux=aux->prox;
+		nodo *aux=p->primeiro_nodo;
+		if(aux == NULL) {
+			printf("\nPlaylist vazia!\n");
+		} else {
+			while(aux != NULL) {
+				mostra_musica(aux,0);
+				aux=aux->prox;
+			}
 		}
 	}
 }
 
 void mostra_musica(nodo *aux, int sinal) {
 	if(aux == NULL) {
-		printf("\nNao ha musica com este codigo na playlist!\n");
+		return;
 	} else {
 		printf("\nTitulo da musica: %s",aux->info->titulo);
 		printf("\nNome do artista: %s",aux->info->artista);
@@ -130,15 +156,21 @@ void mostra_musica(nodo *aux, int sinal) {
 }
 
 void libera(fila *playlist) {
-	nodo *aux = playlist->primeiro_nodo;
-	nodo *anterior;
-	while(aux != playlist->ultimo_nodo) {
-		anterior = aux;
-		aux = aux->prox;
-		free(anterior);
+	if(playlist == NULL) {
+		printf("\nCrie uma playlist primeiro!");
+	} else {
+		nodo *aux = playlist->primeiro_nodo;
+		nodo *anterior;
+		while(aux != playlist->ultimo_nodo) {
+			anterior = aux;
+			aux = aux->prox;
+			free(anterior);
+		}
+		free(playlist->ultimo_nodo);
+		playlist->primeiro_nodo = NULL;
+		playlist->ultimo_nodo = NULL;
+		playlist->tamanho = 0;
+		
+		printf("\nPlaylist deletada!");
 	}
-	free(playlist->ultimo_nodo);
-	playlist->primeiro_nodo = NULL;
-	playlist->ultimo_nodo = NULL;
-	playlist->tamanho = 0;
 }
