@@ -7,8 +7,8 @@ typedef struct desc_avl desc_avl;
 struct nodo {
 	int chave;
 	nodo *pai,
-	    *esq,
-	    *dir;
+	     *esq,
+	     *dir;
 };
 
 struct desc_avl {
@@ -18,19 +18,17 @@ struct desc_avl {
 
 void menu();
 desc_avl *cria_arvore();
-nodo *cria_nodo();
-void insere(desc_avl *arvore,nodo *sub_arvore);
+nodo *cria_nodo(int chave);
+void insere(desc_avl *arvore);
+int le_chave();
 int check_empty(desc_avl *arvore,int code);
-void inorder(nodo *nodo);
-void postorder(nodo *nodo);
-void insere_esq(nodo *sub_arvore,nodo *nodo);
-void insere_dir(nodo *sub_arvore,nodo *nodo);
+void inorder(nodo *node);
+void postorder(nodo *node);
 
 int main() {
-	int op,chave;
+	int op;
 
 	desc_avl *arvore = NULL;
-	nodo *sub_arvore = NULL;
 
 	while(op != 5) {
 
@@ -44,17 +42,17 @@ int main() {
 			break;
 
 		case 2:
-			sub_arvore = cria_nodo();
-			insere(arvore,sub_arvore);
+			insere(arvore);
 			break;
+
 		case 3:
 			check_empty(arvore,0);
 			break;
-			
-        case 4:
+
+		case 4:
 			check_empty(arvore,1);
 			break;
-			
+
 		case 6:
 			return 0;
 			break;
@@ -82,37 +80,55 @@ desc_avl *cria_arvore() {
 	return nova_arvore;
 }
 
-nodo *cria_nodo() {
+nodo *cria_nodo(int chave) {
 	nodo *novo_nodo = (nodo *)malloc(sizeof(nodo));
+	novo_nodo->chave = chave;
 	novo_nodo->pai = NULL;
 	novo_nodo->esq = NULL;
 	novo_nodo->dir = NULL;
 	return novo_nodo;
 }
 
-void insere(desc_avl *arvore,nodo *sub_arvore) {
+void insere(desc_avl *arvore) {
 	if(arvore == NULL) {
-	    printf("\n Crie uma arvore primeiro!");
+		printf("\n Crie uma arvore primeiro!");
 		return;
 	} else {
-        int chave;
-        
-        printf("\n Digite o valor da chave: ");
-        scanf("%d",&chave);
-        
-		sub_arvore->chave = chave;
-
+		nodo *node = cria_nodo(le_chave());
 		if(arvore->raiz == NULL) {
-			arvore->raiz = sub_arvore;
+			arvore->raiz = node;
 		} else {
-			if(chave < arvore->raiz->chave) {
-				insere_esq(arvore->raiz,sub_arvore);
-			}
-			else if(chave > arvore->raiz->chave) {
-				insere_dir(arvore->raiz,sub_arvore);
+		    nodo *atual = arvore->raiz;
+			while (1) {
+				if (node->chave < atual->chave) {
+					if (atual->esq == NULL) {
+						atual->esq = node;
+						break;
+					} else {
+						atual = atual->esq;
+					}
+				} else if (node->chave > atual->chave) {
+					if (atual->dir == NULL) {
+						atual->dir = node;
+						break;
+					} else {
+						atual = atual->dir;
+					}
+				} else {
+					printf("\nChave duplicada!");
+					free(node);
+					break;
+				}
 			}
 		}
 	}
+}
+
+int le_chave() {
+	int chave;
+	printf("\n Digite o valor da chave: ");
+	scanf("%d",&chave);
+	return chave;
 }
 
 int check_empty(desc_avl *arvore,int code) {
@@ -144,33 +160,7 @@ void inorder(nodo *nodo) {
 void postorder(nodo *nodo) {
 	if(nodo != NULL) {
 		printf("\n %d",nodo->chave);
-		inorder(nodo->esq);
-		inorder(nodo->dir);
-	}
-}
-
-void insere_esq(nodo *sub_arvore,nodo *nodo) {
-	if(sub_arvore->esq == NULL) {
-		sub_arvore->esq = nodo;
-	} else {
-		if(nodo->chave < sub_arvore->esq->chave) {
-			insere_esq(sub_arvore->esq,nodo);
-		}
-		else if(nodo->chave > sub_arvore->esq->chave) {
-			insere_dir(sub_arvore->dir,nodo);
-		}
-	}
-}
-
-void insere_dir(nodo *sub_arvore,nodo *nodo) {
-	if(sub_arvore->dir == NULL) {
-		sub_arvore->dir = nodo;
-	} else {
-		if(sub_arvore->chave > sub_arvore->esq->chave) {
-			insere_dir(sub_arvore->dir,nodo);
-		}
-		else if(sub_arvore->chave < sub_arvore->esq->chave) {
-			insere_esq(sub_arvore->esq,nodo);
-		}
+		postorder(nodo->esq);
+		postorder(nodo->dir);
 	}
 }
