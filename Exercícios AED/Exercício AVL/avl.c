@@ -17,21 +17,25 @@ struct desc_avl {
 };
 
 void menu();
+
 desc_avl *cria_arvore();
 nodo *cria_nodo(int chave);
-void insere(desc_avl *arvore);
 int le_chave();
+
+void insere(desc_avl *arvore);
+nodo* insere_avl(nodo *novo, nodo *raiz);
+nodo* remover_avl(nodo* raiz, int chave);
+
 int check_empty(desc_avl *arvore,int code);
 void inorder(nodo *node);
-void postorder(nodo *node);
+void preorder(nodo *node);
 
 int main() {
 	int op;
 
 	desc_avl *arvore = NULL;
 
-	while(op != 5) {
-
+	do {
 		menu();
 		printf("\n Escolha uma das opcoes acima: ");
 		scanf("%d",&op);
@@ -46,21 +50,26 @@ int main() {
 			break;
 
 		case 3:
-			check_empty(arvore,0);
+			check_empty(arvore,2);
 			break;
 
 		case 4:
+			check_empty(arvore,0);
+			break;
+
+		case 5:
 			check_empty(arvore,1);
 			break;
 
 		case 6:
+			printf("\nVoce saiu!");
 			return 0;
 			break;
 
 		default:
 			printf("\n Opcao invalida!");
 		}
-	}
+	} while(op != 6);
 
 	return 0;
 }
@@ -68,9 +77,10 @@ int main() {
 void menu() {
 	printf("\n\n 1 - CREATE AVL");
 	printf("\n 2 - INSERT");
-	printf("\n 3 - PRINT INORDER");
-	printf("\n 4 - PRINT POSTORDER");
-	printf("\n 6 - SING OUT");
+	printf("\n 3 - REMOVE");
+	printf("\n 4 - PRINT INORDER");
+	printf("\n 5 - PRINT PREORDER");
+	printf("\n 6 - SIGN OUT");
 }
 
 desc_avl *cria_arvore() {
@@ -89,41 +99,6 @@ nodo *cria_nodo(int chave) {
 	return novo_nodo;
 }
 
-void insere(desc_avl *arvore) {
-	if(arvore == NULL) {
-		printf("\n Crie uma arvore primeiro!");
-		return;
-	} else {
-		nodo *node = cria_nodo(le_chave());
-		if(arvore->raiz == NULL) {
-			arvore->raiz = node;
-		} else {
-		    nodo *atual = arvore->raiz;
-			while (1) {
-				if (node->chave < atual->chave) {
-					if (atual->esq == NULL) {
-						atual->esq = node;
-						break;
-					} else {
-						atual = atual->esq;
-					}
-				} else if (node->chave > atual->chave) {
-					if (atual->dir == NULL) {
-						atual->dir = node;
-						break;
-					} else {
-						atual = atual->dir;
-					}
-				} else {
-					printf("\nChave duplicada!");
-					free(node);
-					break;
-				}
-			}
-		}
-	}
-}
-
 int le_chave() {
 	int chave;
 	printf("\n Digite o valor da chave: ");
@@ -131,22 +106,93 @@ int le_chave() {
 	return chave;
 }
 
-int check_empty(desc_avl *arvore,int code) {
+void insere(desc_avl *arvore) {
+	if(arvore == NULL) {
+		printf("\n Crie uma arvore primeiro!");
+		return;
+	} else {
+		nodo *node = cria_nodo(le_chave());
+		arvore->raiz = insere_avl(node, arvore->raiz);
+	}
+}
+
+nodo* insere_avl(nodo *novo, nodo *raiz) {
+	if(raiz == NULL) {
+		return novo;
+	}
+
+	if(novo->chave < raiz->chave) {
+		raiz->esq = insere_avl(novo, raiz->esq);
+		raiz->esq->pai = raiz;
+	} else if(novo->chave > raiz->chave) {
+		raiz->dir = insere_avl(novo, raiz->dir);
+		raiz->dir->pai = raiz;
+	} else {
+		printf("\nChave duplicada! Falha ao inserir!");
+		return raiz;
+	}
+
+	return raiz;
+}
+
+nodo* remover_avl(nodo* raiz, int chave) {
+	if (raiz == NULL) {
+		printf("\nChave inexistente!");
+		return NULL;
+	}
+
+	if (chave < raiz->chave) {
+		raiz->esq = remover_avl(raiz->esq, chave);
+		if (raiz->esq) raiz->esq->pai = raiz;
+	} else if (chave > raiz->chave) {
+		raiz->dir = remover_avl(raiz->dir, chave);
+		if (raiz->dir) raiz->dir->pai = raiz;
+	} else {
+		if (raiz->esq == NULL) {
+			nodo *temp = raiz->dir;
+			if (temp) temp->pai = raiz->pai;
+			free(raiz);
+			return temp;
+		} else if (raiz->dir == NULL) {
+			nodo *temp = raiz->esq;
+			if (temp) temp->pai = raiz->pai;
+			free(raiz);
+			return temp;
+		}
+
+		nodo *sucessor = raiz->dir;
+		while (sucessor->esq != NULL)
+			sucessor = sucessor->esq;
+
+		raiz->chave = sucessor->chave;
+		raiz->dir = remover_avl(raiz->dir, sucessor->chave);
+		if (raiz->dir) raiz->dir->pai = raiz;
+	}
+
+	return raiz;
+}
+
+int check_empty(desc_avl *arvore, int code) {
 	if(arvore == NULL) {
 		printf("\n Crie uma arvore primeiro!");
 		return 1;
-	} else {
-		if(arvore->raiz == NULL) {
-			printf("\n Arvore vazia!");
-		} else {
-			if(code == 0) {
-				inorder(arvore->raiz);
-			}
-			else if(code == 1) {
-				postorder(arvore->raiz);
-			}
-		}
 	}
+	if(arvore->raiz == NULL) {
+		printf("\n Arvore vazia!");
+		return 1;
+	}
+
+	if(code == 0)
+		inorder(arvore->raiz);
+	else if(code == 1)
+		preorder(arvore->raiz);
+	else if(code == 2) {
+		int chave;
+		printf("\nDigite o valor da chave que deseja remover: ");
+		scanf("%d",&chave);
+		arvore->raiz = remover_avl(arvore->raiz, chave);
+	}
+	return 0;
 }
 
 void inorder(nodo *nodo) {
@@ -157,10 +203,10 @@ void inorder(nodo *nodo) {
 	}
 }
 
-void postorder(nodo *nodo) {
+void preorder(nodo *nodo) {
 	if(nodo != NULL) {
-		printf("\n %d",nodo->chave);
-		postorder(nodo->esq);
-		postorder(nodo->dir);
+		preorder(nodo->esq);
+		preorder(nodo->dir);
+		printf("\n %d", nodo->chave);
 	}
 }
