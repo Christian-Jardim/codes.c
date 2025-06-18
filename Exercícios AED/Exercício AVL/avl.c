@@ -5,7 +5,8 @@ typedef struct nodo nodo;
 typedef struct desc_avl desc_avl;
 
 struct nodo {
-	int chave;
+	int chave,
+	    altura;
 	nodo *pai,
 	     *esq,
 	     *dir;
@@ -25,6 +26,13 @@ int le_chave();
 void insere(desc_avl *arvore);
 nodo* insere_avl(nodo *novo, nodo *raiz);
 nodo* remover_avl(nodo* raiz, int chave);
+
+int altura(nodo *node);
+void atualizar_altura(nodo *n);
+int balanceamento(nodo *n);
+nodo* rebalancear(nodo *node);
+nodo* rotacao_esquerda(nodo *n);
+nodo* rotacao_direita(nodo *n);
 
 int check_empty(desc_avl *arvore,int code);
 void inorder(nodo *node);
@@ -93,6 +101,7 @@ desc_avl *cria_arvore() {
 nodo *cria_nodo(int chave) {
 	nodo *novo_nodo = (nodo *)malloc(sizeof(nodo));
 	novo_nodo->chave = chave;
+	novo_nodo->altura = 1;
 	novo_nodo->pai = NULL;
 	novo_nodo->esq = NULL;
 	novo_nodo->dir = NULL;
@@ -132,7 +141,71 @@ nodo* insere_avl(nodo *novo, nodo *raiz) {
 		return raiz;
 	}
 
-	return raiz;
+    return rebalancear(raiz);
+}
+
+void atualizar_altura(nodo *n) {
+    if (n)
+        n->altura = 1 + (altura(n->esq) > altura(n->dir) ? altura(n->esq) : altura(n->dir));
+}
+
+int altura(nodo *n) {
+	if (n != NULL)
+		return n->altura;
+	else
+		return -1;
+}
+
+int balanceamento(nodo *n) {
+    return altura(n->dir) - altura(n->esq);
+}
+
+
+nodo* rebalancear(nodo *node) {
+    atualizar_altura(node);
+    int fb = balanceamento(node);
+
+    if (fb < -1) {
+        if (balanceamento(node->esq) > 0)
+            node->esq = rotacao_esquerda(node->esq);
+        return rotacao_direita(node);
+    } else if (fb > 1) {
+        if (balanceamento(node->dir) < 0)
+            node->dir = rotacao_direita(node->dir);
+        return rotacao_esquerda(node);
+    }
+
+    return node;
+}
+
+nodo* rotacao_esquerda(nodo *n) {
+    nodo *aux = n->dir;
+    n->dir = aux->esq;
+    if (aux->esq) aux->esq->pai = n;
+    aux->esq = n;
+
+    aux->pai = n->pai;
+    n->pai = aux;
+
+    atualizar_altura(n);
+    atualizar_altura(aux);
+
+    return aux;
+}
+
+nodo* rotacao_direita(nodo *n) {
+    nodo *aux = n->esq;
+    n->esq = aux->dir;
+    if (aux->dir) aux->dir->pai =n;
+    aux->dir = n;
+
+    aux->pai = n->pai;
+    n->pai = aux;
+
+    atualizar_altura(n);
+    atualizar_altura(aux);
+
+    return aux;
 }
 
 nodo* remover_avl(nodo* raiz, int chave) {
@@ -168,8 +241,7 @@ nodo* remover_avl(nodo* raiz, int chave) {
 		raiz->dir = remover_avl(raiz->dir, sucessor->chave);
 		if (raiz->dir) raiz->dir->pai = raiz;
 	}
-
-	return raiz;
+    return rebalancear(raiz);
 }
 
 int check_empty(desc_avl *arvore, int code) {
@@ -205,8 +277,8 @@ void inorder(nodo *nodo) {
 
 void preorder(nodo *nodo) {
 	if(nodo != NULL) {
+	    printf("\n %d", nodo->chave);
 		preorder(nodo->esq);
 		preorder(nodo->dir);
-		printf("\n %d", nodo->chave);
 	}
 }
