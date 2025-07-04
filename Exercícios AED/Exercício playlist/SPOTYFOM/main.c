@@ -2,71 +2,134 @@
 #include <string.h>
 #include <stdlib.h>
 
-int main(){
-    
+
+typedef struct musica musica;
+typedef struct nodo nodo;
+typedef struct desc desc;
+
+struct musica {
+	char titulo[256];
+	char artista[256];
+	char letra[256];
+	int codigo;
+	int execucoes;
+};
+
+struct nodo {
+	nodo *prox;
+	musica *info;
+	nodo *ant;
+};
+
+struct desc {
+	nodo *primeiro_nodo;
+	int tamanho;
+};
+
+int menu1();
+int menu2();
+desc *carrega();
+desc *cria_desc();
+nodo *cria_nodo();
+musica *cria_campo();
+
+
+int main() {
+
 	int op;
 	char title[256], artist[256], lyrics [256];
-	
-	do{
-		op = menu();
-		
+
+	do {
+		op = menu1();
 		switch(op) {
 		case 1:
-			desc *playlist=cria_desc();
+			do {
+				op = menu2();
+				switch(op) {
+				case 1:
+					desc *acervo=carrega();
+					break;
+				case 0:
+					printf("\n Voce saiu!");
+					break;
+				default:
+					printf("\n Opcao invalida\n");
+				}
+			} while(op != 0);;
 			break;
-		case 2:
-			nodo *node=cria_nodo();
-			musica *song=cria_espaco();
-			printf("\nDigite a posicao na qual quer inserir: ");
-			scanf("%d",&posicao);
-			printf("Digite o titulo da musica: ");
-			scanf(" %[^\n]s",title);
-			printf("Digite o nome do artista: ");
-			scanf(" %[^\n]s",artist);
-			printf("Digite a letra da musica: ");
-			scanf(" %[^\n]s",lyrics);
-			printf("Informe um codigo para identificar essa musica: ");
-			scanf("%d",&code);
-			valida_code(playlist,&code);
-			valida_posicao(playlist,node,song,title,artist,lyrics,code,posicao);
-			break;
-		case 3:
-			
-			break;
-		case 4:
-			
-			break;
-		case 5:
-			
-			break;
-		case 6:
-			
-			break;
-		case 7:
-			
-			break;
-		case 8:
-			libera(playlist);
-			printf("\nVoce saiu!");
+		case 0:
+			printf("\n Voce saiu!");
 			break;
 		default:
-			printf("\nOpcao invalida\n");
+			printf("\n Opcao invalida\n");
 		}
-	}while(op != 8);
+	} while(op != 0);
 
 	return 0;
 }
 
-int menu(){
-	printf("\n1 - Criar uma playlist");
-	printf("\n2 - Inserir uma musica");
-	printf("\n3 - Remover uma musica");
-	printf("\n4 - Encontrar uma musica");
-	printf("\n5 - Mostrar toda a playlist");
-	printf("\n6 - Tocar uma musica");
-	printf("\n7 - Ver o tamanho da playlist");
-	printf("\n8 - Sair");
-	printf("\nEscolha uma das opcoes acima: ");
+int menu1() {
+	int op;
+	printf("\n 1 - Carregar arquivo de musicas");
+	printf("\n 0 - Sair");
+	printf("\n Escolha uma das opcoes acima: ");
 	scanf("%d",&op);
 	return op;
+}
+
+int menu2() {
+	int op;
+	printf("\n 1 - BUSCA");
+	printf("\n 2 - PLAYLIST");
+	printf("\n 3 - EXECUCAO");
+	printf("\n 4 - IMPRESSAO");
+	printf("\n 5 - RELATORIO");
+	printf("\n 0 - SAIR");
+	printf("\n Escolha uma das opcoes acima: ");
+	scanf("%d",&op);
+	return op;
+}
+
+desc *carrega(){
+    int qt;
+	char arquivo[20];
+	printf("\n Nome do arquivo: ");
+	scanf("%s", arquivo);
+	
+	FILE *arq = fopen(arquivo, "r");
+	if(arq == NULL) {
+		printf("\n Erro ao carregar o arquivo");
+	}else{
+		fscanf(arq,"%d\n",&qt);
+		for(int i=0; i<qt; i++) {
+			fscanf(arq,"%[^\n]s\n",item[i].nome);
+			fscanf(arq,"%d\n",&s);
+			item[i].setor = s;
+			fscanf(arq,"%d\n",&item[i].quant);
+			fscanf(arq,"%f\n",&item[i].valor);
+		}
+		printf("\n Arquivo carregado: %s\n",arquivo);
+	}
+	fclose(arq);
+}
+
+
+desc *cria_desc() {
+	desc *nDesc = (desc *)malloc(sizeof(desc));
+	nDesc->tamanho = 0;
+	nDesc->primeiro_nodo=NULL;
+	return nDesc;
+}
+
+nodo *cria_nodo() {
+	nodo *nNodo=(nodo *)malloc(sizeof(nodo));
+	nNodo->prox=NULL;
+	nNodo->ant=NULL;
+	nNodo->info=NULL;
+	return nNodo;
+}
+
+musica *cria_campo() {
+	musica *nMusica = (musica*)malloc(sizeof(musica));
+	return nMusica;
 }
