@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <locale.h>
 
 typedef struct musica Musica;
 typedef struct nodo Nodo;
@@ -26,10 +26,12 @@ struct desc {
 	int tamanho;
 };
 
+int menu();
 int menu1();
-int menu2();
+int menu1_1();
+int menu1_5();
 
-Desc *carrega(Desc *acervo);
+int carrega(Desc **acervo);
 
 Desc *cria_desc();
 Nodo *cria_nodo();
@@ -38,125 +40,194 @@ Musica *cria_campo();
 void insere(Desc *acervo, Nodo *no);
 void mostra_musica(Nodo *aux, int sinal);
 void mostra_acervo(Desc *acervo);
-Nodo *encontra(Desc *playlist, char titulo[20]);
-int main() {
+Nodo *busca_codigo(Desc *acervo, int codigo);
+Nodo *busca_titulo(Desc *acervo, char titulo[256]);
+Nodo *busca_artista(Desc *acervo, char artista[256]);
 
-	int op;
+int main() {
+	int op1,op2,op3,qt = 0,codigo;
+	char titulo[256],artista[256];
 	Desc *acervo=NULL;
+	setlocale(LC_ALL, "Portuguese");
 
 	do {
-		op = menu1();
-		switch(op) {
+		op1 = menu();
+		switch(op1) {
 		case 1:
-			do {
-				acervo=carrega(acervo);
-				op = menu2();
-				switch(op) {
-				case 1:
-
-					break;
-				case 2:
-
-					break;
-				case 3:
-
-					break;
-				case 4:
-					switch(op) {
+			qt = carrega(&acervo);
+			if (qt != 0) {
+				do {
+					op2 = menu1();
+					switch(op2) {
 					case 1:
-
+						op3 = menu1_1();
+						switch(op3) {
+						case 1:
+							printf(" \nInforme o codigo: ");
+							scanf("%d",&codigo);
+							busca_codigo(acervo,codigo);
+							break;
+						case 2:
+							printf(" \nInforme o titulo: ");
+							scanf(" %[^\n]s",titulo);
+							busca_titulo(acervo,titulo);
+							break;
+						case 3:
+							printf(" \nInforme o artista: ");
+							scanf(" %[^\n]s",titulo);
+							busca_artista(acervo,artista);
+							break;
+						case 0:
+							break;
+						default:
+							printf("\n OpC'C#o invC!lida\n");
+						}
+						break;
+					case 2:
+						break;
+					case 3:
+						break;
+					case 4:
+						break;
+					case 5:
+						op3 = menu1_5();
+						switch(op3) {
+						case 1:
+							printf(" \nInforme o tC-tulo da mC:sica: ");
+							scanf(" %[^\n]s",titulo);
+							busca_titulo(acervo,titulo);
+							break;
+						case 2:
+							mostra_acervo(acervo);
+							break;
+						case 0:
+							break;
+						default:
+							printf("\n OpC'C#o invC!lida\n");
+						}
+						break;
+					case 0:
+						break;
+					default:
+						printf("\n OpC'C#o invC!lida\n");
 					}
-					break;
-				case 5:
-
-					break;
-				default:
-					printf("\n Opcao invalida\n");
-				}
-			} while(op != 0);;
+				} while(op2 != 0);
+			}
 			break;
 		case 0:
-			printf("\n Voce saiu!");
 			break;
 		default:
-			printf("\n Opcao invalida\n");
+			printf("\n OpC'C#o invC!lida\n");
 		}
-	} while(op != 0);
+	} while(op1 != 0);
 
 	return 0;
 }
 
+int menu() {
+	int op;
+	printf("\n\n ---------- MENU ----------");
+	printf("\n 1 - Carregar arquivo de mC:sicas");
+	printf("\n 0 - Sair\n");
+	printf("\n Escolha uma das opC'C5es acima: ");
+	scanf("%d",&op);
+	return op;
+}
+
 int menu1() {
 	int op;
-	printf("\n 1 - Carregar arquivo de musicas");
-	printf("\n 0 - Sair");
-	printf("\n Escolha uma das opcoes acima: ");
-	scanf("%d",&op);
-	return op;
-}
-
-int menu2() {
-	int op;
+	printf("\n\n ------- 1 | MENU -------");
 	printf("\n 1 - BUSCA");
 	printf("\n 2 - PLAYLIST");
-	printf("\n 3 - EXECUCAO");
-	printf("\n 4 - IMPRESSAO");
-	printf("\n 5 - RELATORIO");
-	printf("\n 0 - Voltar ao menu anterior");
-	printf("\n Escolha uma das opcoes acima: ");
+	printf("\n 3 - EXECUCCO");
+	printf("\n 4 - IMPRESSCO");
+	printf("\n 5 - RELATCRIO");
+	printf("\n 0 - Voltar ao menu anterior\n");
+	printf("\n Escolha uma das opC'C5es acima: ");
 	scanf("%d",&op);
 	return op;
 }
 
-Desc *carrega(Desc *acervo) {
+int menu1_1() {
+	int op;
+	printf("\n\n ------- 1.1 | MENU -------");
+	printf("\n 1 - Buscar por codigo");
+	printf("\n 2 - Buscar por titulo");
+	printf("\n 3 - Buscar por artista");
+	printf("\n 0 - Voltar ao menu anterior\n");
+	printf("\n Escolha uma das opC'C5es acima: ");
+	scanf("%d",&op);
+	return op;
+}
 
+int menu1_5() {
+	int op;
+	printf("\n\n ------- 1.5 | MENU -------");
+	printf("\n 1 - Buscar por titulo");
+	printf("\n 2 - Imprimir todo o acervo");
+	printf("\n 0 - Voltar ao menu anterior\n");
+	printf("\n Escolha uma das opC'C5es acima: ");
+	scanf("%d",&op);
+	return op;
+}
+
+int carrega(Desc **acervo) {
 	int qt;
 	char arquivo[20], linha[100];
 
 	printf("\n Nome do arquivo: ");
 	scanf("%s", arquivo);
+
 	FILE *arq = fopen(arquivo, "r");
+	if (arq == NULL) {
+		printf("\n\n ----");
+		printf(" Erro ao carregar o arquivo");
+		printf("----\n");
+		return 0;
+	}
 
-	if(arq == NULL) {
-		printf("\n Erro ao carregar o arquivo");
-	} else {
-		acervo=cria_desc();
+	printf("\n\n ----");
+	printf(" Arquivo carregado com sucesso!");
+	printf("----\n");
 
-		fscanf(arq,"%d\n",&qt);
-		while(qt > 0) {
-			Nodo *no=cria_nodo();
-			Musica *musica=cria_campo();
+	*acervo = cria_desc();
+
+	fscanf(arq, "%d\n", &qt);
+
+	for (int i = 0; i < qt; i++) {
+		if (fgets(linha, sizeof(linha), arq)) {
+			linha[strcspn(linha, "\n")] = 0; // remove \n
+
+			Nodo *no = cria_nodo();
+			Musica *musica = cria_campo();
 			no->info = musica;
 
-			// Remover o \n do final, se houver
-			linha[strcspn(linha, "\n")] = 0;
-
-			// Separar com strtok
 			char *token = strtok(linha, ";");
-			if (token != NULL)
-				strcpy(musica->artista, token);
+			if (!token) continue;
+			strcpy(musica->artista, token);
 
 			token = strtok(NULL, ";");
-			if (token != NULL)
-				strcpy(musica->titulo, token);
+			if (!token) continue;
+			strcpy(musica->titulo, token);
 
 			token = strtok(NULL, ";");
-			if (token != NULL)
-				strcpy(musica->letra, token);
+			if (!token) continue;
+			strcpy(musica->letra, token);
 
 			token = strtok(NULL, ";");
-			if (token != NULL)
-				musica->execucoes = atoi(token);
+			if (!token) continue;
+			musica->execucoes = atoi(token);
 
 			token = strtok(NULL, ";");
-			if (token != NULL)
-				musica->codigo = atoi(token);
+			if (!token) continue;
+			musica->codigo = atoi(token);
 
-			insere(acervo,no);
-			qt--;
+			insere(*acervo, no);
 		}
-		fclose(arq);
 	}
+
+	fclose(arq);
+	return qt;
 }
 
 Desc *cria_desc() {
@@ -184,7 +255,7 @@ void insere(Desc *acervo, Nodo *no) {
 		acervo->primeiro_nodo = no;
 	} else {
 		Nodo *aux = acervo->primeiro_nodo;
-		while(aux != NULL) {
+		while(aux->prox != NULL) {
 			aux = aux->prox;
 		}
 		aux->prox = no;
@@ -197,6 +268,7 @@ void mostra_acervo(Desc *acervo) {
 	if(aux == NULL) {
 		printf("\n Acervo vazio!\n");
 	} else {
+		printf("\n\n --------- Acervo ---------");
 		while(aux != NULL) {
 			mostra_musica(aux,0);
 			aux=aux->prox;
@@ -206,20 +278,40 @@ void mostra_acervo(Desc *acervo) {
 
 void mostra_musica(Nodo *aux, int sinal) {
 	if(aux == NULL) {
-		printf(" Nao ha musica com este codigo na playlist!\n");
-	}
-	else {
-		printf("\n Nome do artista: %s",aux->info->artista);
-		printf("\n Titulo da musica: %s",aux->info->titulo);
-		printf("\n Letra da musica: %s\n",aux->info->letra);
+		return;
+	} else {
+		printf("\n\n ------------------\n");
+		printf("\n Artista: %s",aux->info->artista);
+		printf("\n TC-tulo: %s",aux->info->titulo);
+		printf("\n Letra: %s",aux->info->letra);
 		if(sinal != 1) {
-			printf("\n Quantidade de reproducoes: %d\n",aux->info->execucoes);
-			printf("\n Codigo da musica: %d",aux->info->codigo);
+			printf("\n ReproduC'C5es: %d\n",aux->info->execucoes);
+			printf(" DCC3digo: %d",aux->info->codigo);
 		}
 	}
 }
 
-Nodo *encontra(Desc *acervo, char titulo[20]) {
+Nodo *busca_codigo(Desc *acervo, int codigo) {
+	if (acervo->primeiro_nodo == NULL) {
+		printf("\n Acervo vazio!\n");
+		return NULL;
+	} else {
+		Nodo *aux = acervo->primeiro_nodo;
+		while(aux != NULL) {
+			if(aux->info->codigo == codigo) {
+				mostra_musica(aux,0);
+				break;
+			} else {
+				aux = aux->prox;
+			}
+		}
+		if(aux == NULL) {
+			printf("\n MC:sica nC#o encontrada!");
+		}
+	}
+}
+
+Nodo *busca_titulo(Desc *acervo, char titulo[256]) {
 	if (acervo->primeiro_nodo == NULL) {
 		printf("\n Acervo vazio!\n");
 		return NULL;
@@ -227,10 +319,34 @@ Nodo *encontra(Desc *acervo, char titulo[20]) {
 		Nodo *aux = acervo->primeiro_nodo;
 		while(aux != NULL) {
 			if(strcmp(aux->info->titulo, titulo) == 0) {
-				return aux;
+				mostra_musica(aux,0);
+				break;
 			} else {
 				aux = aux->prox;
 			}
+		}
+		if(aux == NULL) {
+			printf("\n MC:sica nC#o encontrada!");
+		}
+	}
+}
+
+Nodo *busca_artista(Desc *acervo, char artista[256]) {
+	if (acervo->primeiro_nodo == NULL) {
+		printf("\n Acervo vazio!\n");
+		return NULL;
+	} else {
+		Nodo *aux = acervo->primeiro_nodo;
+		while(aux != NULL) {
+			if(strcmp(aux->info->artista, artista) == 0) {
+				mostra_musica(aux,0);
+				break;
+			} else {
+				aux = aux->prox;
+			}
+		}
+		if(aux == NULL) {
+			printf("\n MC:sica nC#o encontrada!");
 		}
 	}
 }
