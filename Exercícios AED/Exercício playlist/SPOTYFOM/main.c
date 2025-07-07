@@ -40,9 +40,9 @@ Musica *cria_campo();
 void insere(Desc *acervo, Nodo *no);
 void mostra_musica(Nodo *aux, int sinal);
 void mostra_acervo(Desc *acervo);
-Nodo *busca_codigo(Desc *acervo, int codigo);
-Nodo *busca_titulo(Desc *acervo, char titulo[256]);
-Nodo *busca_artista(Desc *acervo, char artista[256]);
+void busca_codigo(Desc *acervo, int codigo);
+void busca_titulo(Desc *acervo, const char *titulo);
+void busca_artista(Desc *acervo, const char *artista);
 
 int main() {
 	int op1,op2,op3,qt = 0,codigo;
@@ -74,7 +74,7 @@ int main() {
 							break;
 						case 3:
 							printf(" \nInforme o artista: ");
-							scanf(" %[^\n]s",titulo);
+							scanf(" %[^\n]s",artista);
 							busca_artista(acervo,artista);
 							break;
 						case 0:
@@ -84,6 +84,23 @@ int main() {
 						}
 						break;
 					case 2:
+					    op3 = menu1_1();
+						switch(op3) {
+						case 1:
+							printf(" \nInforme o tamanho da playlist: ");
+							scanf("%d",&codigo);
+							//busca_codigo(acervo,codigo);
+							break;
+						case 2:
+							printf(" \nInforme o titulo: ");
+							scanf(" %[^\n]s",titulo);
+							//busca_titulo(acervo,titulo);
+							break;
+						case 0:
+							break;
+						default:
+							printf("\n OpC'C#o invC!lida\n");
+						}
 						break;
 					case 3:
 						break;
@@ -154,6 +171,17 @@ int menu1_1() {
 	printf("\n 1 - Buscar por codigo");
 	printf("\n 2 - Buscar por titulo");
 	printf("\n 3 - Buscar por artista");
+	printf("\n 0 - Voltar ao menu anterior\n");
+	printf("\n Escolha uma das opC'C5es acima: ");
+	scanf("%d",&op);
+	return op;
+}
+
+int menu1_2() {
+	int op;
+	printf("\n\n ------- 1.2 | MENU -------");
+	printf("\n 1 - Playlist aleatoria");
+	printf("\n 2 - Playlist pessoal");
 	printf("\n 0 - Voltar ao menu anterior\n");
 	printf("\n Escolha uma das opC'C5es acima: ");
 	scanf("%d",&op);
@@ -277,24 +305,23 @@ void mostra_acervo(Desc *acervo) {
 }
 
 void mostra_musica(Nodo *aux, int sinal) {
-	if(aux == NULL) {
+	if(aux == NULL)
 		return;
-	} else {
-		printf("\n\n ------------------\n");
-		printf("\n Artista: %s",aux->info->artista);
-		printf("\n TC-tulo: %s",aux->info->titulo);
-		printf("\n Letra: %s",aux->info->letra);
-		if(sinal != 1) {
-			printf("\n ReproduC'C5es: %d\n",aux->info->execucoes);
-			printf(" DCC3digo: %d",aux->info->codigo);
-		}
+
+	printf("\n\n ------------------\n");
+	printf("\n Artista: %s",aux->info->artista);
+	printf("\n TC-tulo: %s",aux->info->titulo);
+	printf("\n Letra: %s",aux->info->letra);
+	if(sinal != 1) {
+		printf("\n ReproduC'C5es: %d\n",aux->info->execucoes);
+		printf(" DCC3digo: %d",aux->info->codigo);
 	}
 }
 
-Nodo *busca_codigo(Desc *acervo, int codigo) {
+void busca_codigo(Desc *acervo, int codigo) {
 	if (acervo->primeiro_nodo == NULL) {
 		printf("\n Acervo vazio!\n");
-		return NULL;
+		return;
 	} else {
 		Nodo *aux = acervo->primeiro_nodo;
 		while(aux != NULL) {
@@ -305,16 +332,15 @@ Nodo *busca_codigo(Desc *acervo, int codigo) {
 				aux = aux->prox;
 			}
 		}
-		if(aux == NULL) {
-			printf("\n MC:sica nC#o encontrada!");
-		}
+		if(aux == NULL) 
+			printf("\n Codigo nao encontrado!");
 	}
 }
 
-Nodo *busca_titulo(Desc *acervo, char titulo[256]) {
+void busca_titulo(Desc *acervo, const char *titulo) {
 	if (acervo->primeiro_nodo == NULL) {
 		printf("\n Acervo vazio!\n");
-		return NULL;
+		return;
 	} else {
 		Nodo *aux = acervo->primeiro_nodo;
 		while(aux != NULL) {
@@ -325,28 +351,25 @@ Nodo *busca_titulo(Desc *acervo, char titulo[256]) {
 				aux = aux->prox;
 			}
 		}
-		if(aux == NULL) {
-			printf("\n MC:sica nC#o encontrada!");
-		}
+		if(aux == NULL)
+			printf("\n Titulo nao encontrada!");
 	}
 }
 
-Nodo *busca_artista(Desc *acervo, char artista[256]) {
+void busca_artista(Desc *acervo, const char *artista) {
 	if (acervo->primeiro_nodo == NULL) {
-		printf("\n Acervo vazio!\n");
-		return NULL;
+		printf("\nAcervo vazio!\n");
+		return;
 	} else {
 		Nodo *aux = acervo->primeiro_nodo;
-		while(aux != NULL) {
-			if(strcmp(aux->info->artista, artista) == 0) {
-				mostra_musica(aux,0);
+		while (aux != NULL) {
+			if (strcmp(aux->info->artista, artista) == 0) {
+				mostra_musica(aux, 0);
 				break;
-			} else {
-				aux = aux->prox;
 			}
+			aux = aux->prox;
 		}
-		if(aux == NULL) {
-			printf("\n MC:sica nC#o encontrada!");
-		}
+		if(aux == NULL)
+			printf("\nArtista nao encontrado!\n");
 	}
 }
