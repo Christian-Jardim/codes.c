@@ -2,10 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <time.h>
 
 typedef struct musica Musica;
 typedef struct nodo Nodo;
-typedef struct desc Lista;
+typedef struct lista Lista;
 typedef struct fila Fila;
 typedef struct pilha Pilha;
 
@@ -24,7 +25,7 @@ struct nodo {
 };
 
 struct lista {
-	Nodo *primeiro_nodo;
+	Nodo *inicio;
 	int tamanho;
 };
 
@@ -35,7 +36,7 @@ struct fila {
 };
 
 struct pilha {
-	Nodo *top;
+	Nodo *topo;
 	int tamanho;
 };
 
@@ -44,23 +45,33 @@ int menu1();
 int menu1_1();
 int menu1_2();
 int menu1_2_2();
+int menu1_3();
 int menu1_4();
 int menu1_5();
 
-int carrega(Desc **acervo);
-int gera(Desc *fonte);
+int carrega(Lista **acervo);
+int output_fila(Fila *fila);
+int output_pilha(Pilha *pilha);
+int output_acervo(Lista *acervo);
 
-Lista *cria_desc();
+Lista *cria_lista();
+Fila *cria_fila();
+Pilha *cria_pilha();
 Nodo *cria_nodo();
 Musica *cria_campo();
 
-void insere(Desc *acervo, Nodo *no);
-Fila *playlist_aleatoria(int codigo, Desc *acervo);
-Pilha *playlist_pessoal(Desc *acervo);
-void executa(Lista *acervo, Fila *fila, Pilha *pilha);
+void insere(Lista *acervo, Nodo *no);
+Fila *playlist_aleatoria(int tamanho, Lista *acervo);
+Pilha *playlist_pessoal(Lista *acervo);
+void executa_fila(Lista *acervo, Fila *fila);
+void executa_pilha(Lista *acervo, Pilha *pilha);
 
-void push(Desc *playlist, Nodo *item);
+void push(Pilha *pilha, Nodo *item);
 void pop(Pilha *pilha);
+
+void enqueue(Fila *fila, Nodo *item);
+void dequeue(Fila *fila);
+
 Musica* copia_musica(Nodo *no);
 
 void mostra_musica(Nodo *aux);
@@ -68,6 +79,10 @@ void mostra_acervo(Lista *acervo);
 Nodo *busca_codigo(Lista *acervo, int codigo);
 Nodo *busca_titulo(Lista *acervo, const char *titulo);
 Nodo *busca_artista(Lista *acervo, const char *artista);
+
+void libera_lista(Lista *acervo);
+void libera_fila(Fila *fila);
+void libera_pilha(Pilha *pilha);
 
 int main() {
 	int op1,op2,op3,codigo;
@@ -77,6 +92,7 @@ int main() {
 	Fila *fila=NULL;
 	Pilha *pilha=NULL;
 
+	srand(time(NULL));
 	setlocale(LC_ALL, "Portuguese");
 
 	do {
@@ -118,7 +134,7 @@ int main() {
 							case 1: // Cria uma playlist aleatoria
 								printf(" \nInforme o tamanho da playlist: ");
 								scanf("%d",&codigo);
-								playlist_aleatoria(codigo);
+								fila = playlist_aleatoria(codigo, acervo);
 								break;
 							case 2: // Cria uma playlist pessoal
 								pilha = playlist_pessoal(acervo);
@@ -129,17 +145,33 @@ int main() {
 						} while(op3 != 0);
 						break;
 					case 3: // Executa a playlist
-						executa(acervo, fila, pilha);
+
+						do {
+							op3 = menu1_3();
+							switch(op3) {
+							case 1: //
+								executa_fila(acervo,fila);
+								break;
+							case 2: //
+								executa_pilha(acervo,pilha);
+								break;
+							case 0: // Volta para o menu anterior
+								break;
+							}
+						} while(op3 != 0);
 						break;
 					case 4: // Abre o menu para gerar o arquivo de relatorio
 						do {
 							op3 = menu1_4();
 							switch(op3) {
-							case 1: // Gera um arquivo de saida com os dados da playlist
-								gera(fila, pilha);
+							case 1: // Gera um arquivo de saida com os dados da playlist em fila
+								output_fila(fila);
 								break;
-							case 2: // Gera um arquivo de saida com os dados do acervo
-								gera(acervo);
+							case 2: // Gera um arquivo de saida com os dados da playlist em pilha
+								output_pilha(pilha);
+								break;
+							case 3: // Gera um arquivo de saida com os dados do acervo
+								output_acervo(acervo);
 								break;
 							case 0: // Volta para o menu anterior
 								break;
@@ -169,7 +201,13 @@ int main() {
 				} while(op2 != 0);
 			}
 			break;
-		case 0: // Sai do programa
+		case 0: // Sai do programa e libera os descritores
+			if (acervo != NULL)
+				libera_lista(acervo);
+			if (fila != NULL)
+				libera_fila(fila);
+			if (pilha != NULL)
+				libera_pilha(pilha);
 			break;
 		}
 	} while(op1 != 0);
@@ -234,11 +272,23 @@ int menu1_2_2() {
 	return op;
 }
 
+int menu1_3() {
+	int op;
+	printf("\n\n ########## 1.2.2 | MENU ##########\n");
+	printf("\n 1 - Executar a playlist aleatoria");
+	printf("\n 2 - Executar a playlist pessoal");
+	printf("\n 0 - Voltar ao menu anterior\n");
+	printf("\n Escolha uma das opC'C5es acima: ");
+	scanf("%d",&op);
+	return op;
+}
+
 int menu1_4() {
 	int op;
 	printf("\n\n ########## 1.4 | MENU ##########\n");
-	printf("\n 1 - Gerar arquivo da playlist");
-	printf("\n 2 - Gerar arquivo do acervo");
+	printf("\n 1 - Gerar arquivo da playlist aleatoria");
+	printf("\n 2 - Gerar arquivo da playlist pessoal");
+	printf("\n 3 - Gerar arquivo do acervo");
 	printf("\n 0 - Voltar ao menu anterior\n");
 	printf("\n Escolha uma das opC'C5es acima: ");
 	scanf("%d",&op);
@@ -256,7 +306,7 @@ int menu1_5() {
 	return op;
 }
 
-int carrega(Desc **acervo) {
+int carrega(Lista **acervo) {
 	int qt;
 	char arquivo[20], linha[100];
 
@@ -271,7 +321,7 @@ int carrega(Desc **acervo) {
 
 	printf("\n\n**** Arquivo carregado com sucesso ****\n");
 
-	*acervo = cria_desc();
+	*acervo = cria_lista();
 
 	fscanf(arq, "%d\n", &qt);
 
@@ -311,11 +361,11 @@ int carrega(Desc **acervo) {
 	return 0;
 }
 
-Desc *cria_desc() {
-	Desc *nDesc = (Desc *)malloc(sizeof(Desc));
-	nDesc->tamanho = 0;
-	nDesc->primeiro_nodo=NULL;
-	return nDesc;
+Lista *cria_lista() {
+	Lista *nLista = (Lista *)malloc(sizeof(Lista));
+	nLista->tamanho = 0;
+	nLista->inicio=NULL;
+	return nLista;
 }
 
 Nodo *cria_nodo() {
@@ -330,13 +380,26 @@ Musica *cria_campo() {
 	return nMusica;
 }
 
+Fila *cria_fila() {
+	Fila *nFila = (Fila *)malloc(sizeof(Fila));
+	nFila->tamanho = 0;
+	nFila->head=NULL;
+	nFila->tail=NULL;
+	return nFila;
+}
 
+Pilha *cria_pilha() {
+	Pilha *nPilha = (Pilha *)malloc(sizeof(Pilha));
+	nPilha->tamanho = 0;
+	nPilha->topo=NULL;
+	return nPilha;
+}
 
-void insere(Desc *acervo, Nodo *no) {
-	if(acervo->primeiro_nodo == NULL) {
-		acervo->primeiro_nodo = no;
+void insere(Lista *acervo, Nodo *no) {
+	if(acervo->inicio == NULL) {
+		acervo->inicio = no;
 	} else {
-		Nodo *aux = acervo->primeiro_nodo;
+		Nodo *aux = acervo->inicio;
 		while(aux->prox != NULL) {
 			aux = aux->prox;
 		}
@@ -345,8 +408,8 @@ void insere(Desc *acervo, Nodo *no) {
 	acervo->tamanho++;
 }
 
-void mostra_acervo(Desc *acervo) {
-	Nodo *aux = acervo->primeiro_nodo;
+void mostra_acervo(Lista *acervo) {
+	Nodo *aux = acervo->inicio;
 	if(aux == NULL) {
 		printf("\n Acervo vazio!\n");
 	} else {
@@ -359,8 +422,10 @@ void mostra_acervo(Desc *acervo) {
 }
 
 void mostra_musica(Nodo *aux) {
-	if(aux == NULL)
+	if (aux == NULL) {
+		printf("\nMC:sica nC#o encontrada.\n");
 		return;
+	}
 
 	printf("\n\n -------------------------------\n");
 	printf("\n Artista: %s",aux->info->artista);
@@ -371,13 +436,13 @@ void mostra_musica(Nodo *aux) {
 	printf("\n\n -------------------------------\n");
 }
 
-Nodo *busca_codigo(Desc *acervo, int codigo) {
-	if (acervo->primeiro_nodo == NULL) {
+Nodo *busca_codigo(Lista *acervo, int codigo) {
+	if (acervo->inicio == NULL) {
 		printf("\n Acervo vazio!\n");
 		return NULL;
 	}
 
-	Nodo *aux = acervo->primeiro_nodo;
+	Nodo *aux = acervo->inicio;
 	while(aux != NULL) {
 		if(aux->info->codigo == codigo)
 			break;
@@ -391,13 +456,13 @@ Nodo *busca_codigo(Desc *acervo, int codigo) {
 }
 
 
-Nodo *busca_titulo(Desc *acervo, const char *titulo) {
-	if (acervo->primeiro_nodo == NULL) {
+Nodo *busca_titulo(Lista *acervo, const char *titulo) {
+	if (acervo->inicio == NULL) {
 		printf("\n Acervo vazio!\n");
 		return NULL;
 	}
 
-	Nodo *aux = acervo->primeiro_nodo;
+	Nodo *aux = acervo->inicio;
 	while(aux != NULL) {
 		if(strcmp(aux->info->titulo, titulo) == 0)
 			break;
@@ -410,30 +475,31 @@ Nodo *busca_titulo(Desc *acervo, const char *titulo) {
 	return aux;
 }
 
-Nodo *busca_artista(Desc *acervo, const char *artista) {
-	if (acervo->primeiro_nodo == NULL) {
-		printf("\n Acervo vazio!\n");
+Nodo *busca_artista(Lista *acervo, const char *artista) {
+	if (acervo->inicio == NULL) {
+		printf("\nAcervo vazio!\n");
 		return NULL;
 	}
 
-	Nodo *aux = acervo->primeiro_nodo;
+	Nodo *aux = acervo->inicio;
+	int encontrou = 0;
 	while (aux != NULL) {
-		if (strcmp(aux->info->artista, artista) == 0)
-			break;
+		if (strcmp(aux->info->artista, artista) == 0) {
+			mostra_musica(aux);
+			encontrou = 1;
+		}
 		aux = aux->prox;
 	}
 
-	if(aux == NULL)
-		printf("\n Artista nao encontrado!\n");
-
-	return aux;
+	if (!encontrou)
+		printf("\nNenhuma mC:sica do artista \"%s\" foi encontrada.\n", artista);
 }
 
-Desc *playlist_pessoal(Desc *acervo) {
+Pilha *playlist_pessoal(Lista *acervo) {
 	char titulo[256];
 	int op;
 
-	Desc *playlist = cria_desc();
+	Pilha *pilha = cria_pilha();
 
 	do {
 		op = menu1_2_2();
@@ -442,30 +508,54 @@ Desc *playlist_pessoal(Desc *acervo) {
 			Nodo *item = cria_nodo();
 			printf("\n Informe o tC-tulo da mC:sica: ");
 			scanf(" %[^\n]s",titulo);
-			item-> info = copia_musica(busca_titulo(acervo,titulo));
-			push(playlist,item);
+			Nodo *resultado = busca_titulo(acervo, titulo);
+			if (resultado != NULL) {
+				item->info = copia_musica(resultado);
+				push(pilha, item);
+			} else {
+				printf("\nMC:sica nC#o encontrada. NC#o adicionada C  playlist.\n");
+				free(item);
+			}
 			break;
 		case 0:
 			break;
 		}
 	} while(op != 0);
-	return playlist;
+	return pilha;
 }
 
-void push(Desc *playlist, Nodo *item) {
+void push(Pilha *pilha, Nodo *item) {
 	if(item != NULL) {
-		item->prox = playlist->primeiro_nodo;
-		playlist->primeiro_nodo = item;
-		playlist->tamanho++;
+		item->prox = pilha->topo;
+		pilha->topo = item;
+		pilha->tamanho++;
 	} else {
 		free(item);
 	}
 }
 
-void pop(Desc *playlist) {
-	Nodo *aux = playlist->primeiro_nodo;
-	playlist->primeiro_nodo = aux->prox;
-	playlist->tamanho--;
+void pop(Pilha *pilha) {
+	Nodo *aux = pilha->topo;
+	pilha->topo = aux->prox;
+	pilha->tamanho--;
+	free(aux);
+}
+
+void enqueue(Fila *fila, Nodo *item) {
+	if(fila->head == NULL) {
+		fila->head = item;
+		fila->tail = item;
+	} else {
+		fila->tail->prox = item;
+		fila->tail = item;
+	}
+	fila->tamanho++;
+}
+
+void dequeue(Fila *fila) {
+	Nodo *aux = fila->head;
+	fila->head = aux->prox;
+	fila->tamanho--;
 	free(aux);
 }
 
@@ -481,41 +571,70 @@ Musica* copia_musica(Nodo *no) {
 	return nova;
 }
 
-Desc *playlist_aleatoria(int codigo, Desc *acervo) {
-    int i;
-    
-    Fila *playlist = cria_fila;
-    Nodo *aux = acervo->primeiro_nodo;
-    
-    for(i = 0; i < tamanho; i++) {
-        for(int j = 0; j < (rand() % 10); j++)
-            aux = aux->prox;
-        Nodo *item = cria_nodo();
-        item-> info = copia_musica(aux);
-        enqueue(playlist, item);
-    }
-    
-    return playlist;
+Fila *playlist_aleatoria(int tamanho, Lista *acervo) {
+
+	Fila *fila = cria_fila();
+	Nodo *aux = acervo->inicio;
+
+	printf("\n ########## MUSICAS QUE ENTRARAM NA PLAYLIST ##########\n");
+
+	for(int i = 0; i < tamanho; i++) {
+		aux = acervo->inicio;
+		int o = rand() % acervo->tamanho;
+		for(int j = 0; j < o; j++) {
+			aux = aux->prox;
+		}
+		Nodo *item = cria_nodo();
+		item->info = copia_musica(aux);
+		enqueue(fila, item);
+
+		mostra_musica(item);
+	}
+
+	return fila;
 }
 
-void executa(Desc *acervo, Desc *playlist) {
-	Nodo *aux = acervo->primeiro_nodo;
+void executa_pilha(Lista *acervo, Pilha *pilha) {
+	if (pilha == NULL || acervo == NULL) return;
 
-	if(playlist != NULL && acervo != NULL) {
-		while(playlist->tamanho > 0) {
-			while(aux != NULL) {
-				if(aux->info->codigo == playlist->primeiro_nodo->info->codigo)
-					break;
-				aux = aux->prox;
+	while (pilha->tamanho > 0 && pilha->topo != NULL) {
+		Nodo *Topo = pilha->topo;
+		Nodo *aux = acervo->inicio;
+
+		// Procura a mC:sica no acervo
+		while (aux != NULL) {
+			if (aux->info->codigo == Topo->info->codigo) {
+				aux->info->execucoes++;
+				break;
 			}
-			aux->info->execucoes++;
-			aux = acervo->primeiro_nodo;
-			pop(playlist);
+			aux = aux->prox;
 		}
+        printf("\nExecutando: %s - %s\n", Topo->info->artista, Topo->info->titulo);
+		pop(pilha);
 	}
 }
 
-int gera(Desc *fonte) {
+void executa_fila(Lista *acervo, Fila *fila) {
+	if (fila == NULL || acervo == NULL) return;
+
+	while (fila->tamanho > 0 && fila->head != NULL) {
+		Nodo *Head = fila->head;
+		Nodo *aux = acervo->inicio;
+
+		// Procura a mC:sica no acervo
+		while (aux != NULL) {
+			if (aux->info->codigo == Head->info->codigo) {
+				aux->info->execucoes++;
+				break;
+			}
+			aux = aux->prox;
+		}
+		printf("\nExecutando: %s - %s\n", Head->info->artista, Head->info->titulo);
+		dequeue(fila);
+	}
+}
+
+int output_fila(Fila *fila) {
 	char arquivo[20];
 
 	printf("\n Nome do arquivo: ");
@@ -527,10 +646,10 @@ int gera(Desc *fonte) {
 		return 1;
 	}
 
-	Nodo *aux = fonte->primeiro_nodo;
+	Nodo *aux = fila->head;
+	fprintf(arq,"%d\n",fila->tamanho);
 
-	fprintf(arq,"%d\n",fonte->tamanho);
-	for(int i = 0; i < fonte->tamanho; i++) {
+	for(int i = 0; i < fila->tamanho; i++) {
 		fprintf(arq,"%s;",aux->info->artista);
 		fprintf(arq,"%s;",aux->info->titulo);
 		fprintf(arq,"%s;",aux->info->letra);
@@ -541,5 +660,96 @@ int gera(Desc *fonte) {
 
 	fclose(arq);
 
-	printf("\n\n **** Arquivo carregado com sucesso ****\n");
+	printf("\n\n **** Arquivo gerado com sucesso ****\n");
+}
+
+int output_pilha(Pilha *pilha) {
+	char arquivo[20];
+
+	printf("\n Nome do arquivo: ");
+	scanf("%s", arquivo);
+
+	FILE *arq = fopen(arquivo, "w");
+	if(arq == NULL) {
+		printf("Erro ao gerar o arquivo");
+		return 1;
+	}
+
+	Nodo *aux = pilha->topo;
+	fprintf(arq,"%d\n",pilha->tamanho);
+
+	for(int i = 0; i < pilha->tamanho; i++) {
+		fprintf(arq,"%s;",aux->info->artista);
+		fprintf(arq,"%s;",aux->info->titulo);
+		fprintf(arq,"%s;",aux->info->letra);
+		fprintf(arq,"%d;",aux->info->execucoes);
+		fprintf(arq,"%d\n",aux->info->codigo);
+		aux = aux->prox;
+	}
+
+	fclose(arq);
+
+	printf("\n\n **** Arquivo gerado com sucesso ****\n");
+}
+
+int output_acervo(Lista *acervo) {
+	char arquivo[20];
+
+	printf("\n Nome do arquivo: ");
+	scanf("%s", arquivo);
+
+	FILE *arq = fopen(arquivo, "w");
+	if(arq == NULL) {
+		printf("Erro ao gerar o arquivo");
+		return 1;
+	}
+
+	Nodo *aux = acervo->inicio;
+	fprintf(arq,"%d\n",acervo->tamanho);
+
+	for(int i = 0; i < acervo->tamanho; i++) {
+		fprintf(arq,"%s;",aux->info->artista);
+		fprintf(arq,"%s;",aux->info->titulo);
+		fprintf(arq,"%s;",aux->info->letra);
+		fprintf(arq,"%d;",aux->info->execucoes);
+		fprintf(arq,"%d\n",aux->info->codigo);
+		aux = aux->prox;
+	}
+
+	fclose(arq);
+
+	printf("\n\n **** Arquivo gerado com sucesso ****\n");
+}
+
+void libera_lista(Lista *acervo) {
+	Nodo *aux = acervo->inicio;
+	while (aux != NULL) {
+		Nodo *temp = aux;
+		aux = aux->prox;
+		free(temp->info); // libera Musica
+		free(temp);       // libera Nodo
+	}
+	free(acervo);
+}
+
+void libera_fila(Fila *fila) {
+	Nodo *aux = fila->head;
+	while (aux != NULL) {
+		Nodo *temp = aux;
+		aux = aux->prox;
+		free(temp->info);
+		free(temp);
+	}
+	free(fila);
+}
+
+void libera_pilha(Pilha *pilha) {
+	Nodo *aux = pilha->topo;
+	while (aux != NULL) {
+		Nodo *temp = aux;
+		aux = aux->prox;
+		free(temp->info);
+		free(temp);
+	}
+	free(pilha);
 }
