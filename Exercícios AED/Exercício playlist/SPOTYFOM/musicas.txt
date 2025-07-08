@@ -1,4 +1,7 @@
-3
-Iron Maiden;Run to the hills;Run to the hills;304;435;
-Metallica;Master of puppets;Master of puppets;254;361;
-Black Sabbath;Paranoid;Finished with my woman;521;137;
+5
+Iron Maiden;Run to the hills;White man came across the sea;304;435;
+Metallica;Master of puppets;End of passion play, crumbling away ;254;361;
+Black Sabbath;Paranoid;Finished with my woman 'cause;521;137;
+Tool;The pot;Who are you to wave your finger?;233;675
+Steely Dan;Aja;Up on the hill;445;389
+
