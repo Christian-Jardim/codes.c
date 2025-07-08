@@ -117,7 +117,7 @@ int carrega(Lista **acervo) {
 
 	for (int i = 0; i < qt; i++) {
 		if (fgets(linha, sizeof(linha), arq)) {
-			linha[strcspn(linha, "\n")] = 0; // remove \n
+			linha[strcspn(linha, "\n")] = 0;
 
 			Nodo *no = cria_nodo();
 			Musica *musica = cria_campo();
