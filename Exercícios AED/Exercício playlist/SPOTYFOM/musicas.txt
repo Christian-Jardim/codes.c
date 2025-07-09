@@ -1,7 +1,8 @@
 5
-Iron Maiden;Run to the hills;White man came across the sea;304;435;
-Metallica;Master of puppets;End of passion play, crumbling away ;254;361;
+Iron Maiden;Run To The Hills;White man came across the sea;304;435;
+Metallica;Master Of Puppets;End of passion play, crumbling away ;254;361;
 Black Sabbath;Paranoid;Finished with my woman 'cause;521;137;
-Tool;The pot;Who are you to wave your finger?;233;675
+Tool;The Pot;Who are you to wave your finger?;233;675
 Steely Dan;Aja;Up on the hill;445;389
-
+Red Hot Chili Peppers;Give It Away;What I've got, you've got to give it to your mama;908;444
+King Crimson;21st Century Schizoid Man;Cat's foot iron claw;333;677
