@@ -50,7 +50,7 @@ struct descritor_grafo_matriz * inicializaGrafoMatriz(int tamanho);
 struct descritor_grafo_matriz * insereArestaMatriz(struct descritor_grafo_matriz *grafo, int chaveSaida, int chaveChegada, int peso);
 void imprimeGrafoMatriz(struct descritor_grafo_matriz *grafoMatriz);
 
-//////-----------------STACK.C
+//////-----------------STACK.H
 
 struct nodopilha{
 	struct aresta *arestaPilha;
