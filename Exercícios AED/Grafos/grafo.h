@@ -33,8 +33,6 @@ int tamanhoAdjacencias(struct descritor_grafo *grafo);
 int listaAjacencias(struct nodo *vertice);
 void imprimeGrafo(struct descritor_grafo *grafo);
 
-
-
 //////---------------REPRESENTACAO COM MATRIZ DE ADJACCNCIA---------------------
 
 struct descritor_grafo_matriz {
@@ -42,7 +40,6 @@ struct descritor_grafo_matriz {
 	int max_arestas;
 	int **grafoMatriz;
 };
-
 
 struct descritor_grafo_matriz* carrega_matriz();
 struct descritor_grafo_matriz * inicializaGrafoMatriz(int tamanho);
@@ -70,7 +67,3 @@ int length(struct desc_stack *stack);
 void makeNull(struct desc_stack *stack);
 struct nodopilha* top(struct desc_stack *stack);
 void showStack(struct desc_stack *stack);
-
-/////// MINHAS FUNCOES
-
-struct descritor_grafo *carrega_lista();
