@@ -1,28 +1,27 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-struct descritor_grafo{
+struct descritor_grafo {
 	int max_vertices;
 	int max_arestas;
 	struct nodo *nodos;
 };
 
-struct nodo{
+struct nodo {
 	int chave;
 	struct nodo *prox;
-	//struct nodo *adjacencias;	
-	struct aresta *adjacencias;	
+	//struct nodo *adjacencias;
+	struct aresta *adjacencias;
 };
 
-struct aresta{
+struct aresta {
 	int partida;
 	int chegada;
 	int peso;
 	struct aresta *prox;
 };
 
-struct descritor_grafo* parser(char *nomeArquivo);
+struct descritor_grafo* carrega_lista();
 struct descritor_grafo * inicializaGrafo(int tamanho);
 struct nodo* criaVertice(int chave);
 void insereVertice(struct descritor_grafo *grafo, int chave);
@@ -36,28 +35,28 @@ void imprimeGrafo(struct descritor_grafo *grafo);
 
 
 
-//////---------------REPRESENTAÇÃO COM MATRIZ DE ADJACÊNCIA---------------------
+//////---------------REPRESENTACAO COM MATRIZ DE ADJACCNCIA---------------------
 
-struct descritor_grafo_matriz{
+struct descritor_grafo_matriz {
 	int max_vertices;
 	int max_arestas;
 	int **grafoMatriz;
 };
 
 
-struct descritor_grafo_matriz* parserMatriz(char *nomeArquivo);
+struct descritor_grafo_matriz* carrega_matriz();
 struct descritor_grafo_matriz * inicializaGrafoMatriz(int tamanho);
 struct descritor_grafo_matriz * insereArestaMatriz(struct descritor_grafo_matriz *grafo, int chaveSaida, int chaveChegada, int peso);
 void imprimeGrafoMatriz(struct descritor_grafo_matriz *grafoMatriz);
 
 //////-----------------STACK.H
 
-struct nodopilha{
+struct nodopilha {
 	struct aresta *arestaPilha;
 	struct nodopilha *prox;
 };
 
-struct desc_stack{
+struct desc_stack {
 	struct nodopilha *top;
 	int tamanho;
 };
@@ -71,3 +70,7 @@ int length(struct desc_stack *stack);
 void makeNull(struct desc_stack *stack);
 struct nodopilha* top(struct desc_stack *stack);
 void showStack(struct desc_stack *stack);
+
+/////// MINHAS FUNCOES
+
+struct descritor_grafo *carrega_lista();
