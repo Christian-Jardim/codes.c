@@ -1,8 +1,51 @@
-7
-Iron Maiden;Run To The Hills;White man came across the sea;304;435;
-Metallica;Master Of Puppets;End of passion play, crumbling away ;254;361;
-Black Sabbath;Paranoid;Finished with my woman 'cause;521;137;
-Tool;The Pot;Who are you to wave your finger?;233;675
-Steely Dan;Aja;Up on the hill;445;389
-Red Hot Chili Peppers;Give It Away;What I've got, you've got to give it to your mama;908;444
-King Crimson;21st Century Schizoid Man;Cat's foot iron claw;333;677
+50
+Iron Maiden;Run To The Hills;White man came across the sea;4;35;
+Metallica;Master Of Puppets;End of passion play, crumbling away;37;61;
+Black Sabbath;Paranoid;Finished with my woman 'cause;21;13;
+Tool;The Pot;Who are you to wave your finger?;33;67
+Steely Dan;Aja;Up on the hill;44;38
+Red Hot Chili Peppers;Give It Away;What I've got, you've got to give it to your mama;90;44
+King Crimson;21st Century Schizoid Man;Cat's foot iron claw;73;67
+The Clash;London Calling;London calling to the faraway towns;55;3
+U2;With or Without You;See the stone set in your eyes;64;41
+Radiohead;Karma Police;Karma police, arrest this man;72;98
+The Cure;Just Like Heaven;Show me, show me, show me how you do that trick;43;92
+Linkin Park;In the End;It starts with one thing, I don't know why;46;16
+Blur;Song 2;Woo-hoo! I got my head checked;27;99
+Oasis;Wonderwall;Today is gonna be the day;86;98
+AC/DC;Back in Black;Back in black, I hit the sack;95;41
+Queen;Bohemian Rhapsody;Is this the real life? Is this just fantasy?;77;91
+Nirvana;Come As You Are;Come as you are, as you were;51;89
+Bon Jovi;Livin' on a Prayer;Once upon a time, not so long ago;9;71
+Red Hot Chili Peppers;Californication;Psychic spies from China try to steal your mind's elation;18;76
+No Doubt;Don't Speak;You and me, we used to be together;58;33
+Muse;Starlight;Far away, this ship is taking me far away;65;43
+Coldplay;Yellow;Look at the stars, look how they shine for you;75;91
+R.E.M.;Losing My Religion;Oh life, it's bigger, it's bigger than you;42;27
+Amy Winehouse;Back to Black;He left no time to regret;99;75
+The Killers;Mr. Brightside;Coming out of my cage and I've been doing just fine;1;0
+Pink Floyd;Wish You Were Here;So, so you think you can tell;98;49
+Pearl Jam;Alive;Son, she said, have I got a little story for you;14;17
+David Bowie;Heroes;I, I will be king;58;14
+Paramore;Misery Business;I'm in the business of misery, let's take it from the top;75;82
+The Who;Baba O'Riley;Out here in the fields, I fight for my meals;16;36
+Arctic Monkeys;Do I Wanna Know?;Have you got color in your cheeks?;76;82
+The Doors;Light My Fire;You know that it would be untrue;27;86
+Kings of Leon;Use Somebody;I've been roaming around, always looking down at all I see;81;43
+Joy Division;Love Will Tear Us Apart;When routine bites hard and ambitions are low;92;1
+Green Day;Boulevard of Broken Dreams;I walk a lonely road;39;10
+Fleetwood Mac;Dreams;Now here you go again, you say you want your freedom;91;35
+The Strokes;Last Nite;Last night, she said, 'Oh, baby, I feel so down';95;55
+Led Zeppelin;Stairway to Heaven;There's a lady who's sure all that glitters is gold;40;97
+Smashing Pumpkins;1979;Shakedown 1979, cool kids never have the time;14;3
+Imagine Dragons;Radioactive;I'm waking up to ash and dust;51;24
+Evanescence;Bring Me to Life;How can you see into my eyes like open doors;55;80
+The Beatles;Hey Jude;Hey Jude, don't make it bad;39;95
+Guns N' Roses;Sweet Child O' Mine;She's got a smile that it seems to me;3;56
+Foo Fighters;The Pretender;Keep you in the dark, you know they all pretend;2;52
+The Police;Every Breath You Take;Every breath you take, every move you make;78;49
+Aerosmith;Dream On;Every time I look in the mirror;70;67
+The Rolling Stones;Paint It Black;I see a red door and I want it painted black;42;63
+Jefferson Airplane;White Rabbit;One pill makes you larger;71;40
+Cream;White Room;In a white room with black curtains in the station;10;43
+Jimi Hendrix;The Wind Cries Mary;After all the jacks are in their boxes;17;55
