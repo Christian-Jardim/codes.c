@@ -13,7 +13,7 @@ int main() {
 	opcao = -1;
 	while(opcao != 0) {
 		printf(" Escolha sua opção:\n");
-		printf(" 1 - Carrega grafo lista\n 2 - Busca adjacências\n 3 - Imprime grafo lista\n 4 - Pilha de arestas\n 5 - Carrega grafo Matriz\n 6 - Imprime grafo matriz\n 0 - SAIR\n");
+		printf(" 1 - Carrega grafo lista\n 2 - Busca adjacências\n 3 - Imprime grafo lista\n 4 - Pilha de arestas\n 5 - Carrega grafo Matriz\n 6 - Imprime grafo matriz\n 7 - Busca BFS\n 0 - SAIR\n");
 		setbuf(stdin,NULL);
 		scanf("%d",&opcao);
 		switch(opcao) {
@@ -72,6 +72,11 @@ int main() {
 			break;
 		case 6:
 			imprimeGrafoMatriz(grafoMatriz);
+			break;
+		case 7:
+		printf("Chave para começar a busca: ");
+		scanf("%d",&chave_busca);
+			bfs(grafo, chave_busca);
 			break;
 		case 0:
 			exit(-1);
