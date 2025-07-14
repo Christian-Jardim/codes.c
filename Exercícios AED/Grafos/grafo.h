@@ -66,3 +66,18 @@ int length(struct desc_stack *stack);
 void makeNull(struct desc_stack *stack);
 struct nodopilha* top(struct desc_stack *stack);
 void showStack(struct desc_stack *stack);
+
+//--------------- QUEUE ---------------------
+
+struct fila {
+    int chave;
+    struct fila *prox;
+};
+
+void enqueue(struct fila **inicio, struct fila **fim, int chave);
+int dequeue(struct fila **inicio, struct fila **fim);
+
+
+//--------------- BFS ---------------------
+
+void bfs(struct descritor_grafo *grafo, int inicio_chave);
