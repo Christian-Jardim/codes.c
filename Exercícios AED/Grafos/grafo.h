@@ -30,8 +30,6 @@ int tamanhoAdjacencias(struct descritor_grafo *grafo);
 int listaAjacencias(struct nodo *vertice);
 void imprimeGrafo(struct descritor_grafo *grafo);
 
-
-
 //--------------- REPRESENTAÇÃO COM MATRIZ DE ADJACÊNCIA ---------------------
 
 struct descritor_grafo_matriz {
