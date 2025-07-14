@@ -135,11 +135,6 @@ void imprimeGrafo(struct descritor_grafo *grafo) {
 	printf("=====================\n");
 }
 
-struct nodo * buscaAdjacencia(struct descritor_grafo *grafo, int partida, int chegada);
-int tamanhoVertices(struct descritor_grafo *grafo);
-int tamanhoAdjacencias(struct descritor_grafo *grafo);
-int listaAjacencias(struct nodo *vertice);
-
 //-----------------------------GRAFO COM MATRIZ ----------------------
 
 struct descritor_grafo_matriz* parserMatriz(char *nomeArquivo) {
@@ -269,4 +264,66 @@ void showStack(struct desc_stack *stack) {
 	}
 	printf("\n");
 	printf("==============\n");
+}
+
+//----------------------------- QUEUE ----------------------
+
+void enqueue(struct fila **inicio, struct fila **fim, int chave) {
+    struct fila *novo = malloc(sizeof(struct fila));
+    novo->chave = chave;
+    novo->prox = NULL;
+
+    if (*fim) {
+        (*fim)->prox = novo;
+    } else {
+        *inicio = novo;
+    }
+    *fim = novo;
+}
+
+int dequeue(struct fila **inicio, struct fila **fim) {
+    if (*inicio == NULL) return -1;
+
+    struct fila *temp = *inicio;
+    int chave = temp->chave;
+    *inicio = temp->prox;
+    if (*inicio == NULL) {
+        *fim = NULL;
+    }
+    free(temp);
+    return chave;
+}
+
+//----------------------------- BFS ----------------------
+
+void bfs(struct descritor_grafo *grafo, int inicio_chave) {
+    if (!grafo) return;
+
+    int visitado[grafo->max_vertices];
+    for (int i = 0; i < grafo->max_vertices; i++) visitado[i] = FALSE;
+
+    struct fila *inicio = NULL, *fim = NULL;
+    enqueue(&inicio, &fim, inicio_chave);
+    visitado[inicio_chave] = TRUE;
+
+    printf("BFS a partir do vértice %d:\n", inicio_chave);
+
+    while (inicio != NULL) {
+        int atual_chave = dequeue(&inicio, &fim);
+        printf("%d ", atual_chave);
+
+        struct nodo *nodo_atual = encontrar_nodo(grafo, atual_chave);
+        if (nodo_atual) {
+            struct aresta *adj = nodo_atual->adjacencias;
+            while (adj) {
+                int destino = adj->chegada;
+                if (!visitado[destino]) {
+                    enqueue(&inicio, &fim, destino);
+                    visitado[destino] = TRUE;
+                }
+                adj = adj->prox;
+            }
+        }
+    }
+    printf("\n");
 }
