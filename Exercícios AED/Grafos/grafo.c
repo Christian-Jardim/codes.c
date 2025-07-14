@@ -312,7 +312,7 @@ void bfs(struct descritor_grafo *grafo, int inicio_chave) {
         int atual_chave = dequeue(&inicio, &fim);
         printf("%d ", atual_chave);
 
-        struct nodo *nodo_atual = encontrar_nodo(grafo, atual_chave);
+        struct nodo *nodo_atual = buscaVertice(grafo, atual_chave);
         if (nodo_atual) {
             struct aresta *adj = nodo_atual->adjacencias;
             while (adj) {
