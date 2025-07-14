@@ -1,6 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-
 struct descritor_grafo {
 	int max_vertices;
 	int max_arestas;
@@ -21,7 +18,7 @@ struct aresta {
 	struct aresta *prox;
 };
 
-struct descritor_grafo* carrega_lista();
+struct descritor_grafo* parser();
 struct descritor_grafo * inicializaGrafo(int tamanho);
 struct nodo* criaVertice(int chave);
 void insereVertice(struct descritor_grafo *grafo, int chave);
@@ -33,7 +30,9 @@ int tamanhoAdjacencias(struct descritor_grafo *grafo);
 int listaAjacencias(struct nodo *vertice);
 void imprimeGrafo(struct descritor_grafo *grafo);
 
-//////---------------REPRESENTACAO COM MATRIZ DE ADJACCNCIA---------------------
+
+
+//--------------- REPRESENTAÇÃO COM MATRIZ DE ADJACÊNCIA ---------------------
 
 struct descritor_grafo_matriz {
 	int max_vertices;
@@ -41,12 +40,12 @@ struct descritor_grafo_matriz {
 	int **grafoMatriz;
 };
 
-struct descritor_grafo_matriz* carrega_matriz();
+struct descritor_grafo_matriz* parserMatriz(char *nomeArquivo);
 struct descritor_grafo_matriz * inicializaGrafoMatriz(int tamanho);
 struct descritor_grafo_matriz * insereArestaMatriz(struct descritor_grafo_matriz *grafo, int chaveSaida, int chaveChegada, int peso);
 void imprimeGrafoMatriz(struct descritor_grafo_matriz *grafoMatriz);
 
-//////-----------------STACK.H
+//--------------- STACK ---------------------
 
 struct nodopilha {
 	struct aresta *arestaPilha;
