@@ -1,16 +1,24 @@
-#include "grafo.h"
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "grafo.h"
 
-struct descritor_grafo* parser(char *nomeArquivo) {
-
-	FILE *file = fopen(nomeArquivo,"r");
+struct descritor_grafo* parser() {
+	char arquivo[20];
 	int total;
-	fscanf(file,"%d",&total);
-	printf("=====================================================\n");
-	printf("================LEITURA GRAFO========================\n");
 
-	printf("total de nodos %d\n",total);
+	printf("\n Nome do arquivo: ");
+	scanf("%s", arquivo);
+	FILE *file = fopen(arquivo,"r");
+	if(file == NULL) {
+		printf("\n Erro ao carregar o arquivo");
+		return NULL;
+	}
+	fscanf(file,"%d",&total);
+	printf(" =======================================================\n");
+	printf(" ================ LEITURA GRAFO ========================\n");
+
+	printf(" Total de nodos %d\n",total);
 	struct descritor_grafo *grafo = NULL;
 	grafo = inicializaGrafo(total);
 	char linha[500];
@@ -26,23 +34,23 @@ struct descritor_grafo* parser(char *nomeArquivo) {
 			linha[n]='\0';
 			if(n > 0 ) //frase valida
 			{
-				printf("linha eh: %s\n", linha);
+				printf(" Linha é: %s\n", linha);
 				int partida = atoi(strtok(linha," "));
-				printf("\n partida strtok= %d\n",partida);
+				printf("\n Partida strtok = %d\n",partida);
 				int chegada = atoi(strtok(NULL," "));
-				printf("\n chegada strtok= %d\n",chegada);
+				printf("\n Chegada strtok = %d\n",chegada);
 
 				int peso = atoi(strtok(NULL," "));
-				printf("\n peso strtok= %d\n",peso);
+				printf("\n Peso strtok = %d\n",peso);
 
 				grafo = insereAresta(grafo,partida,chegada,peso);
 			}
-			n=0; //zera a frase para pegar proximas informaC'C5es
+			n=0; //zera a frase para pegar proximas informações
 			linha[n]='\0';
 		}
 	}
 	fclose(file);
-	printf("=====================================================\n");
+	printf(" =====================================================\n");
 	return grafo;
 }
 
