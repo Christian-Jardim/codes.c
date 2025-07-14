@@ -34,7 +34,7 @@ struct descritor_grafo* parser() {
 			linha[n]='\0';
 			if(n > 0 ) //frase valida
 			{
-				printf(" Linha é: %s\n", linha);
+				printf(" Linha C): %s\n", linha);
 				int partida = atoi(strtok(linha," "));
 				printf("\n Partida strtok = %d\n",partida);
 				int chegada = atoi(strtok(NULL," "));
@@ -45,7 +45,7 @@ struct descritor_grafo* parser() {
 
 				grafo = insereAresta(grafo,partida,chegada,peso);
 			}
-			n=0; //zera a frase para pegar proximas informações
+			n=0; //zera a frase para pegar proximas informaC'C5es
 			linha[n]='\0';
 		}
 	}
@@ -88,7 +88,7 @@ struct nodo * criaVertice(int chave) {
 struct descritor_grafo * insereAresta(struct descritor_grafo *grafo, int chaveSaida, int chaveChegada, int peso) {
 	struct nodo* nodoSaida = buscaVertice(grafo,chaveSaida);
 	if(nodoSaida ==NULL) {
-		printf("nodo buscado nC#o existe\n");
+		printf(" Nodo buscado não existe\n");
 		return grafo;
 	}
 	struct aresta* arestaNova = (struct aresta *) malloc(sizeof(struct aresta));
@@ -121,9 +121,9 @@ struct nodo * buscaVertice(struct descritor_grafo *grafo, int chaveBusca) {
 
 void imprimeGrafo(struct descritor_grafo *grafo) {
 	struct nodo *nodoGrafo = grafo->nodos;
-	printf("========GRAFO LISTA=============\n");
+	printf("\n ========= GRAFO LISTA =============\n");
 	while(nodoGrafo != NULL) {
-		printf("Nodo %d -",nodoGrafo->chave);
+		printf(" Nodo %d -",nodoGrafo->chave);
 		struct aresta *adjacenciaNodo = nodoGrafo->adjacencias;
 		while(adjacenciaNodo != NULL) {
 			printf("[ ->%d (peso %d)] ",adjacenciaNodo->chegada, adjacenciaNodo->peso);
@@ -132,7 +132,7 @@ void imprimeGrafo(struct descritor_grafo *grafo) {
 		printf("\n");
 		nodoGrafo = nodoGrafo->prox;
 	}
-	printf("=====================\n");
+	printf("\n =====================\n");
 }
 
 //-----------------------------GRAFO COM MATRIZ ----------------------
@@ -195,14 +195,14 @@ struct descritor_grafo_matriz * insereArestaMatriz(struct descritor_grafo_matriz
 
 void imprimeGrafoMatriz(struct descritor_grafo_matriz *grafoMatriz) {
 	int i,j;
-	printf("========GRAFO MATRIZ=============\n");
+	printf("\n ========== GRAFO MATRIZ =============\n");
 	for(i=0; i<grafoMatriz->max_vertices; i++) {
 		for(j=0; j<grafoMatriz->max_vertices; j++) {
 			printf("[%d-%d]=%d \t",i+1,j+1,grafoMatriz->grafoMatriz[i][j]);
 		}
 		printf("\n");
 	}
-	printf("=====================\n");
+	printf("\n =====================\n");
 }
 
 //----------------------------- STACK ----------------------
@@ -214,116 +214,115 @@ struct desc_stack *criaDescStack(void) {
 	return stack;
 }
 
-struct nodopilha* criaNodoStack(struct aresta * arestaPilha) {
-	struct nodopilha * novo = (struct nodopilha*)malloc(sizeof(struct nodopilha));
-	novo->arestaPilha = arestaPilha;
+struct nodo_busca *criaNodoStack(struct aresta *arestaPilha) {
+	struct nodo_busca *novo = (struct nodo_busca*)malloc(sizeof(struct nodo_busca));
+	novo->aresta_busca = arestaPilha;
 	novo->prox = NULL;
 	return novo;
 }
 
-void push(struct desc_stack *stack,struct nodopilha*novoElemento) {
+void push(struct desc_stack *stack, struct nodo_busca *novoElemento) {
 	novoElemento->prox = stack->top;
 	stack->top = novoElemento;
 	stack->tamanho++;
 }
 
-struct nodopilha* pop(struct desc_stack *stack) {
-	struct nodopilha *aux = stack->top;
-	stack->top=stack->top->prox;
+struct nodo_busca *pop(struct desc_stack *stack) {
+	struct nodo_busca *aux = stack->top;
+	stack->top = stack->top->prox;
 	stack->tamanho--;
 	return aux;
 }
 
-int empty(struct desc_stack *stack) {
-	if(stack->top ==NULL)
+int empty_stack(struct desc_stack *stack) {
+	if(stack->top == NULL)
 		return 1;
-	else
-		return 0;
+	return 0;
 }
 
-int length(struct desc_stack *stack) {
+int length_stack(struct desc_stack *stack) {
 	return stack->tamanho;
 }
 
-void makeNull(struct desc_stack *stack) {
-	while(empty(stack) == 0) {
+void makeNull_stack(struct desc_stack *stack) {
+	while(empty_stack(stack) == 0) {
 		free(pop(stack));
 	}
 }
 
-struct nodopilha* top(struct desc_stack *stack) {
+struct nodo_busca* top(struct desc_stack *stack) {
 	return stack->top;
 }
 
 void showStack(struct desc_stack *stack) {
-	struct nodopilha* topo = top(stack);
-	printf("====Pilha de Arestas==========\n");
+	struct nodo_busca* topo = top(stack);
+	printf("\n ========= Pilha de Arestas ==========\n");
 	while(topo !=NULL) {
-		printf("[ %d -> %d ] \n",topo->arestaPilha->partida,topo->arestaPilha->chegada);
+		printf("[ %d -> %d ] \n",topo->aresta_busca->partida,topo->aresta_busca->chegada);
 		topo = topo->prox;
 	}
-	printf("\n");
-	printf("==============\n");
+	printf("\n ==============\n");
 }
 
 //----------------------------- QUEUE ----------------------
 
-void enqueue(struct fila **inicio, struct fila **fim, int chave) {
-    struct fila *novo = malloc(sizeof(struct fila));
-    novo->chave = chave;
-    novo->prox = NULL;
-
-    if (*fim) {
-        (*fim)->prox = novo;
-    } else {
-        *inicio = novo;
-    }
-    *fim = novo;
+struct desc_queue *criaDescQueue(void) {
+	struct desc_queue *queue = (struct desc_queue*)malloc(sizeof(struct desc_queue));
+	queue->head = NULL;
+	queue->tail = NULL;
+	queue->tamanho=0;
+	return queue;
 }
 
-int dequeue(struct fila **inicio, struct fila **fim) {
-    if (*inicio == NULL) return -1;
+struct nodo_busca* criaNodoQueue(struct aresta *arestaQueue) {
+	struct nodo_busca *novo = (struct nodo_busca*)malloc(sizeof(struct nodo_busca));
+	novo->aresta_busca = arestaQueue;
+	novo->prox = NULL;
+	return novo;
+}
 
-    struct fila *temp = *inicio;
-    int chave = temp->chave;
-    *inicio = temp->prox;
-    if (*inicio == NULL) {
-        *fim = NULL;
-    }
-    free(temp);
-    return chave;
+void enqueue(struct desc_queue *queue, struct nodo_busca *novoElemento) {
+	queue->tail->prox = novoElemento;
+	queue->tail = novoElemento;
+	queue->tamanho++;
+}
+
+struct nodo_busca* dequeue(struct desc_queue *queue) {
+	struct nodo_busca *aux = queue->head;
+	queue->head = queue->head->prox;
+	queue->tamanho--;
+	return aux;
+}
+
+int empty_queue(struct desc_queue *queue) {
+	if(queue->head == NULL)
+		return 1;
+	return 0;
+}
+
+int length_queue(struct desc_queue *queue) {
+	return queue->tamanho;
+}
+
+void makeNull_queue(struct desc_queue *queue) {
+	while(empty_queue(queue) == 0) {
+		free(dequeue(queue));
+	}
+}
+
+struct nodo_busca* head(struct desc_queue *queue) {
+	return queue->head;
+}
+
+void showQueue(struct desc_queue *queue) {
+	struct nodo_busca* cabeca = head(queue);
+	printf("\n ========= Fila de Arestas ==========\n");
+	while(cabeca != NULL) {
+		printf("[ %d -> %d ] \n",cabeca->aresta_busca->partida,cabeca->aresta_busca->chegada);
+		cabeca = cabeca->prox;
+	}
+	printf("\n ==============\n");
 }
 
 //----------------------------- BFS ----------------------
 
-void bfs(struct descritor_grafo *grafo, int inicio_chave) {
-    if (!grafo) return;
-
-    int visitado[grafo->max_vertices];
-    for (int i = 0; i < grafo->max_vertices; i++) visitado[i] = FALSE;
-
-    struct fila *inicio = NULL, *fim = NULL;
-    enqueue(&inicio, &fim, inicio_chave);
-    visitado[inicio_chave] = TRUE;
-
-    printf("BFS a partir do vértice %d:\n", inicio_chave);
-
-    while (inicio != NULL) {
-        int atual_chave = dequeue(&inicio, &fim);
-        printf("%d ", atual_chave);
-
-        struct nodo *nodo_atual = buscaVertice(grafo, atual_chave);
-        if (nodo_atual) {
-            struct aresta *adj = nodo_atual->adjacencias;
-            while (adj) {
-                int destino = adj->chegada;
-                if (!visitado[destino]) {
-                    enqueue(&inicio, &fim, destino);
-                    visitado[destino] = TRUE;
-                }
-                adj = adj->prox;
-            }
-        }
-    }
-    printf("\n");
-}
