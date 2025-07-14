@@ -30,7 +30,7 @@ int tamanhoAdjacencias(struct descritor_grafo *grafo);
 int listaAjacencias(struct nodo *vertice);
 void imprimeGrafo(struct descritor_grafo *grafo);
 
-//--------------- REPRESENTAÇÃO COM MATRIZ DE ADJACÊNCIA ---------------------
+//--------------- REPRESENTAÇÃO COM MATRIZ DE ADJACÊNCIA ---------------------
 
 struct descritor_grafo_matriz {
 	int max_vertices;
@@ -43,39 +43,47 @@ struct descritor_grafo_matriz * inicializaGrafoMatriz(int tamanho);
 struct descritor_grafo_matriz * insereArestaMatriz(struct descritor_grafo_matriz *grafo, int chaveSaida, int chaveChegada, int peso);
 void imprimeGrafoMatriz(struct descritor_grafo_matriz *grafoMatriz);
 
-//--------------- STACK ---------------------
+// ----------------- STACK E QUEUE ------------
 
-struct nodopilha {
-	struct aresta *arestaPilha;
-	struct nodopilha *prox;
+struct nodo_busca {
+	struct aresta *aresta_busca;
+	struct nodo_busca *prox;
 };
 
+//--------------- STACK ---------------------
+
 struct desc_stack {
-	struct nodopilha *top;
+	struct nodo_busca *top;
 	int tamanho;
 };
 
 struct desc_stack *criaDescStack(void);
-struct nodopilha* criaNodoStack(struct aresta *arestaPilha);
-void push(struct desc_stack *stack,struct nodopilha*novoElemento);
-struct nodopilha* pop(struct desc_stack *stack);
-int empty(struct desc_stack *stack);
-int length(struct desc_stack *stack);
-void makeNull(struct desc_stack *stack);
-struct nodopilha* top(struct desc_stack *stack);
+struct nodo_busca* criaNodoStack(struct aresta *arestaPilha);
+void push(struct desc_stack *stack,struct nodo_busca *novoElemento);
+struct nodo_busca* pop(struct desc_stack *stack);
+int empty_stack(struct desc_stack *stack);
+int length_stack(struct desc_stack *stack);
+void makeNull_stack(struct desc_stack *stack);
+struct nodo_busca* top(struct desc_stack *stack);
 void showStack(struct desc_stack *stack);
 
 //--------------- QUEUE ---------------------
 
-struct fila {
-    int chave;
-    struct fila *prox;
+struct desc_queue {
+	struct nodo_busca *head;
+	struct nodo_busca *tail;
+	int tamanho;
 };
 
-void enqueue(struct fila **inicio, struct fila **fim, int chave);
-int dequeue(struct fila **inicio, struct fila **fim);
+struct desc_queue *criaDescQueue(void);
+struct nodo_busca* criaNodoQueue(struct aresta *arestaQueue) ;
+void enqueue(struct desc_queue *queue, struct nodo_busca *novoElemento);
+struct nodo_busca* dequeue(struct desc_queue *queue);
+int empty_queue(struct desc_queue *queue);
+int length_queue(struct desc_queue *queue);
+void makeNull_queue(struct desc_queue *queue);
+struct nodo_busca* head(struct desc_queue *queue);
+void showQueue(struct desc_queue *queue);
 
+//------------------- BFS ---------------------
 
-//--------------- BFS ---------------------
-
-void bfs(struct descritor_grafo *grafo, int inicio_chave);
