@@ -391,8 +391,7 @@ void busca_largura(struct descritor_grafo *grafo, int chave_origem) {
     // Marca visitados: vamos supor no máximo 100 vértices
     int visitados[grafo->max_vertices] = {0}; 
 
-    struct desc_queue fila;
-    inicializa_fila(&fila);
+    struct desc_queue *fila = cria;
 
     struct nodo *inicio = busca_vertice(grafo->nodos, chave_origem);
     if (inicio == NULL) {
