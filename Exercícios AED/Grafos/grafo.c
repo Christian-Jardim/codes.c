@@ -388,37 +388,55 @@ struct nodo *busca_vertice(struct nodo *nodos, int chave) {
 // ---------- BFS propriamente dita ----------
 
 void busca_largura(struct descritor_grafo *grafo, int chave_origem) {
-    // Marca visitados: vamos supor no máximo 100 vértices
-    int visitados[grafo->max_vertices] = {0}; 
+    int visitado[grafo->max_vertices] = {0};
 
-    struct desc_queue *fila = cria;
-
-    struct nodo *inicio = busca_vertice(grafo->nodos, chave_origem);
-    if (inicio == NULL) {
-        printf("Vértice de origem não encontrado.\n");
+    struct nodo *vertice_origem = buscaVertice(grafo, chave_origem);
+    if (vertice_origem == NULL) {
+        printf("Vértice de origem %d não encontrado.\n", chave_origem);
         return;
     }
 
-    enqueue(&fila, inicio);
-    visitados[chave_origem] = TRUE;
+    struct desc_queue *fila = criaDescQueue();
 
-    printf("BFS a partir do vértice %d:\n", chave_origem);
+    // Marcar origem como visitada
+    visitado[chave_origem] = 1;
 
-    while (!fila_vazia(&fila)) {
-        struct nodo *v = dequeue(&fila);
-        printf("Visitando vértice %d\n", v->chave);
+    // Criar aresta fictícia para enfileirar o vértice de origem
+    struct aresta *inicial = malloc(sizeof(struct aresta));
+    inicial->partida = -1;  // sem pai
+    inicial->chegada = chave_origem;
+    inicial->peso = 0;
+    inicial->prox = NULL;
 
-        struct aresta *a = v->adjacencias;
-        while (a != NULL) {
-            int destino = a->chegada;
-            if (!visitados[destino]) {
-                struct nodo *vizinho = busca_vertice(grafo->nodos, destino);
-                if (vizinho != NULL) {
-                    enqueue(&fila, vizinho);
-                    visitados[destino] = TRUE;
-                }
+    enqueue(fila, criaNodoQueue(inicial));
+
+    printf("Iniciando BFS a partir do vértice %d:\n", chave_origem);
+
+    while (!empty_queue(fila)) {
+        struct nodo_busca *nodo_atual = dequeue(fila);
+        struct aresta *a = nodo_atual->aresta_busca;
+        int chave_atual = a->chegada;
+        free(nodo_atual); // libera nodo da fila
+
+        printf("Visitando vértice %d", chave_atual);
+        if (a->partida != -1) {
+            printf(" (vindo de %d com peso %d)", a->partida, a->peso);
+        }
+        printf("\n");
+
+        struct nodo *v = buscaVertice(grafo, chave_atual);
+        struct aresta *adj = v->adjacencias;
+
+        while (adj != NULL) {
+            int vizinho = adj->chegada;
+            if (!visitado[vizinho]) {
+                visitado[vizinho] = 1;
+                enqueue(fila, criaNodoQueue(adj));
             }
-            a = a->prox;
+            adj = adj->prox;
         }
     }
+
+    makeNull_queue(fila);
+    free(fila);
 }
