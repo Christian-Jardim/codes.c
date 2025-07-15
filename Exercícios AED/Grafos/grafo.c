@@ -326,3 +326,100 @@ void showQueue(struct desc_queue *queue) {
 
 //----------------------------- BFS ----------------------
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TRUE 1
+#define FALSE 0
+
+// Assumindo as estruturas já estão declaradas: descritor_grafo, nodo, aresta, desc_queue, nodo_busca
+
+// ---------- Funções auxiliares para a fila ----------
+
+void inicializa_fila(struct desc_queue *fila) {
+    fila->head = fila->tail = NULL;
+    fila->tamanho = 0;
+}
+
+int fila_vazia(struct desc_queue *fila) {
+    return fila->tamanho == 0;
+}
+
+void enqueue(struct desc_queue *fila, struct nodo *vertice) {
+    struct nodo_busca *novo = malloc(sizeof(struct nodo_busca));
+    novo->vertice_busca = vertice;
+    novo->prox = NULL;
+
+    if (fila->tail == NULL) {
+        fila->head = fila->tail = novo;
+    } else {
+        fila->tail->prox = novo;
+        fila->tail = novo;
+    }
+    fila->tamanho++;
+}
+
+struct nodo *dequeue(struct desc_queue *fila) {
+    if (fila_vazia(fila)) return NULL;
+
+    struct nodo_busca *removido = fila->head;
+    struct nodo *vertice = removido->vertice_busca;
+
+    fila->head = removido->prox;
+    if (fila->head == NULL)
+        fila->tail = NULL;
+
+    free(removido);
+    fila->tamanho--;
+    return vertice;
+}
+
+// ---------- Função para buscar um vértice por chave ----------
+
+struct nodo *busca_vertice(struct nodo *nodos, int chave) {
+    while (nodos != NULL) {
+        if (nodos->chave == chave)
+            return nodos;
+        nodos = nodos->prox;
+    }
+    return NULL;
+}
+
+// ---------- BFS propriamente dita ----------
+
+void busca_largura(struct descritor_grafo *grafo, int chave_origem) {
+    // Marca visitados: vamos supor no máximo 100 vértices
+    int visitados[grafo->max_vertices] = {0}; 
+
+    struct desc_queue fila;
+    inicializa_fila(&fila);
+
+    struct nodo *inicio = busca_vertice(grafo->nodos, chave_origem);
+    if (inicio == NULL) {
+        printf("Vértice de origem não encontrado.\n");
+        return;
+    }
+
+    enqueue(&fila, inicio);
+    visitados[chave_origem] = TRUE;
+
+    printf("BFS a partir do vértice %d:\n", chave_origem);
+
+    while (!fila_vazia(&fila)) {
+        struct nodo *v = dequeue(&fila);
+        printf("Visitando vértice %d\n", v->chave);
+
+        struct aresta *a = v->adjacencias;
+        while (a != NULL) {
+            int destino = a->chegada;
+            if (!visitados[destino]) {
+                struct nodo *vizinho = busca_vertice(grafo->nodos, destino);
+                if (vizinho != NULL) {
+                    enqueue(&fila, vizinho);
+                    visitados[destino] = TRUE;
+                }
+            }
+            a = a->prox;
+        }
+    }
+}
