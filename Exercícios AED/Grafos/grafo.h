@@ -87,3 +87,4 @@ void showQueue(struct desc_queue *queue);
 
 //------------------- BFS ---------------------
 
+void busca_largura(struct descritor_grafo *grafo, int chave_origem);
